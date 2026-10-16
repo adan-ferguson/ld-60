@@ -1,0 +1,6 @@
+import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
+
+export const Level001: LevelDef = {
+	id: '001',
+	displayName: 'Level 1',
+}

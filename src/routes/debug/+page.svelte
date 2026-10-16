@@ -1,17 +1,20 @@
 <script lang="ts">
-
-  import {Game} from '#lib/scripts/game/game.ts'
 	import { resolve } from '$app/paths'
-
-  const game = new Game()
-
+  import {LevelsManager} from '#lib/scripts/game/levelsManager.ts'
 </script>
 
-{#each game.levels as level (level.id)}
-  <a href={resolve("/debug/[id]", { id: String(level.id) })}>
-    {level.displayName}
-  </a>
-{/each}
+<div>
+  <b>Levels</b>
+  <ul>
+    {#each LevelsManager.instance.levels.values() as level (level.id)}
+      <li>
+        <a href={resolve("/debug/[id]", { id: String(level.id) })}>
+          {level.displayName}
+        </a>
+      </li>
+    {/each}
+  </ul>
+</div>
 
 <style>
 </style>
