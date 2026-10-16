@@ -1,7 +1,12 @@
-import { Application } from 'pixi.js'
+import { Application, TextureStyle } from 'pixi.js'
 import { initDevtools } from '@pixi/devtools'
 
 let app: Application | null = null
+
+const BASE_WIDTH = 320
+const BASE_HEIGHT = 180
+
+TextureStyle.defaultOptions.scaleMode = 'nearest'
 
 export async function initPixiApp(
 	canvas: HTMLCanvasElement,
@@ -12,12 +17,15 @@ export async function initPixiApp(
 	}
 	app = new Application()
 	await app.init({
-		width: 1600,
-		height: 900,
-		antialias: true,
+		width: BASE_WIDTH,
+		height: BASE_HEIGHT,
+		resolution: 1,
+		autoDensity: false,
+		antialias: false,
 		canvas,
 		powerPreference: 'high-performance',
 		...options,
+		roundPixels: true,
 	})
 	await initDevtools({ app })
 	return app
