@@ -18,7 +18,7 @@ const GRAVITY = 4
 export class Player {
 	position: XY = { x: 0, y: 0 }
 	velocity: XY = { x: 0, y: 0 }
-	aerialState: AerialState = { kind: 'grounded' }
+	aerialState: Readonly<AerialState> = { kind: 'grounded' }
 	private controlsManager: ControlsManager
 	get canJump() {
 		return (
@@ -34,7 +34,7 @@ export class Player {
 	}
 	update(deltaMS: number) {
 		if (this.onGround()) {
-			this.aerialState.kind = 'grounded'
+			this.aerialState = { kind: 'grounded' }
 		}
 		this.controlsManager.update()
 		this.velocity.x = X_VELOCITY * this.controlsManager.x

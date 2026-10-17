@@ -1,15 +1,14 @@
-import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
+import { getInputState, type InputState } from '#lib/scripts/game/player/inputManager.ts'
 import type { Player } from '#lib/scripts/game/player/player.ts'
 
 export class ControlsManager {
 	private button1Ready = true
 	private button2Ready = true
+	private inputState: InputState | undefined
 	public x: number = 0
 	constructor(private player: Player) {}
-	get inputState() {
-		return getInputState()
-	}
 	update() {
+		this.inputState = getInputState()
 		this.tryJump()
 		this.tryShoot()
 		if (this.player.aerialState.kind === 'grounded') {
@@ -17,8 +16,9 @@ export class ControlsManager {
 		}
 	}
 	private tryJump() {
-		if (!this.inputState.button1) {
+		if (!this.inputState?.button1) {
 			this.button1Ready = true
+			return
 		} else if (!this.button1Ready || !this.player.canJump) {
 			return
 		}
@@ -27,8 +27,9 @@ export class ControlsManager {
 		this.x = this.inputState.moveX
 	}
 	private tryShoot() {
-		if (!this.inputState.button2) {
+		if (!this.inputState?.button2) {
 			this.button2Ready = true
+			return
 		} else if (!this.button2Ready || !this.player.canShoot) {
 			return
 		}

@@ -1,7 +1,7 @@
-export type XY = {
+export type XY = Readonly<{
 	x: number
 	y: number
-}
+}>
 
 export const XY = {
 	angleBetween(a: XY, b: XY): number {
