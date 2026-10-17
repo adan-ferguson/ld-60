@@ -4,8 +4,8 @@ import { Consts } from '#lib/scripts/consts.ts'
 
 let app: Application | null = null
 
-const BASE_WIDTH = Consts.TILES_X * Consts.TILE_SIZE
-const BASE_HEIGHT = Consts.TILES_Y * Consts.TILE_SIZE
+const BASE_WIDTH = Math.round(Consts.TILES_X * Consts.TILE_SIZE_PX)
+const BASE_HEIGHT = Math.round(Consts.TILES_Y * Consts.TILE_SIZE_PX)
 
 TextureStyle.defaultOptions.scaleMode = 'nearest'
 
