@@ -48,6 +48,7 @@ export class Player extends GameEntity {
 			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
 				this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
+				this.velY = 0
 			}
 		}
 		this.controlsManager.update()
