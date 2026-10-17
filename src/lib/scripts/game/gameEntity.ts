@@ -19,7 +19,7 @@ export abstract class GameEntity {
 
 	public update(deltaMS: number) {
 		this.update2(deltaMS)
-		this.x = Math.round(this.x + this.velX * (deltaMS / 1000))
-		this.y = Math.round(this.y + this.velY * (deltaMS / 1000))
+		this.x += this.velX * (deltaMS / 1000)
+		this.y += this.velY * (deltaMS / 1000)
 	}
 }

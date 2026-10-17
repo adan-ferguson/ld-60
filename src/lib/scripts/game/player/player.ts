@@ -15,7 +15,8 @@ export type AerialState =
 
 const JUMP_VELOCITY = 8
 const X_VELOCITY = 6
-const GRAVITY = 4
+const GRAVITY = 40
+const MAX_FALL_SPEED = 200
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
@@ -40,6 +41,7 @@ export class Player extends GameEntity {
 		this.controlsManager.update()
 		this.velX = X_VELOCITY * this.controlsManager.x
 		this.velY += GRAVITY * (deltaMS / 1000)
+		this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 	}
 	jump() {
 		if (this.aerialState.kind === 'grounded') {
