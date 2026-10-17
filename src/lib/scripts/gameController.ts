@@ -1,20 +1,20 @@
 import type { Application } from 'pixi.js'
 import { Game } from '#lib/scripts/game/game.ts'
-import { TileLayer } from '#lib/scripts/pixi/tiles/tileLayer.ts'
+import { TerrainLayer } from '#lib/scripts/pixi/tiles/terrainLayer.ts'
 
 export class GameController {
 	private game: Game
-	private tileLayer: TileLayer
+	private terrainLayer: TerrainLayer
 	static setup(app: Application) {
 		return new GameController(app)
 	}
 	constructor(app: Application) {
 		this.game = new Game()
-		this.tileLayer = new TileLayer()
-		app.stage.addChild(this.tileLayer)
+		this.terrainLayer = new TerrainLayer()
+		app.stage.addChild(this.terrainLayer)
 	}
 	setLevel(levelId: string) {
 		const level = this.game.setLevel(levelId)
-		this.tileLayer.setLevel(level)
+		this.terrainLayer.setLevel(level)
 	}
 }
