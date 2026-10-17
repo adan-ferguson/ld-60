@@ -21,7 +21,7 @@ export class ProjectileEl extends GameEntityEl {
 		}
 		const sprite = new AnimatedSprite({
 			textures: getFrames(proj.options.style),
-			animationSpeed: 0.02,
+			animationSpeed: 0.33,
 			loop: true,
 			autoPlay: true,
 			anchor: { x: 0.5, y: 0.5 },
