@@ -84,7 +84,10 @@ export class Player extends GameEntity {
 				size: 5,
 				source: 'player',
 				lifetime: 0.4,
-				velocity: { x: 10 * this.facing, y: 0 },
+				velX: 10 * this.facing,
+				velY: 0,
+				x: this.x + this.facing * 6,
+				y: this.y,
 			}),
 		)
 	}

@@ -11,6 +11,7 @@ export class EntitiesManager {
 		for (const entity of [...this.entities]) {
 			if (entity.isActive) {
 				entity.update(delta)
+			} else {
 				this.entities.delete(entity)
 			}
 		}

@@ -11,18 +11,29 @@ type Options = {
 	size: number
 	source: 'player' | 'enemy'
 	lifetime: number
-	velocity: XY
+	x: number
+	y: number
+	velX: number
+	velY: number
 }
 
 export class Projectile extends GameEntity {
+	private time = 0
 	constructor(
 		game: Game,
 		public options: Options,
 	) {
 		super(game)
+		this.x = options.x
+		this.y = options.y
+		this.velX = options.velX
+		this.velY = options.velY
 	}
-	public update2(): void {
-		// TODO: check for collisions
+	public update2(delta: number) {
+		this.time += delta
+		if (this.time > this.options.lifetime) {
+			this.isActive = false
+		}
 	}
 	public createPixiEl(): GameEntityEl {
 		return new ProjectileEl(this)
