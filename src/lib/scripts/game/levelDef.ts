@@ -1,6 +1,5 @@
-export class LevelDef {
-	constructor(
-		public id: string,
-		public displayName: string,
-	) {}
+export type LevelDef = {
+	id: string
+	displayName: string
+	tiles: string
 }

@@ -1,10 +1,11 @@
 import { Application, TextureStyle } from 'pixi.js'
 import { initDevtools } from '@pixi/devtools'
+import { Consts } from '#lib/scripts/consts.ts'
 
 let app: Application | null = null
 
-const BASE_WIDTH = 320
-const BASE_HEIGHT = 180
+const BASE_WIDTH = Consts.TILES_X * Consts.TILE_SIZE
+const BASE_HEIGHT = Consts.TILES_Y * Consts.TILE_SIZE
 
 TextureStyle.defaultOptions.scaleMode = 'nearest'
 
