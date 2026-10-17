@@ -43,13 +43,8 @@ export class Player extends GameEntity {
 		return true // TODO: whatever
 	}
 	update2(delta: number) {
-		if (this.onGround() && this.velY >= 0) {
-			this.aerialState = { kind: 'grounded' }
-			this.velY = 0
-		} else {
-			this.velY += GRAVITY * delta
-			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
-		}
+		this.velY += GRAVITY * delta
+		this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 		this.controlsManager.update()
 		this.velX = X_VELOCITY * this.controlsManager.x
 	}
@@ -67,5 +62,27 @@ export class Player extends GameEntity {
 	shoot() {}
 	createPixiEl(): GameEntityEl {
 		return new PlayerEl(this)
+	}
+	protected override move(delta: number) {
+		const terrainCollision = this.game.level?.terrainCollision
+		if (!terrainCollision) {
+			return
+		}
+		const result = terrainCollision.resolveMovement(
+			this.worldBounds,
+			this.velX * delta,
+			this.velY * delta,
+		)
+		this.x += result.x - this.worldBounds.x
+		this.y += result.y - this.worldBounds.y
+		if (result.hitHorizontal) {
+			// this.velX = 0
+		}
+		if (result.hitVertical) {
+			if (this.velY > 0) {
+				this.aerialState = { kind: 'grounded' }
+			}
+			this.velY = 0
+		}
 	}
 }

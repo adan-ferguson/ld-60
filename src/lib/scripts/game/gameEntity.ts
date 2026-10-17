@@ -35,6 +35,10 @@ export abstract class GameEntity {
 
 	public update(delta: number) {
 		this.update2(delta)
+		this.move(delta)
+	}
+
+	protected move(delta: number) {
 		this.x += this.velX * delta
 		this.y += this.velY * delta
 	}
