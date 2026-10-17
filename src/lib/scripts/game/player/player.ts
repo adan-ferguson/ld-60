@@ -20,7 +20,7 @@ const GRAVITY = 110
 const MAX_FALL_SPEED = 200
 const WIDTH = 8
 const HEIGHT = 12
-const SHOT_COOLDOWN = 0.19
+const SHOT_COOLDOWN = 0.3
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
@@ -83,11 +83,11 @@ export class Player extends GameEntity {
 				style: 'small',
 				size: 5,
 				source: 'player',
-				lifetime: 0.4,
-				velX: 10 * this.facing,
+				lifetime: 0.6,
+				velX: 37 * this.facing,
 				velY: 0,
-				x: this.x + this.facing * 6,
-				y: this.y,
+				x: this.x + this.facing * 3,
+				y: this.y - 2,
 			}),
 		)
 	}

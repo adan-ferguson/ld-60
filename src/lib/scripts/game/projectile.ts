@@ -2,7 +2,6 @@ import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import type { Game } from '#lib/scripts/game/game.ts'
-import type { XY } from '#lib/scripts/utils/XY.ts'
 
 export type ProjectileStyle = 'small' | 'large'
 
