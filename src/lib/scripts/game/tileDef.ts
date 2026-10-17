@@ -64,4 +64,10 @@ function getTileType(char: string): TileType | null {
 
 export const TileDef = {
 	parseLevel,
+	toWorldXY(tileXY: XY): XY {
+		return {
+			x: tileXY.x * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
+			y: tileXY.y * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
+		}
+	},
 }

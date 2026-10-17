@@ -2,7 +2,6 @@ import type { TileDef } from '#lib/scripts/game/tileDef.ts'
 import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 
-const FEET_EXTRA = 0.3
 const EPSILON = 0.001
 
 type Body = {
@@ -12,13 +11,17 @@ type Body = {
 	height: number
 }
 
+const FEET_CHECK_HEIGHT = 0.5
+
 export class TerrainCollision {
 	constructor(private tiles: XYMap<TileDef>) {}
 	isGrounded(body: Body) {
+		const feetY = body.y + body.height / 2 + FEET_CHECK_HEIGHT
 		return this.overlapsSolid({
-			...body,
-			y: body.y + FEET_EXTRA,
-			height: body.height,
+			x: body.x,
+			y: feetY + FEET_CHECK_HEIGHT / 2,
+			width: body.width,
+			height: FEET_CHECK_HEIGHT,
 		})
 	}
 
