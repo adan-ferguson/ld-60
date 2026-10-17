@@ -7,4 +7,7 @@ export class EntitiesLayer extends Container {
 	constructor(private game: Game) {
 		super()
 	}
+	update(){
+
+	}
 }

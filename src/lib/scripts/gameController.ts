@@ -1,8 +1,9 @@
 import type { Application } from 'pixi.js'
 import { Game } from '#lib/scripts/game/game.ts'
-import { TerrainLayer } from '#lib/scripts/pixi/tiles/terrainLayer.ts'
-import { EntitiesLayer } from '#lib/scripts/pixi/tiles/entitiesLayer.ts'
-import { VfxLayer } from '#lib/scripts/pixi/tiles/vfxLayer.ts'
+import { EntitiesLayer } from '#lib/scripts/pixi/entities/entitiesLayer.ts'
+import { TerrainLayer } from '#lib/scripts/pixi/terrain/terrainLayer.ts'
+import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
+import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
 
 export class GameController {
 	private game: Game
@@ -28,8 +29,9 @@ export class GameController {
 		this.terrainLayer.setLevel(level)
 		// this.soundManager.setMusic('spawn')
 		this.vfxLayer.addAnimation(
-			new SomeAnimation({
-				onFinish: () => {
+			playerSpawnAnimation({
+				position: level.playerSpawnPosition,
+				onFinished: () => {
 					// this.soundManager.setMusic('gameplay')
 					this.game.beginLevel()
 				},
