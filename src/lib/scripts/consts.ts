@@ -1,6 +1,6 @@
 const x = 16
 const y = 9
-const multi = 3
+const multi = 2
 const TILE_SIZE_PX = 8
 const TILES_X = x * multi
 const TILES_Y = y * multi

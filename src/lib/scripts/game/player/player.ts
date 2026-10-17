@@ -13,9 +13,9 @@ export type AerialState =
 			doubleJumpUsed: boolean
 	  }
 
-const JUMP_VELOCITY = 80
-const X_VELOCITY = 60
-const GRAVITY = 40
+const JUMP_VELOCITY = 58
+const X_VELOCITY = 24
+const GRAVITY = 100
 const MAX_FALL_SPEED = 200
 const WIDTH = 12
 const HEIGHT = 12
@@ -43,8 +43,13 @@ export class Player extends GameEntity {
 		return true // TODO: whatever
 	}
 	update2(delta: number) {
-		this.velY += GRAVITY * delta
-		this.velY = Math.min(this.velY, MAX_FALL_SPEED)
+		if (!this.onGround()) {
+			this.velY += GRAVITY * delta
+			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
+			if (this.aerialState.kind === 'grounded') {
+				this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
+			}
+		}
 		this.controlsManager.update()
 		this.velX = X_VELOCITY * this.controlsManager.x
 	}
