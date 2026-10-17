@@ -26,7 +26,6 @@ export class Game {
 			throw new Error(`Level ${levelId} not found`)
 		}
 		this.level = new LevelInstance(this, lvl)
-		this.player.position = this.level.playerSpawnPosition
 		return this.level
 	}
 
@@ -39,6 +38,7 @@ export class Game {
 
 	beginLevel() {
 		this.player.position = this.level!.playerSpawnPosition
+		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true
 	}

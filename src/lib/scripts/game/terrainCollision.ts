@@ -16,20 +16,18 @@ const FEET_CHECK_HEIGHT = 0.5
 export class TerrainCollision {
 	constructor(private tiles: XYMap<TileDef>) {}
 	isGrounded(body: Body) {
-		const feetY = body.y + body.height / 2 + FEET_CHECK_HEIGHT
 		return this.overlapsSolid({
-			x: body.x,
-			y: feetY + FEET_CHECK_HEIGHT / 2,
-			width: body.width,
+			...body,
+			y: body.y + body.height,
 			height: FEET_CHECK_HEIGHT,
 		})
 	}
 
 	private overlapsSolid(body: Body): boolean {
-		const left = body.x - body.width / 2
-		const right = body.x + body.width / 2
-		const top = body.y - body.height / 2
-		const bottom = body.y + body.height / 2
+		const left = body.x
+		const right = body.x + body.width
+		const top = body.y
+		const bottom = body.y + body.height
 		const { TILE_SIZE_PX } = Consts
 
 		const minTileX = Math.floor((left + EPSILON) / TILE_SIZE_PX)
