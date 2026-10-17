@@ -3,6 +3,7 @@ import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
+import { Projectile } from '#lib/scripts/game/projectile.ts'
 
 export type AerialState =
 	| {
@@ -13,16 +14,18 @@ export type AerialState =
 			doubleJumpUsed: boolean
 	  }
 
-const JUMP_VELOCITY = 58
+const JUMP_VELOCITY = 62
 const X_VELOCITY = 24
-const GRAVITY = 100
+const GRAVITY = 110
 const MAX_FALL_SPEED = 200
-const WIDTH = 12
+const WIDTH = 8
 const HEIGHT = 12
+const SHOT_COOLDOWN = 0.19
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
 	private controlsManager: ControlsManager
+	shotCooldown = 0
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
@@ -40,7 +43,7 @@ export class Player extends GameEntity {
 		)
 	}
 	get canShoot() {
-		return true // TODO: whatever
+		return this.shotCooldown <= 0
 	}
 	update2(delta: number) {
 		if (!this.onGround()) {
@@ -52,23 +55,39 @@ export class Player extends GameEntity {
 			}
 		}
 		this.controlsManager.update()
-		if (this.aerialState.kind === 'grounded') {
+		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {
 			this.velX = X_VELOCITY * this.controlsManager.x
 		}
 		this.facing = this.controlsManager.x > 0 ? 1 : this.controlsManager.x < 0 ? -1 : this.facing
+		this.shotCooldown = Math.max(0, this.shotCooldown - delta)
 	}
 	jump() {
 		if (this.aerialState.kind === 'grounded') {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
 		} else if (this.aerialState.kind === 'aerial') {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true }
+			this.velX = X_VELOCITY * this.controlsManager.x
 		}
 		this.velY = -JUMP_VELOCITY
 	}
 	onGround() {
 		return this.game.level?.terrainCollision.isGrounded(this.worldBounds) ?? false
 	}
-	shoot() {}
+	shoot() {
+		this.shotCooldown = SHOT_COOLDOWN
+		if (this.aerialState.kind !== 'aerial') {
+			this.velX = 0
+		}
+		this.game.entitiesManager.spawn(
+			new Projectile(this.game, {
+				style: 'small',
+				size: 5,
+				source: 'player',
+				lifetime: 0.4,
+				velocity: { x: 10 * this.facing, y: 0 },
+			}),
+		)
+	}
 	createPixiEl(): GameEntityEl {
 		return new PlayerEl(this)
 	}

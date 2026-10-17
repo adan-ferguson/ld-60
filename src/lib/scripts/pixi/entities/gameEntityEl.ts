@@ -10,5 +10,5 @@ export abstract class GameEntityEl extends Container {
 		this.y = Math.round(this.entity.y)
 		this.draw()
 	}
-	public abstract draw(): void
+	public draw() {}
 }

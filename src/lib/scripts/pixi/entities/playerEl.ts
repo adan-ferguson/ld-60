@@ -22,6 +22,9 @@ export class PlayerEl extends GameEntityEl {
 	}
 
 	private getAnimation(): PlayerAnimation {
+		if (this.player.shotCooldown > 0) {
+			return 'throw'
+		}
 		if (this.player.aerialState.kind === 'aerial') {
 			return this.player.velX == 0 ? 'fall' : 'jump'
 		}
@@ -43,8 +46,13 @@ export class PlayerEl extends GameEntityEl {
 		this.currentAnimation = animation
 		this.sprite.textures = spritesheet.animations[animation]!
 		this.sprite.anchor.set(0.5)
-		this.sprite.animationSpeed = 0.12
-		this.sprite.loop = true
+		if (animation == 'throw') {
+			this.sprite.animationSpeed = 0.18
+			this.sprite.loop = true
+		} else {
+			this.sprite.animationSpeed = 0.12
+			this.sprite.loop = true
+		}
 		this.sprite.play()
 	}
 }

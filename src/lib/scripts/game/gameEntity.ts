@@ -4,7 +4,7 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Rectangle } from 'pixi.js'
 
 export abstract class GameEntity {
-	public isActive = false
+	public isActive = true
 	public x: number = 0
 	public y: number = 0
 	public velX: number = 0

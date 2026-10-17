@@ -11,6 +11,7 @@ export class EntitiesLayer extends Container {
 	update() {
 		for (const entity of this.game.activeEntites) {
 			if (!this.onScreen.has(entity)) {
+				console.log('adding', entity)
 				const pixiEl = entity.createPixiEl()
 				this.onScreen.set(entity, pixiEl)
 				this.addChild(pixiEl)
