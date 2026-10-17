@@ -1,6 +1,8 @@
 import type { Game } from '#lib/scripts/game/game.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
+import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
+import { Container } from 'pixi.js'
 
 export type AerialState =
 	| {
@@ -15,11 +17,15 @@ const JUMP_VELOCITY = 8
 const X_VELOCITY = 6
 const GRAVITY = 4
 
-export class Player {
+export class Player extends GameEntity {
 	position: XY = { x: 0, y: 0 }
 	velocity: { x: number; y: number } = { x: 0, y: 0 }
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
 	private controlsManager: ControlsManager
+	constructor(game: Game) {
+		super(game)
+		this.controlsManager = new ControlsManager(this)
+	}
 	get canJump() {
 		return (
 			this.aerialState.kind === 'grounded' ||
@@ -29,11 +35,7 @@ export class Player {
 	get canShoot() {
 		return true // TODO: whatever
 	}
-	constructor(game: Game) {
-		this.controlsManager = new ControlsManager(this)
-	}
 	update(deltaMS: number) {
-		this.velocity = { x: 0, y: 0 }
 		if (this.onGround()) {
 			this.aerialState = { kind: 'grounded' }
 		}
@@ -53,4 +55,8 @@ export class Player {
 		return true // TODO: implement ground detection
 	}
 	shoot() {}
+
+	spawn() {
+		this.pixiElement = new Container() // Or whatever
+	}
 }

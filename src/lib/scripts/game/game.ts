@@ -2,6 +2,7 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 import { LevelsManager } from '#lib/scripts/game/levelsManager.ts'
 import { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
+import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 
 export class Game {
 	public level: LevelInstance | undefined
@@ -12,6 +13,9 @@ export class Game {
 	}
 	constructor() {
 		this.player = new Player(this)
+	}
+	get entities(): GameEntity[] {
+		return [this.player]
 	}
 	get levels(): LevelDef[] {
 		return []
@@ -33,7 +37,8 @@ export class Game {
 		this.player?.update(deltaMS)
 	}
 
-	resume() {
+	beginLevel() {
+		this.player.spawn()
 		this.playing = true
 	}
 }
