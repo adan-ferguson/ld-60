@@ -6,8 +6,8 @@ export abstract class GameEntityEl extends Container {
 		super()
 	}
 	public update() {
-		this.x = this.entity.position.x
-		this.y = this.entity.position.y
+		this.x = Math.round(this.entity.x)
+		this.y = Math.round(this.entity.y)
 		this.draw()
 	}
 	public abstract draw(): void

@@ -35,6 +35,12 @@ export const XY = {
 			y: (a.y + b.y) / 2,
 		}
 	},
+	round(a: XY) {
+		return {
+			x: Math.round(a.x),
+			y: Math.round(a.y),
+		}
+	},
 	same(a: XY, b: XY): boolean {
 		return a.x === b.x && a.y === b.y
 	},

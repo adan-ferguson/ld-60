@@ -1,7 +1,6 @@
 import type { Game } from '#lib/scripts/game/game.ts'
 import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import type { Container } from 'pixi.js'
 import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 
@@ -19,7 +18,6 @@ const X_VELOCITY = 6
 const GRAVITY = 4
 
 export class Player extends GameEntity {
-	velocity: { x: number; y: number } = { x: 0, y: 0 }
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
 	private controlsManager: ControlsManager
 	constructor(game: Game) {
@@ -35,13 +33,13 @@ export class Player extends GameEntity {
 	get canShoot() {
 		return true // TODO: whatever
 	}
-	update(deltaMS: number) {
+	update2(deltaMS: number) {
 		if (this.onGround()) {
 			this.aerialState = { kind: 'grounded' }
 		}
 		this.controlsManager.update()
-		this.velocity.x = X_VELOCITY * this.controlsManager.x
-		this.velocity.y += GRAVITY * (deltaMS / 1000)
+		this.velX = X_VELOCITY * this.controlsManager.x
+		this.velY += GRAVITY * (deltaMS / 1000)
 	}
 	jump() {
 		if (this.aerialState.kind === 'grounded') {
@@ -49,7 +47,7 @@ export class Player extends GameEntity {
 		} else if (this.aerialState.kind === 'aerial') {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true }
 		}
-		this.velocity.y = -JUMP_VELOCITY
+		this.velY = -JUMP_VELOCITY
 	}
 	onGround() {
 		return true // TODO: implement ground detection
