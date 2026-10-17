@@ -12,9 +12,13 @@ export class GameController {
 		this.game = new Game()
 		this.terrainLayer = new TerrainLayer()
 		app.stage.addChild(this.terrainLayer)
+		app.ticker.add((ticker) => {
+			this.game.update(ticker.deltaMS)
+		})
 	}
 	setLevel(levelId: string) {
 		const level = this.game.setLevel(levelId)
 		this.terrainLayer.setLevel(level)
+		this.game.resume()
 	}
 }

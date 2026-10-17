@@ -17,7 +17,7 @@ function parseLevel(levelTiles: string) {
 		)
 	}
 	const parsed: XYMap<TileDef> = new XYMap()
-	let spawnSet = false
+	let spawnPosition: XY | undefined = undefined
 	for (let y = 0; y < rows.length; y++) {
 		const row = rows[y]!
 		if (row.length !== Consts.TILES_X) {
@@ -31,12 +31,12 @@ function parseLevel(levelTiles: string) {
 			const XY = { x, y }
 			if (type) {
 				if (type === 'spawn') {
-					if (spawnSet) {
+					if (spawnPosition) {
 						throw new Error(
 							`Multiple spawn points found in tiles. Only one spawn point is allowed.`,
 						)
 					}
-					spawnSet = true
+					spawnPosition = XY
 				}
 				parsed.set({ x, y }, { XY, type })
 			} else if (x == 0 || x == Consts.TILES_X - 1 || y == 0 || y == Consts.TILES_Y - 1) {
@@ -46,7 +46,7 @@ function parseLevel(levelTiles: string) {
 			}
 		}
 	}
-	return parsed
+	return { spawnPosition: spawnPosition!, tiles: parsed }
 }
 
 function getTileType(char: string): TileType | null {
