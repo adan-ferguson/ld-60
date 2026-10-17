@@ -30,11 +30,11 @@ export class Game {
 		return this.level
 	}
 
-	update(deltaMS: number) {
+	update(delta: number) {
 		if (!this.playing) {
 			return
 		}
-		this.player?.update(deltaMS)
+		this.player?.update(delta)
 	}
 
 	beginLevel() {

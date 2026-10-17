@@ -9,8 +9,8 @@ export class TerrainLayer extends Graphics {
 		for (const tile of level.tiles.values) {
 			if (tile.type == 'wall') {
 				this.rect(
-					tile.XY.x * TILE_SIZE_PX,
-					tile.XY.y * TILE_SIZE_PX,
+					tile.tileXY.x * TILE_SIZE_PX,
+					tile.tileXY.y * TILE_SIZE_PX,
 					TILE_SIZE_PX,
 					TILE_SIZE_PX,
 				).fill('white')

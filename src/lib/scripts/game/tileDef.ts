@@ -3,7 +3,7 @@ import { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 
 export type TileDef = {
-	XY: XY
+	tileXY: XY
 	type: TileType
 }
 
@@ -38,7 +38,7 @@ function parseLevel(levelTiles: string) {
 					}
 					spawnPosition = XY
 				}
-				parsed.set({ x, y }, { XY, type })
+				parsed.set({ x, y }, { tileXY: XY, type })
 			} else if (x == 0 || x == Consts.TILES_X - 1 || y == 0 || y == Consts.TILES_Y - 1) {
 				throw new Error(
 					"Invalid tile at border. Borders must be walls. I know I should have done this programmatically but I didn't! It's a game jam geez leave me alone.",

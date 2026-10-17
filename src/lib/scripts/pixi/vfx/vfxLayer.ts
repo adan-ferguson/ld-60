@@ -7,9 +7,9 @@ export class VfxLayer extends Container {
 		this.animations.add(animation)
 		this.addChild(animation.pixiEl)
 	}
-	update(deltaMS: number) {
+	update(delta: number) {
 		for (const animation of [...this.animations]) {
-			animation.update(deltaMS)
+			animation.update(delta)
 			if (animation.isFinished) {
 				this.removeChild(animation.pixiEl)
 				this.animations.delete(animation)

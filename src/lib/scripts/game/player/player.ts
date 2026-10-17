@@ -17,6 +17,8 @@ const JUMP_VELOCITY = 8
 const X_VELOCITY = 6
 const GRAVITY = 40
 const MAX_FALL_SPEED = 200
+const WIDTH = 10
+const HEIGHT = 12
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
@@ -24,6 +26,12 @@ export class Player extends GameEntity {
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
+	}
+	get width() {
+		return WIDTH
+	}
+	get height() {
+		return HEIGHT
 	}
 	get canJump() {
 		return (
@@ -34,14 +42,16 @@ export class Player extends GameEntity {
 	get canShoot() {
 		return true // TODO: whatever
 	}
-	update2(deltaMS: number) {
-		if (this.onGround()) {
+	update2(delta: number) {
+		if (this.onGround() && this.velY >= 0) {
 			this.aerialState = { kind: 'grounded' }
+			this.velY = 0
+		} else {
+			this.velY += GRAVITY * delta
+			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 		}
 		this.controlsManager.update()
 		this.velX = X_VELOCITY * this.controlsManager.x
-		this.velY += GRAVITY * (deltaMS / 1000)
-		this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 	}
 	jump() {
 		if (this.aerialState.kind === 'grounded') {
@@ -52,7 +62,7 @@ export class Player extends GameEntity {
 		this.velY = -JUMP_VELOCITY
 	}
 	onGround() {
-		return true // TODO: implement ground detection
+		return this.game.level?.terrainCollision.isGrounded(this.worldBounds) ?? false
 	}
 	shoot() {}
 	createPixiEl(): GameEntityEl {

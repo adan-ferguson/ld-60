@@ -20,9 +20,10 @@ export class GameController {
 		this.vfxLayer = new VfxLayer()
 		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
 		app.ticker.add((ticker) => {
-			this.game.update(ticker.deltaMS)
+			const delta = ticker.deltaMS / 1000
+			this.game.update(delta)
 			this.entitiesLayer.update()
-			this.vfxLayer.update(ticker.deltaMS)
+			this.vfxLayer.update(delta)
 		})
 	}
 	setLevel(levelId: string) {

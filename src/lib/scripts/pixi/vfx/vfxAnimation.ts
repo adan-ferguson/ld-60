@@ -1,9 +1,9 @@
 import { Container } from 'pixi.js'
 
 type Options = {
-	draw: (deltaMS: number) => void
+	draw: (delta: number) => void
 	finished: () => void
-	durationMS: number
+	duration: number
 }
 
 export class VfxAnimation {
@@ -17,17 +17,17 @@ export class VfxAnimation {
 		this.options = {
 			draw: () => {},
 			finished: () => {},
-			durationMS: 500,
+			duration: 0.5,
 			...options,
 		}
 	}
-	update(deltaMS: number) {
+	update(delta: number) {
 		if (this.isFinished) {
 			return
 		}
-		this.timeMS += Math.min(this.options.durationMS, deltaMS)
-		this.options.draw(this.timeMS / this.options.durationMS)
-		if (this.timeMS >= this.options.durationMS) {
+		this.timeMS += Math.min(this.options.duration, delta)
+		this.options.draw(this.timeMS / this.options.duration)
+		if (this.timeMS >= this.options.duration) {
 			this.options.finished()
 			this.isFinished = true
 		}

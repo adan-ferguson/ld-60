@@ -20,7 +20,7 @@ export function playerSpawnAnimation(options: Options) {
 	gfx.y = Consts.GAME_HEIGHT / 2
 	return new VfxAnimation(gfx, {
 		finished: options.onFinished,
-		durationMS: 1500,
+		duration: 1.5,
 		draw: (t: number) => {
 			t = easeOutQuad(t)
 			const radius = lerp(Consts.GAME_HEIGHT / 2, 0, t)

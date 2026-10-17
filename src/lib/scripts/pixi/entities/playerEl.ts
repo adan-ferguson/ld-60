@@ -2,8 +2,6 @@ import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Player } from '#lib/scripts/game/player/player.ts'
 import { Graphics } from 'pixi.js'
 
-const SIZE = 12
-
 export class PlayerEl extends GameEntityEl {
 	private gfx: Graphics
 	constructor(private player: Player) {
@@ -12,6 +10,7 @@ export class PlayerEl extends GameEntityEl {
 	}
 	draw() {
 		this.gfx.clear()
-		this.gfx.rect(-SIZE / 2, -SIZE / 2, SIZE, SIZE).fill('blue')
+		const { x, y, width, height } = this.player.localBounds
+		this.gfx.rect(x, y, width, height).fill('blue')
 	}
 }
