@@ -52,7 +52,10 @@ export class Player extends GameEntity {
 			}
 		}
 		this.controlsManager.update()
-		this.velX = X_VELOCITY * this.controlsManager.x
+		if (this.aerialState.kind === 'grounded') {
+			this.velX = X_VELOCITY * this.controlsManager.x
+		}
+		this.facing = this.controlsManager.x > 0 ? 1 : this.controlsManager.x < 0 ? -1 : this.facing
 	}
 	jump() {
 		if (this.aerialState.kind === 'grounded') {

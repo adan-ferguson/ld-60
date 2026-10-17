@@ -6,14 +6,13 @@ export class ControlsManager {
 	private button2Ready = true
 	private inputState: InputState | undefined
 	public x: number = 0
+	public facing: number = 1
 	constructor(private player: Player) {}
 	update() {
 		this.inputState = getInputState()
 		this.tryJump()
 		this.tryShoot()
-		if (this.player.aerialState.kind === 'grounded') {
-			this.x = this.inputState.moveX
-		}
+		this.x = this.inputState.moveX
 	}
 	private tryJump() {
 		if (!this.inputState?.button1) {
