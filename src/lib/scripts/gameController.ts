@@ -21,6 +21,7 @@ export class GameController {
 		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
 		app.ticker.add((ticker) => {
 			this.game.update(ticker.deltaMS)
+			this.entitiesLayer.update()
 			this.vfxLayer.update(ticker.deltaMS)
 		})
 	}

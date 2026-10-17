@@ -14,8 +14,8 @@ export class Game {
 	constructor() {
 		this.player = new Player(this)
 	}
-	get entities(): GameEntity[] {
-		return [this.player]
+	get activeEntites(): GameEntity[] {
+		return [this.player].filter((e) => e.isActive)
 	}
 	get levels(): LevelDef[] {
 		return []
@@ -38,6 +38,7 @@ export class Game {
 	}
 
 	beginLevel() {
+		this.player.position = this.level!.playerSpawnPosition
 		this.player.isActive = true
 		this.playing = true
 	}

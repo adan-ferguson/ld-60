@@ -15,7 +15,7 @@ const DIAMOND_ROTATION = Math.PI
 
 export function playerSpawnAnimation(options: Options) {
 	const gfx = new Graphics()
-	const targetXY = XY.scale(options.targetPosition, Consts.TILE_SIZE_PX)
+	const targetXY = options.targetPosition
 	gfx.x = Consts.GAME_WIDTH / 2
 	gfx.y = Consts.GAME_HEIGHT / 2
 	return new VfxAnimation(gfx, {
