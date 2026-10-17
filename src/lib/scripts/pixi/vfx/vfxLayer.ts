@@ -2,17 +2,17 @@ import { Container } from 'pixi.js'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 
 export class VfxLayer extends Container {
+	private animations: Set<VfxAnimation> = new Set()
 	addAnimation(animation: VfxAnimation) {
-		this.addChild(animation)
+		this.animations.add(animation)
+		this.addChild(animation.pixiEl)
 	}
 	update(deltaMS: number) {
-		const children = [...this.children]
-		for (const child of children) {
-			if (child instanceof VfxAnimation) {
-				child.update(deltaMS)
-				if (child.isFinished) {
-					this.removeChild(child)
-				}
+		for (const animation of [...this.animations]) {
+			animation.update(deltaMS)
+			if (animation.isFinished) {
+				this.removeChild(animation.pixiEl)
+				this.animations.delete(animation)
 			}
 		}
 	}

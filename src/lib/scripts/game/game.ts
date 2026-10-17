@@ -38,7 +38,7 @@ export class Game {
 	}
 
 	beginLevel() {
-		this.player.spawn()
+		this.player.isActive = true
 		this.playing = true
 	}
 }

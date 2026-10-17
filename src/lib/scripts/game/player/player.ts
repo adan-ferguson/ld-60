@@ -2,7 +2,8 @@ import type { Game } from '#lib/scripts/game/game.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import { Container } from 'pixi.js'
+import type { Container } from 'pixi.js'
+import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 
 export type AerialState =
 	| {
@@ -55,8 +56,7 @@ export class Player extends GameEntity {
 		return true // TODO: implement ground detection
 	}
 	shoot() {}
-
-	spawn() {
-		this.pixiElement = new Container() // Or whatever
+	createPixiEl(): Container {
+		return new PlayerEl(this)
 	}
 }

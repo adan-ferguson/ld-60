@@ -30,7 +30,7 @@ export class GameController {
 		// this.soundManager.setMusic('spawn')
 		this.vfxLayer.addAnimation(
 			playerSpawnAnimation({
-				position: level.playerSpawnPosition,
+				targetPosition: level.playerSpawnPosition,
 				onFinished: () => {
 					// this.soundManager.setMusic('gameplay')
 					this.game.beginLevel()

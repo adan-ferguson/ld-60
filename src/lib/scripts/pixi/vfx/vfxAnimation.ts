@@ -6,12 +6,14 @@ type Options = {
 	durationMS: number
 }
 
-export class VfxAnimation extends Container {
+export class VfxAnimation {
 	timeMS = 0
 	isFinished = false
 	options: Options
-	constructor(options: Partial<Options>) {
-		super()
+	constructor(
+		public pixiEl: Container,
+		options: Partial<Options>,
+	) {
 		this.options = {
 			draw: () => {},
 			finished: () => {},
@@ -20,6 +22,9 @@ export class VfxAnimation extends Container {
 		}
 	}
 	update(deltaMS: number) {
+		if (this.isFinished) {
+			return
+		}
 		this.timeMS += Math.min(this.options.durationMS, deltaMS)
 		this.options.draw(this.timeMS / this.options.durationMS)
 		if (this.timeMS >= this.options.durationMS) {
