@@ -4,7 +4,7 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 
 export class LevelInstance {
-	public tiles: XYMap<TileDef>
+	tiles: XYMap<TileDef>
 	constructor(game: Game, levelDef: LevelDef) {
 		this.tiles = TileDef.parseLevel(levelDef.tiles)
 	}
