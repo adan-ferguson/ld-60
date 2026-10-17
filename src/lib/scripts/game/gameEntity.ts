@@ -9,6 +9,7 @@ export abstract class GameEntity {
 	public y: number = 0
 	public velX: number = 0
 	public velY: number = 0
+	public facing: number = 1
 	protected constructor(protected game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(): GameEntityEl

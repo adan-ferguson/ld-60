@@ -1,16 +1,18 @@
 import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Player } from '#lib/scripts/game/player/player.ts'
-import { Graphics } from 'pixi.js'
+import { type AnimatedSprite, Graphics } from 'pixi.js'
 
 export class PlayerEl extends GameEntityEl {
-	private gfx: Graphics
+	private readonly sprite: AnimatedSprite
 	constructor(private player: Player) {
 		super(player)
-		this.addChild((this.gfx = new Graphics()))
+		this.sprite = createAnimation('player', 'player-idle-', {
+			animationSpeed: 0.1,
+		})
+		this.sprite.anchor.set(0.5)
+		this.addChild(this.sprite)
 	}
 	draw() {
-		this.gfx.clear()
-		const { x, y, width, height } = this.player.localBounds
-		this.gfx.rect(x, y, width, height).fill('blue')
+		this.sprite.scale.x = Math.sign(this.player.facing)
 	}
 }
