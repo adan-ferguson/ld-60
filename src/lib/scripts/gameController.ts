@@ -6,13 +6,14 @@ import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
 import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
-import { isHighScore } from '#lib/scripts/game/highScores.ts'
+import { addHighScore, isHighScore } from '#lib/scripts/game/highScores.ts'
 
 export type ScreenPhase =
 	| { kind: 'prewave'; wave: number }
 	| { kind: 'wave' }
 	| {
 			kind: 'postwave'
+			wave: number
 			bonuses: Bonuses
 	  }
 	| {
@@ -31,6 +32,7 @@ export class GameController {
 	public stopped = CoolEvents.createHandler()
 	public updated = CoolEvents.createHandler<(delta: number) => void>()
 	public phaseChanged = CoolEvents.createHandler<(phase: ScreenPhase) => void>()
+	private waveCleared = false
 	static setup(app: Application) {
 		return new GameController(app)
 	}
@@ -59,9 +61,12 @@ export class GameController {
 	startGame(wave: number = 1) {
 		this.game = new Game(wave)
 		this.game.playerDied.listen(() => {
-			const gameOver = !this.game?.lives
 			setTimeout(() => {
-				if (gameOver) {
+				if (this.waveCleared || !this.game) {
+					return
+				}
+				this.game.lives--
+				if (!this.game.lives) {
 					this.gameOver()
 				} else {
 					this.preWave()
@@ -69,12 +74,14 @@ export class GameController {
 			}, 2400)
 		})
 		this.game.waveCleared.listen((bonuses) => {
+			this.waveCleared = true
 			setTimeout(() => {
 				if (!this.game) {
 					return
 				}
 				this.setScreenPhase({
 					kind: 'postwave',
+					wave: this.game.wave,
 					bonuses,
 				})
 				this.game.score += bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus
@@ -90,6 +97,7 @@ export class GameController {
 	gameOver() {
 		const score = this.game?.score ?? 0
 		this.setScreenPhase({ kind: 'gameover', score, isHighScore: isHighScore(score) })
+		addHighScore(score)
 		setTimeout(() => {
 			this.stopped.emit()
 			this.vfxLayer.clear()
@@ -116,6 +124,7 @@ export class GameController {
 		if (!this.game) {
 			throw 'No game'
 		}
+		this.waveCleared = false
 		this.setScreenPhase({ kind: 'wave' })
 		const level = this.game.level!
 		this.terrainLayer.setLevel(level)

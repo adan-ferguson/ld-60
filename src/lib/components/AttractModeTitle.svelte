@@ -32,7 +32,7 @@
 
 </script>
 
-<div class="size-full main">
+<div class="cover-everything main">
   {#if showScoreboard}
     <div class="cover-everything">
       <div>Top Cquabllers</div>

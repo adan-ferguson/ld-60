@@ -49,10 +49,6 @@ class Game {
 	constructor(wave: number = 1) {
 		this.player = new Player(this)
 		this.player.destroyed.listen(() => {
-			if (this.waveClearedEmitted) {
-				return // it's fine
-			}
-			this.lives--
 			this.playerDied.emit(this.lives)
 		})
 		this.player.isActive = false
