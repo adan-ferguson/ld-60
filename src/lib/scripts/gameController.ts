@@ -30,8 +30,8 @@ export class GameController {
 			this.hudLayer.update(delta)
 		})
 	}
-	setLevel(levelId: string) {
-		const level = this.game.setLevel(levelId)
+	setLevel(wave: number) {
+		const level = this.game.setWave(wave)
 		this.terrainLayer.setLevel(level)
 		// this.soundManager.setMusic('spawn')
 		this.vfxLayer.addAnimation(

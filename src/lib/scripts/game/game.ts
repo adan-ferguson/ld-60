@@ -1,4 +1,3 @@
-import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 import { LevelsManager } from '#lib/scripts/game/levelsManager.ts'
 import { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
@@ -12,6 +11,8 @@ class Game {
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
+	wave = 1
+	score = 0
 	private get turretShotInterval() {
 		return 4 // TODO: scale up with round time and level
 	}
@@ -25,15 +26,9 @@ class Game {
 	get activeEntites(): GameEntity[] {
 		return [this.player, ...this.entitiesManager.entities].filter((e) => e.isActive)
 	}
-	get levels(): LevelDef[] {
-		return []
-	}
-	setLevel(levelId: string) {
-		const lvl = LevelsManager.instance.levels.get(levelId)
-		if (!lvl) {
-			throw new Error(`Level ${levelId} not found`)
-		}
-		this.level = new LevelInstance(this, lvl)
+	setWave(wave: number) {
+		const lvl = LevelsManager.instance.getWave(wave)
+		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		this.entitiesManager.setLevel(this.level)
 		return this.level
 	}
