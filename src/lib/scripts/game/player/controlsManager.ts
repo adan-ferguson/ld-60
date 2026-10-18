@@ -37,4 +37,13 @@ export class ControlsManager {
 		this.button1Ready = false
 		this.player.shoot()
 	}
+
+	reset() {
+		this.button1Ready = true
+		this.button2Ready = true
+		this.inputState = undefined
+		this.x = 0
+		this.y = 0
+		this.facing = 1
+	}
 }

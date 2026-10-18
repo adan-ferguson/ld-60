@@ -134,4 +134,13 @@ export class Player extends GameEntity {
 			this.velY = 0
 		}
 	}
+
+	resetState() {
+		this.velX = 0
+		this.velY = 0
+		this.aerialState = { kind: 'grounded' }
+		this.shotCooldown = 0
+		this.facing = 1
+		this.controlsManager.reset()
+	}
 }

@@ -49,6 +49,9 @@ class Game {
 	constructor(wave: number = 1) {
 		this.player = new Player(this)
 		this.player.destroyed.listen(() => {
+			if (this.waveClearedEmitted) {
+				return // it's fine
+			}
 			this.lives--
 			this.playerDied.emit(this.lives)
 		})
@@ -103,9 +106,8 @@ class Game {
 	}
 	beginLevel() {
 		this.entitiesManager.reset()
+		this.player.resetState()
 		this.player.position = this.level!.playerSpawnPosition
-		this.player.velX = 0
-		this.player.velY = 0
 		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true
