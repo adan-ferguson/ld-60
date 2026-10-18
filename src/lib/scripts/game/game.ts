@@ -4,6 +4,8 @@ import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 
+const EXTRA_LIFE = 25000
+
 class Game {
 	public level: LevelInstance | undefined
 	player: Player
@@ -11,18 +13,31 @@ class Game {
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
+	lives = 3
 	wave = 1
-	score = 0
+	#score = 0
+	get score() {
+		return this.#score
+	}
+	set score(value: number) {
+		const extraLivesBefore = Math.floor(this.#score / EXTRA_LIFE)
+		const extraLivesAfter = Math.floor(value / EXTRA_LIFE)
+		if (extraLivesAfter > extraLivesBefore) {
+			this.lives += extraLivesAfter - extraLivesBefore
+		}
+		this.#score = value
+	}
 	private get turretShotInterval() {
 		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.5)
 	}
 	static async load() {
 		return new Game()
 	}
-	constructor() {
+	constructor(wave: number = 1) {
 		this.player = new Player(this)
 		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
+		this.setWave(wave)
 	}
 	get activeEntites(): GameEntity[] {
 		return [this.player, ...this.entitiesManager.entities].filter((e) => e.isActive)

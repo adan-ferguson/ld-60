@@ -48,7 +48,7 @@
       <img src="/assets/sprites/man-icon.png" alt="Lives">
       {scoreDisplay}
     </div>
-    <div>
+    <div style:font-size="2cqh">
       Khananaphone Electronics Co., Ltd.
     </div>
   </div>
@@ -76,7 +76,7 @@
     position: absolute;
     left: 5cqh;
     right: 5cqh;
-    bottom: 1.5cqh;
+    bottom: 1cqh;
 
     display: flex;
     flex-direction: row;

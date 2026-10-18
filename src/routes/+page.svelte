@@ -13,6 +13,9 @@
 
   onMount(async () => {
     gc = await initGame(canvas)
+    gc.started.listen(() => {
+      started = true
+    })
   })
 
 </script>
