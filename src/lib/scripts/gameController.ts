@@ -79,6 +79,9 @@ export class GameController {
 				})
 				this.game.score += bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus
 				this.game.nextWave()
+				setTimeout(() => {
+					this.preWave()
+				}, 2500)
 			}, 2000)
 		})
 		this.started.emit()
