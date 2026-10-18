@@ -34,8 +34,8 @@ export class Player extends GameEntity {
 	}
 	get hurtboxBounds() {
 		return new Rectangle(
-			this.worldBounds.x,
-			this.worldBounds.y,
+			this.worldBounds.x + this.worldBounds.width / 4,
+			this.worldBounds.y + this.worldBounds.height / 4,
 			this.worldBounds.width / 2,
 			this.worldBounds.height / 2,
 		)

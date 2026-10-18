@@ -9,9 +9,6 @@ export class ManEl extends WithManSprite {
 	) {
 		super(gc, man)
 		this.setAnimation('idle')
-	}
-
-	private getAnimation(): PlayerAnimation {
-		return 'idle'
+		this.sprite.tint = 'red'
 	}
 }

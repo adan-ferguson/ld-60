@@ -14,6 +14,7 @@ export class Man extends Enemy {
 	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
+		this.y -= 2
 	}
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ManEl(gc, this)

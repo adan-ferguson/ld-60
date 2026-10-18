@@ -51,7 +51,6 @@ export class LevelInstance {
 		return enemySpawns
 	}
 	getTreasureSpawnPosition() {
-		debugger
 		const treasures = this.tiles.values.filter((t) => t.type === 'treasure')
 		const xy = Random.chooseOne(treasures)?.tileXY ?? { x: 0, y: 0 }
 		return TileDef.toWorldXY(xy)

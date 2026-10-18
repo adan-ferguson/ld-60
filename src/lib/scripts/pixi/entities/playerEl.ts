@@ -19,7 +19,6 @@ export class WithManSprite extends GameEntityEl {
 			this.addChild(this.sprite)
 		}
 		this.currentAnimation = animation
-		this.sprite.tint = 'cyan'
 		this.sprite.textures = spritesheet.animations[animation]!
 		this.sprite.anchor.set(0.5)
 		if (animation == 'throw') {
@@ -40,6 +39,7 @@ export class PlayerEl extends WithManSprite {
 	) {
 		super(gc, player)
 		this.setAnimation('idle')
+		this.sprite.tint = 'cyan'
 		this.zIndex = 1
 		player.destroyed.listen(() => {
 			gc.vfxLayer.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))

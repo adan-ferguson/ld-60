@@ -27,7 +27,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 export const Level004: LevelDef = {
 	id: '001',
-	displayName: 'Level 1',
+	displayName: 'Level 4',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x1............................1x
