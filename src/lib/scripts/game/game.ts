@@ -67,7 +67,7 @@ class Game {
 	setWave(wave: number) {
 		const lvl = LevelsManager.instance.getWave(wave)
 		this.wave = wave
-		this.level = new LevelInstance(this, lvl.def, 1) //lvl.loops)
+		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		return this.level
 	}
 	update(delta: number) {
