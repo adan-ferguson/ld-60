@@ -9,6 +9,9 @@ export class EntitiesLayer extends Container {
 		super()
 	}
 	update() {
+		if (!this.gc.game) {
+			return
+		}
 		for (const entity of this.gc.game.activeEntites) {
 			if (!this.onScreen.has(entity)) {
 				const pixiEl = entity.createPixiEl(this.gc)

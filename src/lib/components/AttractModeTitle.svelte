@@ -2,30 +2,40 @@
 
   import {onMount} from 'svelte'
   import {Random} from '#lib/scripts/utils/random.ts'
+  import {getHighScores} from '#lib/scripts/game/highScores.ts'
 
-  let crazyPoints = $state<HTMLSpanElement>()
   let creditsText = $state("Credits 999")
   let showText = $state(false)
+  let showScoreboard = $state(false)
+  let attractModeState = $state(0)
 
   onMount(() => {
     const i = setInterval(() => {
-      if(crazyPoints){
-        crazyPoints.style.color = randomColor()
+      // TODO: this sucks
+      const crazyText = document.querySelector('.crazy-text') as HTMLSpanElement
+      if(crazyText){
+        crazyText.style.color = randomColor()
       }
     }, 0)
     const j = setInterval(() => {
-      if(creditsText !== "Press Start"){
+      attractModeState++
+      attractModeState %= 2
+      if(attractModeState == 0){
         creditsText = "Press Start"
-      } else {
+      }else if(attractModeState == 1){
         creditsText = "Credits 999"
       }
     }, 2000)
     setTimeout(() => {
       showText = true
     }, 1000)
+    const k = setInterval(() => {
+      showScoreboard = !showScoreboard
+    }, 10000)
     return () => {
       clearInterval(i)
       clearInterval(j)
+      clearInterval(k)
     }
   })
 
@@ -36,24 +46,35 @@
 
 </script>
 
-<div class="size-full main">
-  <div class="logo-window">
-    <img
-      class="logo"
-      src="/assets/logo.png"
-      alt="Khananaphone Electronics"
-    />
+{#if showScoreboard}
+  <div class="scores">
+    <div>Top Cquabllers</div>
+    <ol>
+      {#each getHighScores() as score, i (i)}
+        <li class:crazy-text={i == 0}>{score}</li>
+      {/each}
+    </ol>
   </div>
-  {#if showText}
-    <div class="copy">
-      <p>PRESENTED BY:</p>
-      <p>KHANANAPHONE ELECTRONICS INC. LTD</p>
-      <p>EXTRA CQUABBLER EVERY <span bind:this={crazyPoints}>25000 POINTS</span></p>
-      <p>(C) 1986 KHANANAPHONE ELECTRONICS INC. LTD</p>
+{:else}
+  <div class="size-full main">
+    <div class="logo-window">
+      <img
+        class="logo"
+        src="/assets/logo.png"
+        alt="Khananaphone Electronics"
+      />
     </div>
-    <div class="credits">{creditsText}</div>
-  {/if}
-</div>
+    {#if showText}
+      <div class="copy">
+        <p>PRESENTED BY:</p>
+        <p>KHANANAPHONE ELECTRONICS INC. LTD</p>
+        <p>EXTRA CQUABBLER EVERY <span class="crazy-text">25000 POINTS</span></p>
+        <p>(C) 1986 KHANANAPHONE ELECTRONICS INC. LTD</p>
+      </div>
+      <div class="credits">{creditsText}</div>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .main {
