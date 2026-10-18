@@ -19,7 +19,10 @@
         creditsText = "Credits 999"
       }
     }, 2000)
-    return () => clearInterval(i)
+    return () => {
+      clearInterval(i)
+      clearInterval(j)
+    }
   })
 
   function randomColor(){
