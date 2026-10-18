@@ -23,7 +23,7 @@ export async function initPixiApp(
 		canvas,
 		powerPreference: 'high-performance',
 		...options,
-		roundPixels: true,
+		// roundPixels: true,
 	})
 	await initDevtools({ app })
 	return app

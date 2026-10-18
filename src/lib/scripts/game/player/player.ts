@@ -1,4 +1,4 @@
-import type { Game } from '#lib/scripts/game/game.ts'
+import Game from '#lib/scripts/game/game.ts'
 import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
@@ -14,13 +14,13 @@ export type AerialState =
 			doubleJumpUsed: boolean
 	  }
 
-const JUMP_VELOCITY = 62
+const JUMP_VELOCITY = 65
 const X_VELOCITY = 24
-const GRAVITY = 110
+const GRAVITY = 125
 const MAX_FALL_SPEED = 200
 const WIDTH = 8
 const HEIGHT = 12
-const SHOT_COOLDOWN = 0.3
+const SHOT_COOLDOWN = 0.25
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
@@ -51,7 +51,7 @@ export class Player extends GameEntity {
 			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
 				this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
-				this.velY = 0
+				this.velX = 0
 			}
 		}
 		this.controlsManager.update()

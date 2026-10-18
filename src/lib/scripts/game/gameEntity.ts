@@ -1,20 +1,24 @@
-import type { Game } from '#lib/scripts/game/game.ts'
+import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Rectangle } from 'pixi.js'
 
 export abstract class GameEntity {
 	public isActive = true
-	public x: number = 0
-	public y: number = 0
-	public velX: number = 0
-	public velY: number = 0
-	public facing: number = 1
+	public x = 0
+	public y = 0
+	public velX = 0
+	public velY = 0
+	public facing = 1
+	private damageTaken = 0
 	protected constructor(protected game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(): GameEntityEl
 	public abstract get width(): number
 	public abstract get height(): number
+	public get maxHealth(): number {
+		return 1
+	}
 
 	public get worldBounds(): Rectangle {
 		return new Rectangle(
@@ -42,5 +46,13 @@ export abstract class GameEntity {
 	protected move(delta: number) {
 		this.x += this.velX * delta
 		this.y += this.velY * delta
+	}
+
+	public takeDamage(amount: number) {
+		this.damageTaken += amount
+		if (this.damageTaken >= this.maxHealth) {
+			this.isActive = false
+			// todo: particles
+		}
 	}
 }

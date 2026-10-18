@@ -1,5 +1,5 @@
 import type { Application } from 'pixi.js'
-import { Game } from '#lib/scripts/game/game.ts'
+import Game from '#lib/scripts/game/game.ts'
 import { EntitiesLayer } from '#lib/scripts/pixi/entities/entitiesLayer.ts'
 import { TerrainLayer } from '#lib/scripts/pixi/terrain/terrainLayer.ts'
 import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'

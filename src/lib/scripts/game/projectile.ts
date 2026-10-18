@@ -1,7 +1,7 @@
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
-import type { Game } from '#lib/scripts/game/game.ts'
+import Game from '#lib/scripts/game/game.ts'
 import type { ColorSource } from 'pixi.js'
 
 export type ProjectileStyle = 'small' | 'large'
@@ -25,8 +25,8 @@ export class Projectile extends GameEntity {
 		public options: Options,
 	) {
 		super(game)
-		this.x = Math.round(options.x)
-		this.y = Math.round(options.y)
+		this.x = options.x
+		this.y = options.y
 		this.velX = options.velX
 		this.velY = options.velY
 	}
@@ -34,6 +34,16 @@ export class Projectile extends GameEntity {
 		this.time += delta
 		if (this.time > this.options.lifetime) {
 			this.isActive = false
+		}
+		if (this.options.source === 'player') {
+			const target = this.game.entitiesManager.enemies.find((enemy) =>
+				enemy.worldBounds.intersects(this.worldBounds),
+			)
+			if (target) {
+				target.takeDamage(1)
+				this.isActive = false
+				// todo: particles
+			}
 		}
 	}
 	public createPixiEl(): GameEntityEl {

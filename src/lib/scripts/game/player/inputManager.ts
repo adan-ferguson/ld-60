@@ -8,7 +8,6 @@ export type InputState = {
 }
 
 const keysDown = new Set<string>()
-let gamepad: Gamepad | undefined
 
 if (browser) {
 	window.addEventListener('keydown', (e) => {
@@ -25,10 +24,10 @@ if (browser) {
 		keysDown.delete(e.code)
 		e.preventDefault()
 	})
-	gamepad = navigator.getGamepads().find(Boolean) ?? undefined
 }
 
 export function getInputState(): InputState {
+	const gamepad = navigator.getGamepads().find(Boolean) ?? undefined
 	const stickX = digitalAxis(gamepad?.axes[0] ?? 0)
 	const stickY = digitalAxis(gamepad?.axes[1] ?? 0)
 	const moveLeft =
@@ -52,9 +51,9 @@ export function getInputState(): InputState {
 		gamepad?.buttons[13]?.pressed ||
 		stickY === 1
 	const button1 =
-		keysDown.has('KeyZ') || keysDown.has('KeyI') || gamepad?.buttons[0]?.pressed || false
+		keysDown.has('KeyZ') || keysDown.has('KeyI') || gamepad?.buttons[2]?.pressed || false
 	const button2 =
-		keysDown.has('KeyX') || keysDown.has('KeyO') || gamepad?.buttons[1]?.pressed || false
+		keysDown.has('KeyX') || keysDown.has('KeyO') || gamepad?.buttons[0]?.pressed || false
 	return {
 		moveX: (moveRight ? 1 : 0) - (moveLeft ? 1 : 0),
 		moveY: (moveDown ? 1 : 0) - (moveUp ? 1 : 0),

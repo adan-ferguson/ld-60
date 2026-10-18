@@ -7,7 +7,8 @@ export type TileDef = {
 	type: TileType
 }
 
-export type TileType = 'wall' | 'spawn'
+export type TileType = 'wall' | 'spawn' | 'turret' | 'man'
+export type EnemyType = 'turret' | 'man'
 
 function parseLevel(levelTiles: string) {
 	const rows = levelTiles.split('\n').filter((line) => line.trim().length > 0)
@@ -58,6 +59,12 @@ function getTileType(char: string): TileType | null {
 	}
 	if (char == 'S') {
 		return 'spawn'
+	}
+	if (char == '1') {
+		return 'turret'
+	}
+	if (char == '2') {
+		return 'man'
 	}
 	throw new Error(`Invalid character in tiles: ${char}`)
 }

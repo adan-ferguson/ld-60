@@ -4,6 +4,7 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 export abstract class GameEntityEl extends Container {
 	constructor(protected entity: GameEntity) {
 		super()
+		this.zIndex = 0
 	}
 	public update() {
 		this.x = Math.round(this.entity.x)

@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js'
-import type { Game } from '#lib/scripts/game/game.ts'
+import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 

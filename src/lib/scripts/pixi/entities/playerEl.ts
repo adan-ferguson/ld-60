@@ -10,6 +10,7 @@ export class PlayerEl extends GameEntityEl {
 	constructor(private player: Player) {
 		super(player)
 		this.setAnimation('idle')
+		this.zIndex = 1
 	}
 	draw() {
 		const nextAnimation = this.getAnimation()
@@ -49,7 +50,7 @@ export class PlayerEl extends GameEntityEl {
 		this.sprite.anchor.set(0.5)
 		if (animation == 'throw') {
 			this.sprite.animationSpeed = 0.18
-			this.sprite.loop = true
+			this.sprite.loop = false
 		} else {
 			this.sprite.animationSpeed = 0.12
 			this.sprite.loop = true
