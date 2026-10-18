@@ -4,11 +4,36 @@ import { AnimatedSprite, Assets, Spritesheet } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 
-type PlayerAnimation = 'idle' | 'jump' | 'run' | 'fall' | 'throw'
+export type PlayerAnimation = 'idle' | 'jump' | 'run' | 'fall' | 'throw'
 
-export class PlayerEl extends GameEntityEl {
-	private sprite!: AnimatedSprite
-	private currentAnimation: PlayerAnimation = 'idle'
+export class WithManSprite extends GameEntityEl {
+	protected sprite!: AnimatedSprite
+	protected currentAnimation: PlayerAnimation = 'idle'
+	protected setAnimation(animation: PlayerAnimation) {
+		const spritesheet = Assets.get<Spritesheet>('man-spritesheet')
+		if (!spritesheet) {
+			throw new Error('The man spritesheet has not been loaded')
+		}
+		if (!this.sprite) {
+			this.sprite = new AnimatedSprite(spritesheet.animations[animation]!)
+			this.addChild(this.sprite)
+		}
+		this.currentAnimation = animation
+		this.sprite.tint = 'cyan'
+		this.sprite.textures = spritesheet.animations[animation]!
+		this.sprite.anchor.set(0.5)
+		if (animation == 'throw') {
+			this.sprite.animationSpeed = 0.18
+			this.sprite.loop = false
+		} else {
+			this.sprite.animationSpeed = 0.12
+			this.sprite.loop = true
+		}
+		this.sprite.play()
+	}
+}
+
+export class PlayerEl extends WithManSprite {
 	constructor(
 		gc: GameController,
 		private player: Player,
@@ -41,28 +66,5 @@ export class PlayerEl extends GameEntityEl {
 			return 'run'
 		}
 		return 'idle'
-	}
-
-	private setAnimation(animation: PlayerAnimation) {
-		const spritesheet = Assets.get<Spritesheet>('man-spritesheet')
-		if (!spritesheet) {
-			throw new Error('The man spritesheet has not been loaded')
-		}
-		if (!this.sprite) {
-			this.sprite = new AnimatedSprite(spritesheet.animations[animation]!)
-			this.addChild(this.sprite)
-		}
-		this.currentAnimation = animation
-		this.sprite.tint = 'cyan'
-		this.sprite.textures = spritesheet.animations[animation]!
-		this.sprite.anchor.set(0.5)
-		if (animation == 'throw') {
-			this.sprite.animationSpeed = 0.18
-			this.sprite.loop = false
-		} else {
-			this.sprite.animationSpeed = 0.12
-			this.sprite.loop = true
-		}
-		this.sprite.play()
 	}
 }

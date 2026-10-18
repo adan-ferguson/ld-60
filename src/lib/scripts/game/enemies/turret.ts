@@ -30,9 +30,6 @@ export class Turret extends Enemy {
 	get score(): number {
 		return 1000
 	}
-	public get maxHealth(): number {
-		return this.game.loops
-	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
 	}

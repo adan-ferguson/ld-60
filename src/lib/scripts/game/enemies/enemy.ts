@@ -1,7 +1,9 @@
-import { type EnemyType, TileDef } from '#lib/scripts/game/tileDef.ts'
+import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import Game from '#lib/scripts/game/game.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
+
+export type EnemyType = 'turret' | 'man'
 
 export type EnemySpawnDef = {
 	tileXY: XY

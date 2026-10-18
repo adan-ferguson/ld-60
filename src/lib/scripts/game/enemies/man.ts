@@ -2,24 +2,31 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
+import type { GameController } from '#lib/scripts/gameController.ts'
+import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 
 export class Man extends Enemy {
 	get score(): number {
-		throw new Error('Method not implemented.')
+		return 1000
+	}
+	public get maxHealth(): number {
+		return 2 + this.game.loops
 	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
 	}
-	createPixiEl(): GameEntityEl {
-		throw new Error('Method not implemented.')
+	createPixiEl(gc: GameController): GameEntityEl {
+		return new ManEl(gc, this)
 	}
 	get height(): number {
-		throw new Error('Method not implemented.')
+		return 12
 	}
 	update2(delta: number): void {
-		throw new Error('Method not implemented.')
+		if (this.worldBounds.intersects(this.game.player.hurtboxBounds)) {
+			this.game.player.takeDamage(1)
+		}
 	}
 	get width(): number {
-		throw new Error('Method not implemented.')
+		return 8
 	}
 }
