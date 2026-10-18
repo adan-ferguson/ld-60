@@ -14,7 +14,7 @@ function parseLevel(levelTiles: string) {
 	const rows = levelTiles.split('\n').filter((line) => line.trim().length > 0)
 	if (rows.length !== Consts.TILES_Y) {
 		throw new Error(
-			`Invalid number of rows in tiles. Expected ${Consts.TILES_Y - 2}, got ${rows.length}`,
+			`Invalid number of rows in tiles. Expected ${Consts.TILES_Y}, got ${rows.length}`,
 		)
 	}
 	const parsed: XYMap<TileDef> = new XYMap()
@@ -23,7 +23,7 @@ function parseLevel(levelTiles: string) {
 		const row = rows[y]!
 		if (row.length !== Consts.TILES_X) {
 			throw new Error(
-				`Invalid number of columns in tiles. Expected ${Consts.TILES_X - 2}, got ${row.length}`,
+				`Invalid number of columns in tiles. Expected ${Consts.TILES_X}, got ${row.length}`,
 			)
 		}
 		for (let x = 0; x < row.length; x++) {
@@ -57,7 +57,7 @@ function getTileType(char: string): TileType | null {
 	if (char == 'x') {
 		return 'wall'
 	}
-	if (char == 'S') {
+	if (char == 's') {
 		return 'spawn'
 	}
 	if (char == '1') {
@@ -66,7 +66,7 @@ function getTileType(char: string): TileType | null {
 	if (char == '2') {
 		return 'man'
 	}
-	if (char == 'R') {
+	if (char == 'r') {
 		return 'lava'
 	}
 	throw new Error(`Invalid character in tiles: ${char}`)

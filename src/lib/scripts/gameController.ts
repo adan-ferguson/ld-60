@@ -4,12 +4,14 @@ import { EntitiesLayer } from '#lib/scripts/pixi/entities/entitiesLayer.ts'
 import { TerrainLayer } from '#lib/scripts/pixi/terrain/terrainLayer.ts'
 import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
 import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
+import { HudLayer } from '#lib/scripts/pixi/hudLayer.ts'
 
 export class GameController {
 	public game: Game
 	private terrainLayer: TerrainLayer
 	private entitiesLayer: EntitiesLayer
 	public vfxLayer: VfxLayer
+	private hudLayer: HudLayer
 	static setup(app: Application) {
 		return new GameController(app)
 	}
@@ -18,12 +20,14 @@ export class GameController {
 		this.terrainLayer = new TerrainLayer()
 		this.entitiesLayer = new EntitiesLayer(this)
 		this.vfxLayer = new VfxLayer()
-		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
+		this.hudLayer = new HudLayer(this)
+		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer, this.hudLayer)
 		app.ticker.add((ticker) => {
 			const delta = ticker.deltaMS / 1000
 			this.game.update(delta)
 			this.entitiesLayer.update()
 			this.vfxLayer.update(delta)
+			this.hudLayer.update(delta)
 		})
 	}
 	setLevel(levelId: string) {

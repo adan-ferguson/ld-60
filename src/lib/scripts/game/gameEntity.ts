@@ -42,8 +42,22 @@ export abstract class GameEntity {
 	}
 
 	public update(delta: number) {
+		if (!this.isActive) {
+			return
+		}
 		this.update2(delta)
 		this.move(delta)
+		this.checkHazards()
+	}
+
+	protected checkHazards() {
+		const terrainCollision = this.game.level?.terrainCollision
+		if (!terrainCollision || !this.isActive) {
+			return
+		}
+		if (terrainCollision.overlapsLava(this.worldBounds)) {
+			this.takeDamage(this.maxHealth)
+		}
 	}
 
 	protected move(delta: number) {
@@ -52,6 +66,9 @@ export abstract class GameEntity {
 	}
 
 	public takeDamage(amount: number) {
+		if (!this.isActive) {
+			return
+		}
 		this.damageTaken += amount
 		if (this.damageTaken >= this.maxHealth) {
 			this.destroyed.emit()

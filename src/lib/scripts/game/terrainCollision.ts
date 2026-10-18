@@ -37,6 +37,10 @@ export class TerrainCollision {
 		})
 	}
 
+	overlapsLava(body: Body): boolean {
+		return this.overlapsTileType(body, 'lava')
+	}
+
 	resolveMovement(body: Body, deltaX: number, deltaY: number): MovementResult {
 		const horizontal = this.resolveAxis(body, 'x', deltaX)
 
@@ -127,6 +131,10 @@ export class TerrainCollision {
 	}
 
 	private overlapsSolid(body: Body): boolean {
+		return this.overlapsTileType(body, 'wall')
+	}
+
+	private overlapsTileType(body: Body, tileType: TileDef['type']): boolean {
 		const left = body.x
 		const right = body.x + body.width
 		const top = body.y
@@ -140,7 +148,9 @@ export class TerrainCollision {
 
 		for (let tileY = minTileY; tileY <= maxTileY; tileY++) {
 			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {
-				if (this.isSolidTile(tileX, tileY)) {
+				const tile = this.tiles.get({ x: tileX, y: tileY })
+
+				if (tile?.type === tileType) {
 					return true
 				}
 			}
