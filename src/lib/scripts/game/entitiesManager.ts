@@ -7,25 +7,26 @@ import { Random } from '#lib/scripts/utils/random.ts'
 
 export class EntitiesManager {
 	public entities: Set<GameEntity> = new Set()
-	private enemyCount = 0
 	constructor(private game: Game) {}
 	get enemies() {
-		return this.entities.values().filter((e) => e instanceof Enemy)
+		return [...this.entities].filter((e) => e instanceof Enemy)
 	}
 	get hasEnemy() {
-		return this.enemyCount > 0
+		for (const entity of this.entities) {
+			if (entity instanceof Enemy && entity.isActive) {
+				return true
+			}
+		}
+
+		return false
 	}
 	spawn(entity: GameEntity) {
 		this.entities.add(entity)
 	}
 	update(delta: number) {
-		this.enemyCount = 0
 		for (const entity of [...this.entities]) {
 			if (entity.isActive) {
 				entity.update(delta)
-				if (entity instanceof Enemy) {
-					this.enemyCount++
-				}
 			} else {
 				this.entities.delete(entity)
 			}

@@ -58,7 +58,7 @@ export class GameController {
 	}
 	startGame(wave: number = 1) {
 		this.game = new Game(wave)
-		this.game.player.destroyed.listen(() => {
+		this.game.playerDied.listen(() => {
 			const gameOver = !this.game?.lives
 			setTimeout(() => {
 				if (gameOver) {
@@ -70,12 +70,15 @@ export class GameController {
 		})
 		this.game.waveCleared.listen((bonuses) => {
 			setTimeout(() => {
+				if (!this.game) {
+					return
+				}
 				this.setScreenPhase({
 					kind: 'postwave',
 					bonuses,
 				})
-				this.game!.score += bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus
-				this.game!.nextWave()
+				this.game.score += bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus
+				this.game.nextWave()
 			}, 2000)
 		})
 		this.started.emit()
@@ -96,6 +99,10 @@ export class GameController {
 		}, 2500)
 	}
 	setScreenPhase(phase: ScreenPhase) {
+		if (!this.game) {
+			return
+		}
+		this.game.playing = false
 		this.screenPhase = phase
 		this.phaseChanged.emit(phase)
 	}
@@ -111,8 +118,11 @@ export class GameController {
 			playerSpawnAnimation({
 				targetPosition: level.playerSpawnPosition,
 				onFinished: () => {
+					if (!this.game) {
+						return
+					}
 					// this.soundManager.setMusic('gameplay')
-					this.game!.beginLevel()
+					this.game.beginLevel()
 				},
 			}),
 		)

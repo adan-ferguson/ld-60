@@ -16,7 +16,7 @@ export type Bonuses = {
 class Game {
 	public level: LevelInstance | undefined
 	player: Player
-	private playing = false
+	playing = false
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
@@ -47,6 +47,7 @@ class Game {
 		this.player = new Player(this)
 		this.player.destroyed.listen(() => {
 			this.lives--
+			this.playerDied.emit(this.lives)
 		})
 		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
@@ -89,6 +90,7 @@ class Game {
 			waveBonus: 1000 * this.wave,
 			arbitraryBonus: Math.round(2000 * Math.random()),
 		})
+		this.waveClearedEmitted = true
 	}
 	beginLevel() {
 		this.entitiesManager.reset()
@@ -96,7 +98,7 @@ class Game {
 		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true
-		this.waveClearedEmitted = true
+		this.waveClearedEmitted = false
 		this.roundTimer = 0
 		this.turretTimer = 0
 	}

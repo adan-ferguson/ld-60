@@ -40,9 +40,9 @@
   {:else if phase.kind === 'postwave'}
     <div class="cover-everything">
       <div>Wave {gc.game.wave} Complete</div>
-      <div>Time Bonus: {phase.timeBonus}</div>
-      <div>Wave Bonus: {phase.waveBonus}</div>
-      <div>Arbitrary Bonus: {phase.arbitraryBonus}</div>
+      <div>Time Bonus: {phase.bonuses.timeBonus}</div>
+      <div>Wave Bonus: {phase.bonuses.waveBonus}</div>
+      <div>Arbitrary Bonus: {phase.bonuses.arbitraryBonus}</div>
     </div>
   {:else if phase.kind === 'gameover'}
     <div class="cover-everything">
