@@ -44,6 +44,7 @@ export class PlayerEl extends GameEntityEl {
 			this.addChild(this.sprite)
 		}
 		this.currentAnimation = animation
+		this.sprite.tint = 'cyan'
 		this.sprite.textures = spritesheet.animations[animation]!
 		this.sprite.anchor.set(0.5)
 		if (animation == 'throw') {

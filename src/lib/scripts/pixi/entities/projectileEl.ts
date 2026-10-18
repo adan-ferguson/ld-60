@@ -27,6 +27,7 @@ export class ProjectileEl extends GameEntityEl {
 			anchor: { x: 0.5, y: 0.5 },
 			scale: { x: proj.options.velX < 0 ? -1 : 1, y: 1 },
 		})
+		this.tint = proj.options.tint
 		this.addChild(sprite)
 	}
 }

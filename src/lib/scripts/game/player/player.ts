@@ -88,6 +88,7 @@ export class Player extends GameEntity {
 				velY: 0,
 				x: this.x + this.facing * 5,
 				y: this.y - 2,
+				tint: 'cyan',
 			}),
 		)
 	}

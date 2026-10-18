@@ -2,6 +2,7 @@ import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import type { Game } from '#lib/scripts/game/game.ts'
+import type { ColorSource } from 'pixi.js'
 
 export type ProjectileStyle = 'small' | 'large'
 
@@ -14,6 +15,7 @@ type Options = {
 	y: number
 	velX: number
 	velY: number
+	tint: ColorSource
 }
 
 export class Projectile extends GameEntity {
@@ -23,8 +25,8 @@ export class Projectile extends GameEntity {
 		public options: Options,
 	) {
 		super(game)
-		this.x = options.x
-		this.y = options.y
+		this.x = Math.round(options.x)
+		this.y = Math.round(options.y)
 		this.velX = options.velX
 		this.velY = options.velY
 	}
