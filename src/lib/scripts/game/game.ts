@@ -3,6 +3,7 @@ import { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
+import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
 const EXTRA_LIFE = 25000
 
@@ -16,6 +17,9 @@ class Game {
 	lives = 3
 	wave = 1
 	#score = 0
+	public playerDied = CoolEvents.createHandler()
+	public waveCleared = CoolEvents.createHandler()
+	private waveFinishEmitted = false
 	get score() {
 		return this.#score
 	}
@@ -35,6 +39,9 @@ class Game {
 	}
 	constructor(wave: number = 1) {
 		this.player = new Player(this)
+		this.player.destroyed.listen(() => {
+			this.lives--
+		})
 		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
 		this.setWave(wave)
@@ -48,7 +55,6 @@ class Game {
 	setWave(wave: number) {
 		const lvl = LevelsManager.instance.getWave(wave)
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
-		this.entitiesManager.setLevel(this.level)
 		return this.level
 	}
 	update(delta: number) {
@@ -63,12 +69,17 @@ class Game {
 			this.entitiesManager.fireRandomTurret()
 			this.turretTimer = 0
 		}
+		if (!this.entitiesManager.hasEnemy && !this.waveFinishEmitted) {
+			this.waveCleared.emit()
+		}
 	}
 	beginLevel() {
+		this.entitiesManager.reset()
 		this.player.position = this.level!.playerSpawnPosition
 		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true
+		this.waveFinishEmitted = true
 		this.roundTimer = 0
 		this.turretTimer = 0
 	}

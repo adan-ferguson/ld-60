@@ -43,12 +43,14 @@ export class GameController {
 		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
 		app.ticker.add((ticker) => {
 			if (!this.game) {
+				app.stage.visible = false
 				const { button1, button2 } = getInputState()
 				if (button1 || button2) {
 					this.startGame()
 				}
 				return
 			}
+			app.stage.visible = true
 			const delta = ticker.deltaMS / 1000
 			this.game.update(delta)
 			this.entitiesLayer.update()
@@ -58,9 +60,18 @@ export class GameController {
 	}
 	startGame(wave: number = 1) {
 		this.game = new Game(wave)
+		this.game.player.destroyed.listen(() => {
+			const gameOver = !this.game?.lives
+			setTimeout(() => {
+				if (gameOver) {
+					this.gameOver()
+				} else {
+					this.preWave()
+				}
+			}, 2400)
+		})
 		this.started.emit()
 		this.preWave()
-		// this.startLevel()
 	}
 	gameOver() {
 		const score = this.game?.score ?? 0

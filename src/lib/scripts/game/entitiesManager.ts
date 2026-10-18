@@ -1,6 +1,5 @@
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { createEnemy } from '#lib/scripts/game/enemies/enemyFactory.ts'
 import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
 import { Turret } from '#lib/scripts/game/enemies/turret.ts'
@@ -8,26 +7,34 @@ import { Random } from '#lib/scripts/utils/random.ts'
 
 export class EntitiesManager {
 	public entities: Set<GameEntity> = new Set()
+	private enemyCount = 0
 	constructor(private game: Game) {}
 	get enemies() {
 		return this.entities.values().filter((e) => e instanceof Enemy)
+	}
+	get hasEnemy() {
+		return this.enemyCount > 0
 	}
 	spawn(entity: GameEntity) {
 		this.entities.add(entity)
 	}
 	update(delta: number) {
+		this.enemyCount = 0
 		for (const entity of [...this.entities]) {
 			if (entity.isActive) {
 				entity.update(delta)
+				if (entity instanceof Enemy) {
+					this.enemyCount++
+				}
 			} else {
 				this.entities.delete(entity)
 			}
 		}
 	}
 
-	setLevel(level: LevelInstance) {
+	reset() {
 		this.entities.clear()
-		level.enemySpawns.forEach((enemySpawnData) => {
+		this.game.level?.enemySpawns.forEach((enemySpawnData) => {
 			this.entities.add(createEnemy(this.game, enemySpawnData))
 		})
 	}
