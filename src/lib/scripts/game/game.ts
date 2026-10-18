@@ -5,7 +5,13 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
-const EXTRA_LIFE = 25000
+const EXTRA_LIFE = 50000
+
+export type Bonuses = {
+	timeBonus: number
+	waveBonus: number
+	arbitraryBonus: number
+}
 
 class Game {
 	public level: LevelInstance | undefined
@@ -18,8 +24,8 @@ class Game {
 	wave = 1
 	#score = 0
 	public playerDied = CoolEvents.createHandler()
-	public waveCleared = CoolEvents.createHandler()
-	private waveFinishEmitted = false
+	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
+	private waveClearedEmitted = false
 	get score() {
 		return this.#score
 	}
@@ -52,8 +58,12 @@ class Game {
 	get loops() {
 		return this.level?.loops ?? 1
 	}
+	nextWave() {
+		this.setWave(this.wave + 1)
+	}
 	setWave(wave: number) {
 		const lvl = LevelsManager.instance.getWave(wave)
+		this.wave = wave
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		return this.level
 	}
@@ -69,9 +79,16 @@ class Game {
 			this.entitiesManager.fireRandomTurret()
 			this.turretTimer = 0
 		}
-		if (!this.entitiesManager.hasEnemy && !this.waveFinishEmitted) {
-			this.waveCleared.emit()
+		if (!this.entitiesManager.hasEnemy && !this.waveClearedEmitted) {
+			this.waveClear()
 		}
+	}
+	waveClear() {
+		this.waveCleared.emit({
+			timeBonus: Math.max(0, 6000 - Math.round(this.roundTimer * 100)),
+			waveBonus: 1000 * this.wave,
+			arbitraryBonus: Math.round(2000 * Math.random()),
+		})
 	}
 	beginLevel() {
 		this.entitiesManager.reset()
@@ -79,7 +96,7 @@ class Game {
 		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true
-		this.waveFinishEmitted = true
+		this.waveClearedEmitted = true
 		this.roundTimer = 0
 		this.turretTimer = 0
 	}

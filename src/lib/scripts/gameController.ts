@@ -1,5 +1,5 @@
 import type { Application } from 'pixi.js'
-import Game from '#lib/scripts/game/game.ts'
+import Game, { type Bonuses } from '#lib/scripts/game/game.ts'
 import { EntitiesLayer } from '#lib/scripts/pixi/entities/entitiesLayer.ts'
 import { TerrainLayer } from '#lib/scripts/pixi/terrain/terrainLayer.ts'
 import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
@@ -13,9 +13,7 @@ export type ScreenPhase =
 	| { kind: 'wave' }
 	| {
 			kind: 'postwave'
-			timeBonus: number
-			waveBonus: number
-			arbitraryBonus: number
+			bonuses: Bonuses
 	  }
 	| {
 			kind: 'gameover'
@@ -69,6 +67,16 @@ export class GameController {
 					this.preWave()
 				}
 			}, 2400)
+		})
+		this.game.waveCleared.listen((bonuses) => {
+			setTimeout(() => {
+				this.setScreenPhase({
+					kind: 'postwave',
+					bonuses,
+				})
+				this.game!.score += bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus
+				this.game!.nextWave()
+			}, 2000)
 		})
 		this.started.emit()
 		this.preWave()

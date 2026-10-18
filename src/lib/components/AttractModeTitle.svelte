@@ -54,7 +54,7 @@
       <div class="copy">
         <p>PRESENTED BY:</p>
         <p>KHANANAPHONE ELECTRONICS INC. LTD</p>
-        <p>EXTRA CQUABBLER EVERY <span class="crazy-text">25000 POINTS</span></p>
+        <p>EXTRA CQUABBLER EVERY <span class="crazy-text">50000 POINTS</span></p>
         <p>(C) 1986 KHANANAPHONE ELECTRONICS INC. LTD</p>
       </div>
       <div class="credits">{creditsText}</div>
