@@ -17,7 +17,7 @@ export type Bonuses = {
 }
 
 class Game {
-	public level: LevelInstance | undefined
+	public level!: LevelInstance
 	player: Player
 	playing = false
 	public entitiesManager: EntitiesManager
@@ -104,6 +104,8 @@ class Game {
 	beginLevel() {
 		this.entitiesManager.reset()
 		this.player.position = this.level!.playerSpawnPosition
+		this.player.velX = 0
+		this.player.velY = 0
 		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.player.isActive = true
 		this.playing = true

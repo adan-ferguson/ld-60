@@ -1,6 +1,6 @@
 import type { GameController } from '#lib/scripts/gameController.ts'
 import type { Man } from '#lib/scripts/game/enemies/man.ts'
-import { type PlayerAnimation, WithManSprite } from '#lib/scripts/pixi/entities/playerEl.ts'
+import { WithManSprite } from '#lib/scripts/pixi/entities/playerEl.ts'
 
 export class ManEl extends WithManSprite {
 	constructor(
@@ -8,7 +8,11 @@ export class ManEl extends WithManSprite {
 		private man: Man,
 	) {
 		super(gc, man)
-		this.setAnimation('idle')
+		this.setAnimation('run')
 		this.sprite.tint = 'red'
+	}
+
+	draw() {
+		this.sprite.scale.x = Math.sign(this.man.facing)
 	}
 }
