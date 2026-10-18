@@ -12,7 +12,7 @@ export const AssetUtils = {
 	async preload() {
 		await Assets.load(toPreload)
 	},
-	requestPreload(src: string, alias: undefined | string = undefined) {
-		toPreload.push({ src, alias })
+	requestPreload(asset: UnresolvedAsset) {
+		toPreload.push(asset)
 	},
 }

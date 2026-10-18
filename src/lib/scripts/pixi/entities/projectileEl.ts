@@ -8,7 +8,10 @@ rp('small')
 rp('large')
 
 function rp(style: ProjectileStyle) {
-	AssetUtils.requestPreload(`/assets/sprites/projectile_${style}.json`, `projectile_${style}`)
+	AssetUtils.requestPreload({
+		src: `/assets/sprites/projectile_${style}.json`,
+		alias: `projectile_${style}`,
+	})
 }
 
 const frames: Map<ProjectileStyle, Texture<TextureSource<any>>[]> = new Map()

@@ -3,8 +3,23 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 
-AssetUtils.requestPreload('/assets/sprites/man-icon.png', 'man-icon')
-AssetUtils.requestPreload('/assets/fonts/Silkscreen-Regular.ttf', 'Silkscreen')
+AssetUtils.requestPreload({ src: '/assets/sprites/man-icon.png', alias: 'man-icon' })
+AssetUtils.requestPreload({
+	src: '/assets/fonts/Silkscreen-Regular.ttf',
+	data: {
+		family: 'Silkscreen',
+		style: 'normal',
+		weights: [400],
+	},
+})
+AssetUtils.requestPreload({
+	src: '/assets/fonts/Silkscreen-Bold.ttf',
+	data: {
+		family: 'Silkscreen',
+		style: 'normal',
+		weights: [700],
+	},
+})
 
 const { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE_PX } = Consts
 
@@ -17,9 +32,10 @@ export class HudLayer extends Container {
 	private scoreText: Text
 	constructor(private gc: GameController) {
 		super()
+		console.log(document.fonts.check('6px Silkscreen'), document.fonts.check('700 6px Silkscreen'))
 		const hudTextStyle = new TextStyle({
 			fontFamily: 'Silkscreen',
-			fontSize: 6,
+			fontSize: 8,
 			fontWeight: '400',
 			fill: '#000000',
 		})
@@ -34,25 +50,26 @@ export class HudLayer extends Container {
 			text: '0x',
 			style: hudTextStyle,
 			anchor: { x: 0, y: 0.5 },
-			position: { x: 3, y: botY },
+			position: { x: 8, y: botY },
 		})
 		const livesIcon = new Sprite({
 			tint: 'cyan',
 			texture: Assets.get('man-icon'),
 			anchor: { x: 0, y: 0.5 },
-			position: { x: 1, y: botY },
+			position: { x: 16, y: botY },
 		})
 		this.scoreText = new Text({
 			text: '',
 			style: hudTextStyle,
 			anchor: { x: 0, y: 0.5 },
-			position: { x: 10, y: botY },
+			position: { x: 20, y: botY },
 		})
 		const companyNameLol = new Text({
 			text: 'Khananaphone Electronics Co., Ltd.',
 			style: hudTextStyle,
 			anchor: { x: 1, y: 0.5 },
-			position: { x: GAME_WIDTH - 1, y: botY },
+			position: { x: GAME_WIDTH, y: botY },
+			resolution: 2,
 		})
 
 		this.addChild(this.waveText, this.scoreText, this.livesCount, livesIcon, companyNameLol)
