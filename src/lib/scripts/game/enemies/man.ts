@@ -10,7 +10,7 @@ export class Man extends Enemy {
 		return 1000
 	}
 	public get maxHealth(): number {
-		return 2 + this.game.loops
+		return 1
 	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)

@@ -1,6 +1,5 @@
 import { Container } from 'pixi.js'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
-import type { XY } from '#lib/scripts/utils/XY.ts'
 
 export class VfxLayer extends Container {
 	private animations: Set<VfxAnimation> = new Set()
@@ -16,5 +15,13 @@ export class VfxLayer extends Container {
 				this.animations.delete(animation)
 			}
 		}
+	}
+
+	clear() {
+		for (const anim of this.animations.values()) {
+			this.removeChild(anim.pixiEl)
+			anim.pixiEl.destroy()
+		}
+		this.animations.clear()
 	}
 }

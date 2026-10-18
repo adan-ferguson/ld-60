@@ -1,7 +1,14 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
-import { Level001, Level004 } from '#lib/scripts/game/levels/level001.ts'
+import { Level002 } from '#lib/scripts/game/levels/level002.ts'
+import { Level003 } from '#lib/scripts/game/levels/level003.ts'
+import { Level004 } from '#lib/scripts/game/levels/level004.ts'
 
-const levels: LevelDef[] = [Level001, Level004]
+const levels: LevelDef[] = [
+	// Level001,
+	// Level002,
+	//Level003,
+	Level004,
+]
 
 export class LevelsManager {
 	private static _instance: LevelsManager

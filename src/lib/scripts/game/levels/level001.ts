@@ -24,28 +24,3 @@ xx1b...........t............c1xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 }
-
-export const Level004: LevelDef = {
-	id: '001',
-	displayName: 'Level 4',
-	tiles: `
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x1............................1x
-x..............................x
-x...xxxxxxxx...xxxxxxxxxxx.....x
-x...xxxxxxxx...xxxxxxxxxxx.....x
-x...xx..................xx....xx
-x...xx.1..............1.xx.....x
-x...xx..................xx.....x
-x...xx.........................x
-x...xx.........................x
-x...1x..................xx....1x
-x...xx.....xx.....xx....xxxxxxxx
-x..........xx.....xx....xxxxxxxx
-x..........xx..................x
-x..........xx..................x
-x..x...xxxxxx..................x
-x..x.s.xxxxxx..................x
-xxxxxxxxxxxxxRRRRRRRRRRRRRRRRRRx
-`,
-}

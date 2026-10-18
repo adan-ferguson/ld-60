@@ -42,7 +42,7 @@ class Game {
 		this.#score = value
 	}
 	private get turretShotInterval() {
-		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.5)
+		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.6)
 	}
 	static async load() {
 		return new Game()
@@ -69,7 +69,7 @@ class Game {
 	setWave(wave: number) {
 		const lvl = LevelsManager.instance.getWave(wave)
 		this.wave = wave
-		this.level = new LevelInstance(this, lvl.def, lvl.loops)
+		this.level = new LevelInstance(this, lvl.def, 1) //lvl.loops)
 		return this.level
 	}
 	update(delta: number) {

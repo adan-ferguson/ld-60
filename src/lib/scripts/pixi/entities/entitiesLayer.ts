@@ -29,4 +29,12 @@ export class EntitiesLayer extends Container {
 			}
 		}
 	}
+
+	clear() {
+		for (const pixiEl of this.onScreen.values()) {
+			this.removeChild(pixiEl)
+			pixiEl.destroy()
+		}
+		this.onScreen.clear()
+	}
 }

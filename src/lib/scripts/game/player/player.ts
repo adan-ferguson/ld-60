@@ -23,6 +23,7 @@ const MAX_FALL_SPEED = 200
 const WIDTH = 8
 const HEIGHT = 12
 const SHOT_COOLDOWN = 0.25
+const AIR_CONTROL = 0.04
 
 export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
@@ -67,6 +68,8 @@ export class Player extends GameEntity {
 		this.controlsManager.update()
 		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {
 			this.velX = X_VELOCITY * this.controlsManager.x
+		} else if (this.aerialState.kind === 'aerial') {
+			this.velX += this.controlsManager.x * AIR_CONTROL
 		}
 		this.facing = this.controlsManager.x > 0 ? 1 : this.controlsManager.x < 0 ? -1 : this.facing
 		this.shotCooldown = Math.max(0, this.shotCooldown - delta)

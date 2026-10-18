@@ -31,8 +31,8 @@ export class Treasure extends GameEntity {
 		}
 		if (this.game.player.worldBounds.intersects(this.worldBounds)) {
 			this.isActive = false
-			this.game.score += 2000 * this.game.treasureCombo
 			this.game.treasureCombo += 1
+			this.game.score += 2000 * this.game.treasureCombo
 		}
 	}
 
