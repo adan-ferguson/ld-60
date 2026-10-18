@@ -3,6 +3,8 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { createEnemy } from '#lib/scripts/game/enemies/enemyFactory.ts'
 import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
+import { Turret } from '#lib/scripts/game/enemies/turret.ts'
+import { Random } from '#lib/scripts/utils/random.ts'
 
 export class EntitiesManager {
 	public entities: Set<GameEntity> = new Set()
@@ -30,5 +32,10 @@ export class EntitiesManager {
 		})
 	}
 
-	fireRandomTurret() {}
+	fireRandomTurret() {
+		const turrets = [...this.entities].filter((e) => e instanceof Turret)
+		const turret =
+			Random.chooseOne(turrets.filter((t) => !t.fireTimeout)) ?? Random.chooseOne(turrets)
+		turret?.queueFire()
+	}
 }

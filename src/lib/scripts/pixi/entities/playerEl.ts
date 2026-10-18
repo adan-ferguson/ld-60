@@ -2,6 +2,7 @@ import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Player } from '#lib/scripts/game/player/player.ts'
 import { AnimatedSprite, Assets, Spritesheet } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 
 type PlayerAnimation = 'idle' | 'jump' | 'run' | 'fall' | 'throw'
 
@@ -15,6 +16,9 @@ export class PlayerEl extends GameEntityEl {
 		super(gc, player)
 		this.setAnimation('idle')
 		this.zIndex = 1
+		player.destroyed.listen(() => {
+			gc.vfxLayer.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
+		})
 	}
 	draw() {
 		const nextAnimation = this.getAnimation()

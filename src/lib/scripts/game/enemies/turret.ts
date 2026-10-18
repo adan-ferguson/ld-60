@@ -4,9 +4,20 @@ import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { TurretEl } from '#lib/scripts/pixi/entities/turretEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { Projectile } from '#lib/scripts/game/projectile.ts'
 
 export class Turret extends Enemy {
-	public update2(): void {}
+	public fireTimeout: number | undefined
+	public update2(delta: number): void {
+		if (this.fireTimeout === undefined) {
+			return
+		}
+		this.fireTimeout -= delta
+		if (this.fireTimeout <= 0) {
+			this.fire()
+			this.fireTimeout = undefined
+		}
+	}
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new TurretEl(gc, this)
 	}
@@ -18,5 +29,28 @@ export class Turret extends Enemy {
 	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
+	}
+	queueFire() {
+		if (this.fireTimeout !== undefined) {
+			this.fire()
+		}
+		this.fireTimeout = 0.5
+	}
+	private fire() {
+		const angle = this.angleTo(this.game.player)
+		const SPEED = 60
+		this.game.entitiesManager.spawn(
+			new Projectile(this.game, {
+				style: 'dot',
+				size: 1,
+				source: 'enemy',
+				lifetime: 5,
+				velX: Math.cos(angle) * SPEED,
+				velY: Math.sin(angle) * SPEED,
+				x: this.x,
+				y: this.y,
+				tint: 'red',
+			}),
+		)
 	}
 }

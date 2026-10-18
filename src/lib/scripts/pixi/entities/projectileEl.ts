@@ -1,6 +1,6 @@
 import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Projectile, ProjectileStyle } from '#lib/scripts/game/projectile.ts'
-import { AnimatedSprite, Assets, type Spritesheet, Texture, TextureSource } from 'pixi.js'
+import { AnimatedSprite, Assets, Graphics, type Spritesheet, Texture, TextureSource } from 'pixi.js'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 
@@ -14,21 +14,36 @@ function rp(style: ProjectileStyle) {
 const frames: Map<ProjectileStyle, Texture<TextureSource<any>>[]> = new Map()
 
 export class ProjectileEl extends GameEntityEl {
-	constructor(gc: GameController, proj: Projectile) {
+	constructor(
+		gc: GameController,
+		private proj: Projectile,
+	) {
 		super(gc, proj)
-		const spritesheet = Assets.get<Spritesheet>(`projectile_${proj.options.style}`)
+		if (proj.options.style === 'dot') {
+			this.gfxy()
+		} else {
+			this.spritey()
+		}
+	}
+	gfxy() {
+		const gfx = new Graphics()
+		gfx.circle(0, 0, this.proj.options.size).fill('red')
+		this.addChild(gfx)
+	}
+	spritey() {
+		const spritesheet = Assets.get<Spritesheet>(`projectile_${this.proj.options.style}`)
 		if (!spritesheet) {
 			throw new Error('The man spritesheet has not been loaded')
 		}
 		const sprite = new AnimatedSprite({
-			textures: getFrames(proj.options.style),
+			textures: getFrames(this.proj.options.style),
 			animationSpeed: 0.33,
 			loop: true,
 			autoPlay: true,
 			anchor: { x: 0.5, y: 0.5 },
-			scale: { x: proj.options.velX < 0 ? -1 : 1, y: 1 },
+			scale: { x: this.proj.options.velX < 0 ? -1 : 1, y: 1 },
 		})
-		this.tint = proj.options.tint
+		this.tint = this.proj.options.tint
 		this.zIndex = 2
 		this.addChild(sprite)
 	}

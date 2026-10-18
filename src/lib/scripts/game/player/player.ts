@@ -5,6 +5,7 @@ import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { Rectangle } from 'pixi.js'
 
 export type AerialState =
 	| {
@@ -30,6 +31,14 @@ export class Player extends GameEntity {
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
+	}
+	get hurtboxBounds() {
+		return new Rectangle(
+			this.worldBounds.x,
+			this.worldBounds.y,
+			this.worldBounds.width / 2,
+			this.worldBounds.height / 2,
+		)
 	}
 	get width() {
 		return WIDTH

@@ -7,13 +7,13 @@ import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 
 class Game {
 	public level: LevelInstance | undefined
-	private player: Player
+	player: Player
 	private playing = false
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
 	private get turretShotInterval() {
-		return 5 // TODO: scale up with round time and level
+		return 4 // TODO: scale up with round time and level
 	}
 	static async load() {
 		return new Game()

@@ -58,4 +58,10 @@ export abstract class GameEntity {
 			this.isActive = false
 		}
 	}
+
+	public angleTo(entity: GameEntity): number {
+		const dx = entity.x - this.x
+		const dy = entity.y - this.y
+		return Math.atan2(dy, dx)
+	}
 }

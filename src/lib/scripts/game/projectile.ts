@@ -5,7 +5,7 @@ import Game from '#lib/scripts/game/game.ts'
 import type { ColorSource } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 
-export type ProjectileStyle = 'small' | 'large'
+export type ProjectileStyle = 'small' | 'large' | 'dot'
 
 type Options = {
 	style: ProjectileStyle
@@ -43,7 +43,14 @@ export class Projectile extends GameEntity {
 			if (target) {
 				target.takeDamage(1)
 				this.isActive = false
-				// todo: particles
+			}
+		} else if (this.options.source === 'enemy') {
+			if (
+				this.game.player.isActive &&
+				this.game.player.hurtboxBounds.intersects(this.worldBounds)
+			) {
+				this.game.player.takeDamage(1)
+				this.isActive = false
 			}
 		}
 	}
