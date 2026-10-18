@@ -14,10 +14,9 @@
 
   onMount(() => {
     gc.updated.listen((delta) => {
-      updateScore(delta, gc.game.score)
-      wave = gc.game.wave
-      // Replace this with your actual lives value when you add one.
-      lives = 0
+      updateScore(delta, gc.game?.score ?? 0)
+      wave = gc.game?.wave ?? 1
+      lives = gc.game?.lives ?? 0
     })
   })
 

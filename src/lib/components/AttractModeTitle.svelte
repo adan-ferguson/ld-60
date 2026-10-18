@@ -1,7 +1,6 @@
 <script lang="ts">
 
   import {onMount} from 'svelte'
-  import {Random} from '#lib/scripts/utils/random.ts'
   import {getHighScores} from '#lib/scripts/game/highScores.ts'
 
   let creditsText = $state("Credits 999")
@@ -10,13 +9,6 @@
   let attractModeState = $state(0)
 
   onMount(() => {
-    const i = setInterval(() => {
-      // TODO: this sucks
-      const crazyText = document.querySelector('.crazy-text') as HTMLSpanElement
-      if(crazyText){
-        crazyText.style.color = randomColor()
-      }
-    }, 0)
     const j = setInterval(() => {
       attractModeState++
       attractModeState %= 2
@@ -33,16 +25,10 @@
       showScoreboard = !showScoreboard
     }, 10000)
     return () => {
-      clearInterval(i)
       clearInterval(j)
       clearInterval(k)
     }
   })
-
-  function randomColor(){
-    // Not actually random, just choose from like 8
-    return Random.chooseOne(['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta'])!
-  }
 
 </script>
 
@@ -146,4 +132,5 @@
       transform: translateX(0);
     }
   }
+
 </style>

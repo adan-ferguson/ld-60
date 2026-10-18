@@ -10,7 +10,7 @@
   onMount(async () => {
     gc = await initGame(canvas)
     if(page.params.id !== undefined) {
-      gc.game.setWave(Number(page.params.id))
+      gc.startGame(Number(page.params.id))
     }
   })
 

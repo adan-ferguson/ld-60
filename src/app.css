@@ -23,3 +23,41 @@ canvas {
   font-style: normal;
   font-display: swap;
 }
+
+.crazy-text {
+  animation: crazy-colors 400ms steps(1, end) infinite;
+}
+
+@keyframes crazy-colors {
+  0% {
+    color: red;
+  }
+
+  12.5% {
+    color: blue;
+  }
+
+  25% {
+    color: green;
+  }
+
+  37.5% {
+    color: yellow;
+  }
+
+  50% {
+    color: orange;
+  }
+
+  62.5% {
+    color: purple;
+  }
+
+  75% {
+    color: cyan;
+  }
+
+  87.5% {
+    color: magenta;
+  }
+}
