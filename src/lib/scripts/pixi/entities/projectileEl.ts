@@ -2,6 +2,7 @@ import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Projectile, ProjectileStyle } from '#lib/scripts/game/projectile.ts'
 import { AnimatedSprite, Assets, type Spritesheet, Texture, TextureSource } from 'pixi.js'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 rp('small')
 rp('large')
@@ -13,8 +14,8 @@ function rp(style: ProjectileStyle) {
 const frames: Map<ProjectileStyle, Texture<TextureSource<any>>[]> = new Map()
 
 export class ProjectileEl extends GameEntityEl {
-	constructor(proj: Projectile) {
-		super(proj)
+	constructor(gc: GameController, proj: Projectile) {
+		super(gc, proj)
 		const spritesheet = Assets.get<Spritesheet>(`projectile_${proj.options.style}`)
 		if (!spritesheet) {
 			throw new Error('The man spritesheet has not been loaded')

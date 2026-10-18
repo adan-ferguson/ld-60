@@ -1,14 +1,18 @@
 import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Player } from '#lib/scripts/game/player/player.ts'
 import { AnimatedSprite, Assets, Spritesheet } from 'pixi.js'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 type PlayerAnimation = 'idle' | 'jump' | 'run' | 'fall' | 'throw'
 
 export class PlayerEl extends GameEntityEl {
 	private sprite!: AnimatedSprite
 	private currentAnimation: PlayerAnimation = 'idle'
-	constructor(private player: Player) {
-		super(player)
+	constructor(
+		gc: GameController,
+		private player: Player,
+	) {
+		super(gc, player)
 		this.setAnimation('idle')
 		this.zIndex = 1
 	}

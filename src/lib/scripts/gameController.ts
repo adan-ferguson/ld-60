@@ -6,17 +6,17 @@ import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
 import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
 
 export class GameController {
-	private game: Game
+	public game: Game
 	private terrainLayer: TerrainLayer
 	private entitiesLayer: EntitiesLayer
-	private vfxLayer: VfxLayer
+	public vfxLayer: VfxLayer
 	static setup(app: Application) {
 		return new GameController(app)
 	}
 	constructor(app: Application) {
 		this.game = new Game()
 		this.terrainLayer = new TerrainLayer()
-		this.entitiesLayer = new EntitiesLayer(this.game)
+		this.entitiesLayer = new EntitiesLayer(this)
 		this.vfxLayer = new VfxLayer()
 		app.stage.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
 		app.ticker.add((ticker) => {

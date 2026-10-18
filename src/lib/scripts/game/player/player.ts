@@ -4,6 +4,7 @@ import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 export type AerialState =
 	| {
@@ -92,8 +93,8 @@ export class Player extends GameEntity {
 			}),
 		)
 	}
-	createPixiEl(): GameEntityEl {
-		return new PlayerEl(this)
+	createPixiEl(gc: GameController): GameEntityEl {
+		return new PlayerEl(gc, this)
 	}
 	protected override move(delta: number) {
 		const terrainCollision = this.game.level?.terrainCollision

@@ -2,6 +2,8 @@ import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Rectangle } from 'pixi.js'
+import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 export abstract class GameEntity {
 	public isActive = true
@@ -13,9 +15,10 @@ export abstract class GameEntity {
 	private damageTaken = 0
 	protected constructor(protected game: Game) {}
 	public abstract update2(delta: number): void
-	public abstract createPixiEl(): GameEntityEl
+	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get width(): number
 	public abstract get height(): number
+	public destroyed = CoolEvents.createHandler()
 	public get maxHealth(): number {
 		return 1
 	}
@@ -51,8 +54,8 @@ export abstract class GameEntity {
 	public takeDamage(amount: number) {
 		this.damageTaken += amount
 		if (this.damageTaken >= this.maxHealth) {
+			this.destroyed.emit()
 			this.isActive = false
-			// todo: particles
 		}
 	}
 }

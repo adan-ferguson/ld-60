@@ -3,6 +3,7 @@ import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { ColorSource } from 'pixi.js'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 export type ProjectileStyle = 'small' | 'large'
 
@@ -46,8 +47,8 @@ export class Projectile extends GameEntity {
 			}
 		}
 	}
-	public createPixiEl(): GameEntityEl {
-		return new ProjectileEl(this)
+	public createPixiEl(gc: GameController): GameEntityEl {
+		return new ProjectileEl(gc, this)
 	}
 	public get width(): number {
 		return this.options.size

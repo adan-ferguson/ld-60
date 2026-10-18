@@ -2,17 +2,17 @@ import { Container } from 'pixi.js'
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
+import type { GameController } from '#lib/scripts/gameController.ts'
 
 export class EntitiesLayer extends Container {
 	onScreen: Map<GameEntity, GameEntityEl> = new Map()
-	constructor(private game: Game) {
+	constructor(private gc: GameController) {
 		super()
 	}
 	update() {
-		for (const entity of this.game.activeEntites) {
+		for (const entity of this.gc.game.activeEntites) {
 			if (!this.onScreen.has(entity)) {
-				console.log('adding', entity)
-				const pixiEl = entity.createPixiEl()
+				const pixiEl = entity.createPixiEl(this.gc)
 				this.onScreen.set(entity, pixiEl)
 				this.addChild(pixiEl)
 			} else {
