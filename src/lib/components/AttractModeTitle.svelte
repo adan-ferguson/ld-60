@@ -55,7 +55,7 @@
         <p>PRESENTED BY:</p>
         <p>KHANANAPHONE ELECTRONICS INC. LTD</p>
         <p>EXTRA CQUABBLER EVERY <span class="crazy-text">25000 POINTS</span></p>
-        <p>(C) 1986 KHANANAPHONE ELECTRONICS INC. LTD</p>
+        <p>WASD + JK TO SHOOT, OR ARROWS + ZX TO SHOOT, OR USE A CONTROLLER</p>
       </div>
       <div class="credits">{creditsText}</div>
     {/if}
