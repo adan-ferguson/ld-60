@@ -32,17 +32,17 @@
 
 </script>
 
-{#if showScoreboard}
-  <div class="scores">
-    <div>Top Cquabllers</div>
-    <ol>
-      {#each getHighScores() as score, i (i)}
-        <li class:crazy-text={i == 0}>{score}</li>
-      {/each}
-    </ol>
-  </div>
-{:else}
-  <div class="size-full main">
+<div class="size-full main">
+  {#if showScoreboard}
+    <div class="cover-everything">
+      <div>Top Cquabllers</div>
+      <ol>
+        {#each getHighScores() as score, i (i)}
+          <li class:crazy-text={i == 0}>{score}</li>
+        {/each}
+      </ol>
+    </div>
+  {:else}
     <div class="logo-window">
       <img
         class="logo"
@@ -59,8 +59,8 @@
       </div>
       <div class="credits">{creditsText}</div>
     {/if}
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style>
   .main {
@@ -68,6 +68,7 @@
     color: white;
     font-size: 4cqh;
   }
+
   .logo-window {
     position: absolute;
     top: 0;
