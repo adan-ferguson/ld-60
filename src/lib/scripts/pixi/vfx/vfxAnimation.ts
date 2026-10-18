@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js'
 
 type Options = {
-	draw: (delta: number) => void
+	draw: (t: number) => void
 	finished: () => void
 	duration: number
 }
