@@ -5,14 +5,15 @@ type Handlers<T extends EventMap> = {
 }
 
 type Handler<T extends EventMap[string]> = {
-	listen: (fn: T) => () => void
+	listen: (fn: (...args: Parameters<T>) => void) => () => void
 	emit: (...args: Parameters<T>) => void
-	listeners: Set<T>
+	listeners: Set<(...args: Parameters<T>) => void>
 }
 
 export const CoolEvents = {
 	createHandler<T extends (...args: any[]) => void>(): Handler<T> {
-		const listeners = new Set<T>()
+		const listeners = new Set<(...args: Parameters<T>) => void>()
+
 		return {
 			listeners,
 			listen(fn) {

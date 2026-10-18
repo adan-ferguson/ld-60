@@ -16,6 +16,7 @@ type Options = {
 	y: number
 	velX: number
 	velY: number
+	angle: number
 	tint: ColorSource
 }
 
@@ -52,6 +53,9 @@ export class Projectile extends GameEntity {
 				this.game.player.takeDamage(1)
 				this.isActive = false
 			}
+		}
+		if (this.game.level?.terrainCollision.overlapsSolid(this.worldBounds)) {
+			this.isActive = false
 		}
 	}
 	public createPixiEl(gc: GameController): GameEntityEl {

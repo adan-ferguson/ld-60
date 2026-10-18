@@ -14,5 +14,9 @@ export abstract class Enemy extends GameEntity {
 		const worldXY = TileDef.toWorldXY(tileXY)
 		this.x = worldXY.x
 		this.y = worldXY.y
+		this.destroyed.listen(() => {
+			game.score += this.score
+		})
 	}
+	abstract get score(): number
 }

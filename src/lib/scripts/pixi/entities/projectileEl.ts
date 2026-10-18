@@ -44,7 +44,7 @@ export class ProjectileEl extends GameEntityEl {
 			loop: true,
 			autoPlay: true,
 			anchor: { x: 0.5, y: 0.5 },
-			scale: { x: this.proj.options.velX < 0 ? -1 : 1, y: 1 },
+			rotation: this.proj.options.angle,
 		})
 		this.tint = this.proj.options.tint
 		this.zIndex = 2

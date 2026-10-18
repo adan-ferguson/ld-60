@@ -10,7 +10,11 @@ export class LevelInstance {
 	tiles: XYMap<TileDef>
 	playerSpawnPosition: XY
 	public terrainCollision: TerrainCollision
-	constructor(game: Game, levelDef: LevelDef, loops: number) {
+	constructor(
+		game: Game,
+		levelDef: LevelDef,
+		public loops: number,
+	) {
 		const { spawnPosition, tiles } = TileDef.parseLevel(levelDef.tiles)
 		this.tiles = tiles
 		this.playerSpawnPosition = TileDef.toWorldXY(spawnPosition)

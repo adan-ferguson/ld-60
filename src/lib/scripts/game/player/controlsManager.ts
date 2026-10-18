@@ -5,14 +5,16 @@ export class ControlsManager {
 	private button1Ready = true
 	private button2Ready = true
 	private inputState: InputState | undefined
-	public x: number = 0
-	public facing: number = 1
+	public x = 0
+	public y = 0
+	public facing = 1
 	constructor(private player: Player) {}
 	update() {
 		this.inputState = getInputState()
 		this.tryJump()
 		this.tryShoot()
 		this.x = this.inputState.moveX
+		this.y = this.inputState.moveY
 	}
 	private tryJump() {
 		if (!this.inputState?.button2) {

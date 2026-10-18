@@ -51,9 +51,9 @@ export function getInputState(): InputState {
 		gamepad?.buttons[13]?.pressed ||
 		stickY === 1
 	const button1 =
-		keysDown.has('KeyZ') || keysDown.has('KeyI') || gamepad?.buttons[2]?.pressed || false
+		keysDown.has('KeyZ') || keysDown.has('KeyJ') || gamepad?.buttons[2]?.pressed || false
 	const button2 =
-		keysDown.has('KeyX') || keysDown.has('KeyO') || gamepad?.buttons[0]?.pressed || false
+		keysDown.has('KeyX') || keysDown.has('KeyK') || gamepad?.buttons[0]?.pressed || false
 	return {
 		moveX: (moveRight ? 1 : 0) - (moveLeft ? 1 : 0),
 		moveY: (moveDown ? 1 : 0) - (moveUp ? 1 : 0),

@@ -27,6 +27,12 @@ export class Turret extends Enemy {
 	public get height(): number {
 		return 8
 	}
+	get score(): number {
+		return 1000
+	}
+	public get maxHealth(): number {
+		return this.game.loops
+	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
 	}
@@ -34,7 +40,7 @@ export class Turret extends Enemy {
 		if (this.fireTimeout !== undefined) {
 			this.fire()
 		}
-		this.fireTimeout = 0.5
+		this.fireTimeout = 1
 	}
 	private fire() {
 		const angle = this.angleTo(this.game.player)
@@ -49,6 +55,7 @@ export class Turret extends Enemy {
 				velY: Math.sin(angle) * SPEED,
 				x: this.x,
 				y: this.y,
+				angle: angle,
 				tint: 'red',
 			}),
 		)

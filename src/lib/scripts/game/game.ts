@@ -14,17 +14,21 @@ class Game {
 	wave = 1
 	score = 0
 	private get turretShotInterval() {
-		return 4 // TODO: scale up with round time and level
+		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.5)
 	}
 	static async load() {
 		return new Game()
 	}
 	constructor() {
 		this.player = new Player(this)
+		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
 	}
 	get activeEntites(): GameEntity[] {
 		return [this.player, ...this.entitiesManager.entities].filter((e) => e.isActive)
+	}
+	get loops() {
+		return this.level?.loops ?? 1
 	}
 	setWave(wave: number) {
 		const lvl = LevelsManager.instance.getWave(wave)

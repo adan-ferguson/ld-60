@@ -130,7 +130,7 @@ export class TerrainCollision {
 		}
 	}
 
-	private overlapsSolid(body: Body): boolean {
+	public overlapsSolid(body: Body): boolean {
 		return this.overlapsTileType(body, 'wall')
 	}
 

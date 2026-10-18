@@ -17,7 +17,7 @@ export type AerialState =
 	  }
 
 const JUMP_VELOCITY = 65
-const X_VELOCITY = 24
+const X_VELOCITY = 36
 const GRAVITY = 125
 const MAX_FALL_SPEED = 200
 const WIDTH = 8
@@ -74,6 +74,7 @@ export class Player extends GameEntity {
 	jump() {
 		if (this.aerialState.kind === 'grounded') {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
+			this.velX = X_VELOCITY * this.controlsManager.x
 		} else if (this.aerialState.kind === 'aerial') {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true }
 			this.velX = X_VELOCITY * this.controlsManager.x
@@ -88,14 +89,17 @@ export class Player extends GameEntity {
 		if (this.aerialState.kind !== 'aerial') {
 			this.velX = 0
 		}
+		const y = this.controlsManager.y
+		const x = y ? 0 : this.facing
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
 				size: 5,
 				source: 'player',
 				lifetime: 0.8,
-				velX: 40 * this.facing,
-				velY: 0,
+				velX: 50 * x,
+				velY: 50 * y,
+				angle: Math.atan2(y, x),
 				x: this.x + this.facing * 5,
 				y: this.y - 2,
 				tint: 'cyan',

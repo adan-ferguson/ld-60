@@ -1,5 +1,6 @@
 import { Container } from 'pixi.js'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
+import type { XY } from '#lib/scripts/utils/XY.ts'
 
 export class VfxLayer extends Container {
 	private animations: Set<VfxAnimation> = new Set()
