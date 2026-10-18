@@ -41,7 +41,7 @@
 		overflow: hidden;
 		container-type: size;
 		container-name: play-area;
-		background-color: white;
+		background-color: black;
 		position: relative;
 	}
 </style>
