@@ -31,7 +31,7 @@ export class EntitiesLayer extends Container {
 	}
 
 	clear() {
-		for (const pixiEl of this.onScreen.values()) {
+		for (const pixiEl of this.children) {
 			this.removeChild(pixiEl)
 			pixiEl.destroy()
 		}
