@@ -9,7 +9,7 @@ export class EntitiesLayer extends Container {
 		super()
 	}
 	update() {
-		if (!this.gc.game) {
+		if (!this.gc.game?.playing) {
 			return
 		}
 		for (const entity of this.gc.game.activeEntites) {
@@ -22,7 +22,7 @@ export class EntitiesLayer extends Container {
 			}
 		}
 		for (const [entity, pixiEl] of this.onScreen) {
-			if (!entity.isActive) {
+			if (!this.gc.game.activeEntites.includes(entity)) {
 				this.removeChild(pixiEl)
 				pixiEl.destroy()
 				this.onScreen.delete(entity)
@@ -31,7 +31,7 @@ export class EntitiesLayer extends Container {
 	}
 
 	clear() {
-		for (const pixiEl of this.children) {
+		for (const pixiEl of [...this.children]) {
 			this.removeChild(pixiEl)
 			pixiEl.destroy()
 		}

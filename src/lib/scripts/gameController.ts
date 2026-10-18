@@ -92,13 +92,14 @@ export class GameController {
 		this.setScreenPhase({ kind: 'gameover', score, isHighScore: isHighScore(score) })
 		setTimeout(() => {
 			this.stopped.emit()
-			this.entitiesLayer.clear()
 			this.vfxLayer.clear()
 			this.game = undefined
 		}, 6000)
 	}
 	preWave() {
 		this.setScreenPhase({ kind: 'prewave', wave: this.game?.wave ?? 1 })
+		this.vfxLayer.clear()
+		this.entitiesLayer.clear()
 		setTimeout(() => {
 			this.startLevel()
 		}, 2500)
@@ -115,8 +116,6 @@ export class GameController {
 		if (!this.game) {
 			throw 'No game'
 		}
-		this.entitiesLayer.clear()
-		this.vfxLayer.clear()
 		this.setScreenPhase({ kind: 'wave' })
 		const level = this.game.level!
 		this.terrainLayer.setLevel(level)

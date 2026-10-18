@@ -13,7 +13,8 @@
   const scoreDisplay = $derived(currentScore.toString().padStart(12, '0'))
 
   onMount(() => {
-    gc.updated.listen((delta) => {
+    currentScore = gc.game?.score ?? 0
+    return gc.updated.listen((delta) => {
       updateScore(delta, gc.game?.score ?? 0)
       wave = gc.game?.wave ?? 1
       lives = gc.game?.lives ?? 0

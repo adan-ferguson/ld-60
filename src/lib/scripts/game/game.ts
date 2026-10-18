@@ -6,7 +6,7 @@ import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Treasure } from '#lib/scripts/game/treasure.ts'
 
-const EXTRA_LIFE = 50000
+const EXTRA_LIFE = 25000
 const TREASURE_SPAWN_TIME = 10
 const EVIL_GUY_SPAWN_TIME = 30
 
@@ -23,7 +23,6 @@ class Game {
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
-	treasureCombo = 0
 	lives = 3
 	wave = 1
 	#score = 0
@@ -78,12 +77,12 @@ class Game {
 		}
 		this.player?.update(delta)
 		this.entitiesManager.update(delta)
-		if (crossedInterval(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
+		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
 			this.spawnTreasure()
 		}
-		if (crossedInterval(EVIL_GUY_SPAWN_TIME, this.roundTimer, delta)) {
-			this.spawnEvilGuy()
-		}
+		// if (crossedThreshold(EVIL_GUY_SPAWN_TIME, this.roundTimer, delta)) {
+		// 	this.spawnEvilGuy()
+		// }
 		this.roundTimer += delta
 		this.turretTimer += delta
 		if (this.turretTimer > this.turretShotInterval) {
@@ -119,16 +118,16 @@ class Game {
 		this.entitiesManager.spawn(new Treasure(this, this.level.getTreasureSpawnPosition()))
 	}
 	spawnEvilGuy() {
-		if (!this.level) {
-			return
-		}
-		const pos = this.level.getTreasureSpawnPosition()
+		// if (!this.level) {
+		// 	return
+		// }
+		// const pos = this.level.getTreasureSpawnPosition()
 		// this.entitiesManager.spawn(new EvilGuy(this, pos))
 	}
 }
 
-function crossedInterval(interval: number, currentTime: number, delta: number) {
-	return Math.floor(currentTime / interval) !== Math.floor((currentTime + delta) / interval)
+function crossedThreshold(threshold: number, currentTime: number, delta: number) {
+	return currentTime < threshold && currentTime + delta >= threshold
 }
 
 export default Game
