@@ -17,7 +17,7 @@ export async function initPixiApp(
 	await app.init({
 		width: Consts.GAME_WIDTH,
 		height: Consts.GAME_HEIGHT,
-		resolution: 1,
+		resolution: Consts.RESOLUTION,
 		autoDensity: false,
 		antialias: false,
 		canvas,
