@@ -60,13 +60,19 @@ export class GameController {
 	static setup(app: Application, testWave?: number) {
 		return new GameController(app, testWave)
 	}
-	constructor(app: Application, testWave?: number) {
+	constructor(
+		app: Application,
+		private testWave?: number,
+	) {
 		this.mainContainer = new MainContainer(this)
 		app.stage.addChild(this.mainContainer)
 		this.setupTicker(app)
-		if (testWave) {
-			this.startGame(testWave)
+		if (this.isTestMode) {
+			this.startGame()
 		}
+	}
+	get isTestMode() {
+		return this.testWave !== undefined
 	}
 	private setupTicker(app: Application) {
 		app.ticker.add((ticker) => {
@@ -81,11 +87,11 @@ export class GameController {
 				return
 			}
 			this.game.update(delta)
-			// this.updated.emit(delta)
+			this.updated.emit(delta)
 		})
 	}
-	startGame(wave: number = 1) {
-		this.game = new Game(wave)
+	startGame() {
+		this.game = new Game(this.testWave)
 		this.game.scoreAdded.listen((amount, pos) => {
 			if (pos) {
 				this.flyingTextController.addScore(amount, pos)
@@ -96,7 +102,9 @@ export class GameController {
 				if (this.waveCleared || !this.game) {
 					return
 				}
-				this.game.lives--
+				if (!this.isTestMode) {
+					this.game.lives--
+				}
 				if (!this.game.lives) {
 					this.gameOver()
 				} else {
@@ -116,7 +124,9 @@ export class GameController {
 					bonuses,
 				})
 				this.game.addScore(bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus)
-				this.game.nextWave()
+				if (!this.isTestMode) {
+					this.game.nextWave()
+				}
 				setTimeout(() => {
 					this.preWave()
 				}, 2500)

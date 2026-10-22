@@ -13,7 +13,7 @@ export class LevelInstance {
 	public terrainCollision: TerrainCollision
 	constructor(
 		game: Game,
-		levelDef: LevelDef,
+		public levelDef: LevelDef,
 		public loops: number,
 	) {
 		const { spawnPosition, tiles } = TileDef.parseLevel(levelDef.tiles)

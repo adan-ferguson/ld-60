@@ -58,9 +58,10 @@ canvas {
 
 html {
   font-family: 'Silkscreen', monospace;
-  font-size: 4cqh;
+  font-size: 3.5cqh;
   color: white;
-  -webkit-text-stroke: 0.05cqh black;
+  text-rendering: geometricPrecision;
+  letter-spacing: -0.25cqh;
 }
 
 .size-full {

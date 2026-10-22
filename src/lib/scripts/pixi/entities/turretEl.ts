@@ -26,6 +26,7 @@ export class TurretEl extends GameEntityEl {
 		if (this.turret.fireTimeout) {
 			color = this.turret.fireTimeout % 0.16 < 0.08 ? 'red' : 'black'
 		}
-		this.gfx.rect(-1, -1, 2, 2).fill(color)
+		this.gfx.rect(-2, -1, 4, 2).fill(color)
+		this.gfx.rect(-1, -2, 2, 4).fill(color)
 	}
 }
