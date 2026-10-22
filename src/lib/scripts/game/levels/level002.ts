@@ -1,7 +1,6 @@
-import type { OldLevelDef } from '#lib/scripts/game/oldLevelDef.ts'
+import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
-export const Level002: OldLevelDef = {
-	id: '002',
+export const Level002: LevelDef = {
 	displayName: 'Level 2',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

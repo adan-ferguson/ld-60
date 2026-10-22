@@ -61,7 +61,7 @@ class Game {
 		this.setWave(this.wave + 1)
 	}
 	setWave(wave: number) {
-		const lvl = LevelsManager.instance.getLevel(wave)
+		const lvl = LevelsManager.getWave(wave)
 		this.wave = wave
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		return this.level

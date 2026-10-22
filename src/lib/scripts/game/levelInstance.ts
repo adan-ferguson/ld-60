@@ -1,11 +1,11 @@
 import Game from '#lib/scripts/game/game.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
-import type { OldLevelDef } from '#lib/scripts/game/oldLevelDef.ts'
 import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { TerrainCollision } from '#lib/scripts/game/terrainCollision.ts'
 import type { EnemySpawnDef } from '#lib/scripts/game/enemies/enemy.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
+import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export class LevelInstance {
 	tiles: XYMap<TileDef>
@@ -13,7 +13,7 @@ export class LevelInstance {
 	public terrainCollision: TerrainCollision
 	constructor(
 		game: Game,
-		levelDef: OldLevelDef,
+		levelDef: LevelDef,
 		public loops: number,
 	) {
 		const { spawnPosition, tiles } = TileDef.parseLevel(levelDef.tiles)
