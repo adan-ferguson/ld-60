@@ -4,7 +4,15 @@ import { AnimatedSprite, Assets, Spritesheet } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 
-export type PlayerAnimation = 'idle' | 'jump' | 'run' | 'fall' | 'throw'
+export type PlayerAnimation =
+	'idle' | 'jump' | 'run' | 'fall' | 'throw' | 'crouch' | 'crouch-move' | 'crouch-attack'
+
+type AnimationDef = {
+	frames: number[]
+	loop: boolean
+}
+
+const defs: Record<PlayerAnimation, AnimationDef> = {}
 
 export class WithManSprite extends GameEntityEl {
 	protected sprite!: AnimatedSprite

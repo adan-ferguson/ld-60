@@ -30,13 +30,14 @@ export class ProjectileEl extends GameEntityEl {
 	}
 	gfxy() {
 		const gfx = new Graphics()
-		gfx.circle(0, 0, this.proj.options.size).fill('red')
+		const r = this.proj.options.size
+		gfx.rect(-r / 2, -r / 2, r, r).fill('red')
 		this.addChild(gfx)
 	}
 	spritey() {
 		const spritesheet = Assets.get<Spritesheet>(`projectile_${this.proj.options.style}`)
 		if (!spritesheet) {
-			throw new Error('The man spritesheet has not been loaded')
+			throw new Error('The projectile spritesheet has not been loaded')
 		}
 		const sprite = new AnimatedSprite({
 			textures: getFrames(this.proj.options.style),
