@@ -1,9 +1,3 @@
-.size-full {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
 canvas {
   image-rendering: pixelated;
 }
@@ -62,7 +56,29 @@ canvas {
   }
 }
 
-.cover-everything {
+html {
+  font-family: 'Silkscreen', monospace;
+  font-size: 4cqh;
+  color: white;
+  -webkit-text-stroke: 0.05cqh black;
+}
+
+.size-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.center-contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mid-wave-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -72,8 +88,4 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
-  background-color: black;
-  font-family: 'Silkscreen', monospace;
-  font-size: 4cqh;
 }

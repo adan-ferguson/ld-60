@@ -5,10 +5,12 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Treasure } from '#lib/scripts/game/treasure.ts'
+import type { XY } from '#lib/scripts/utils/XY.ts'
 
 const EXTRA_LIFE = 25000
 const TREASURE_SPAWN_TIME = 10
 const EVIL_GUY_SPAWN_TIME = 30
+const SCORE_ROLLING_SPEED = 2000
 
 export type Bonuses = {
 	timeBonus: number
@@ -23,22 +25,16 @@ class Game {
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
 	private turretTimer = 0
+	private rollingScore = 0
+	private targetScore = 0
 	lives = 3
 	wave = 1
-	#score = 0
 	public playerDied = CoolEvents.createHandler()
 	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
+	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	private waveClearedEmitted = false
 	get score() {
-		return this.#score
-	}
-	set score(value: number) {
-		const extraLivesBefore = Math.floor(this.#score / EXTRA_LIFE)
-		const extraLivesAfter = Math.floor(value / EXTRA_LIFE)
-		if (extraLivesAfter > extraLivesBefore) {
-			this.lives += extraLivesAfter - extraLivesBefore
-		}
-		this.#score = value
+		return this.rollingScore
 	}
 	private get turretShotInterval() {
 		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.6)
@@ -65,7 +61,7 @@ class Game {
 		this.setWave(this.wave + 1)
 	}
 	setWave(wave: number) {
-		const lvl = LevelsManager.instance.getWave(wave)
+		const lvl = LevelsManager.instance.getLevel(wave)
 		this.wave = wave
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		return this.level
@@ -74,6 +70,7 @@ class Game {
 		if (!this.playing) {
 			return
 		}
+		this.updateScore(delta)
 		this.player?.update(delta)
 		this.entitiesManager.update(delta)
 		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
@@ -117,6 +114,27 @@ class Game {
 		}
 		this.entitiesManager.spawn(new Treasure(this, this.level.getTreasureSpawnPosition()))
 	}
+	updateScore(delta: number) {
+		if (this.targetScore <= this.rollingScore) {
+			// TODO: stop rolling score sound
+			this.rollingScore = this.targetScore
+			return
+		}
+		// TODO: maintain rolling score sound
+		const change = Math.round(
+			Math.min(this.targetScore - this.rollingScore, delta * SCORE_ROLLING_SPEED),
+		)
+		const extraLives = intervalsCrossed(EXTRA_LIFE, this.rollingScore, change)
+		if (extraLives > 0) {
+			// TODO: play extra life sound
+			this.lives += extraLives
+		}
+		this.rollingScore += change
+	}
+	addScore(amount: number, sourcePosition?: XY) {
+		this.targetScore += amount
+		this.scoreAdded.emit(amount, sourcePosition)
+	}
 	spawnEvilGuy() {
 		// if (!this.level) {
 		// 	return
@@ -128,6 +146,12 @@ class Game {
 
 function crossedThreshold(threshold: number, currentTime: number, delta: number) {
 	return currentTime < threshold && currentTime + delta >= threshold
+}
+
+function intervalsCrossed(interval: number, currentValue: number, delta: number) {
+	const before = Math.floor(currentValue / interval)
+	const after = Math.floor((currentValue + delta) / interval)
+	return after - before
 }
 
 export default Game

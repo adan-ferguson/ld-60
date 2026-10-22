@@ -16,7 +16,6 @@ export class VfxLayer extends Container {
 			}
 		}
 	}
-
 	clear() {
 		for (const anim of this.animations.values()) {
 			this.removeChild(anim.pixiEl)

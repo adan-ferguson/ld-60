@@ -5,35 +5,19 @@
 
   const { gc }: {gc: GameController } = $props()
 
-  let wave = $state(1)
-  let currentScore = $state(0)
+  let wave = $state("")
+  let score = $state(0)
   let lives = $state(0)
 
-  const SCORE_ROLLING_SPEED = 1000
-  const scoreDisplay = $derived(currentScore.toString().padStart(12, '0'))
+  const scoreDisplay = $derived(score.toString().padStart(12, '0'))
 
   onMount(() => {
-    currentScore = gc.game?.score ?? 0
-    return gc.updated.listen((delta) => {
-      updateScore(delta, gc.game?.score ?? 0)
-      wave = gc.game?.wave ?? 1
+    return gc.updated.listen(() => {
+      score = gc.game?.score ?? 0
+      wave = gc.game ? gc.game.wave.toString() : ""
       lives = gc.game?.lives ?? 0
     })
   })
-
-  function updateScore(delta: number, targetScore: number) {
-    if (targetScore === currentScore) {
-      return
-    }
-    if (targetScore < currentScore) {
-      currentScore = targetScore
-    } else {
-      const change = Math.round(
-        Math.min(targetScore - currentScore, delta * SCORE_ROLLING_SPEED),
-      )
-      currentScore += change
-    }
-  }
 </script>
 
 <div

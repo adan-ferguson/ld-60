@@ -42,7 +42,7 @@ export class PlayerEl extends WithManSprite {
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
 		player.destroyed.listen(() => {
-			gc.vfxLayer.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
+			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
 		})
 	}
 	draw() {

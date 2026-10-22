@@ -30,7 +30,7 @@ export class Treasure extends GameEntity {
 		}
 		if (this.game.player.worldBounds.intersects(this.worldBounds)) {
 			this.isActive = false
-			this.game.score += 1000 * this.game.wave
+			this.game.addScore(1000 * this.game.wave)
 		}
 	}
 

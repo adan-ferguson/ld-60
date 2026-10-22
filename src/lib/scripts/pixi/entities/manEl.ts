@@ -12,7 +12,7 @@ export class ManEl extends WithManSprite {
 		this.setAnimation('run')
 		this.sprite.tint = 'red'
 		man.destroyed.listen(() => {
-			gc.vfxLayer.addAnimation(destroyIntoSquaresAnimation(man.worldBounds, 'red', 2, 3))
+			gc.addAnimation(destroyIntoSquaresAnimation(man.worldBounds, 'red', 2, 3))
 		})
 	}
 

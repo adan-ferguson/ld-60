@@ -17,7 +17,7 @@ export abstract class Enemy extends GameEntity {
 		this.x = worldXY.x
 		this.y = worldXY.y
 		this.destroyed.listen(() => {
-			game.score += this.score
+			game.addScore(this.score, this)
 		})
 	}
 	abstract get score(): number

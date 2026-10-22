@@ -8,7 +8,7 @@
   <ul>
     {#each LevelsManager.instance.levels.values() as level (level.id)}
       <li>
-        <a href={resolve("/debug/[id]", { id: String(level.id) })}>
+        <a href={resolve("/editor/[id]", { id: String(level.id) })}>
           {level.displayName}
         </a>
       </li>

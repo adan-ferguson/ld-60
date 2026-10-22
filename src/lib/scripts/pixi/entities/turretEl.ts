@@ -14,7 +14,7 @@ export class TurretEl extends GameEntityEl {
 		this.gfx = new Graphics()
 		this.addChild(this.gfx)
 		turret.destroyed.listen(() => {
-			gc.vfxLayer.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, 'magenta'))
+			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, 'magenta'))
 		})
 	}
 	draw() {
@@ -26,6 +26,6 @@ export class TurretEl extends GameEntityEl {
 		if (this.turret.fireTimeout) {
 			color = this.turret.fireTimeout % 0.16 < 0.08 ? 'red' : 'black'
 		}
-		this.gfx.circle(0, 0, 2).fill(color)
+		this.gfx.rect(-1, -1, 2, 2).fill(color)
 	}
 }
