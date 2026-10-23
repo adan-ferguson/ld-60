@@ -2,7 +2,7 @@ import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import Game from '#lib/scripts/game/game.ts'
-import type { ColorSource } from 'pixi.js'
+import type { ColorSource, Rectangle } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 
 export type ProjectileStyle = 'small' | 'large' | 'dot'
@@ -46,10 +46,7 @@ export class Projectile extends GameEntity {
 				this.isActive = false
 			}
 		} else if (this.options.source === 'enemy') {
-			if (
-				this.game.player.isActive &&
-				this.game.player.hurtboxBounds.intersects(this.worldBounds)
-			) {
+			if (this.game.player.isActive && this.game.player.worldBounds.intersects(this.worldBounds)) {
 				this.game.player.takeDamage(1)
 				this.isActive = false
 			}

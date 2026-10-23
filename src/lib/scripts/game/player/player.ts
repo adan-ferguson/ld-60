@@ -22,6 +22,7 @@ const GRAVITY = 125
 const MAX_FALL_SPEED = 200
 const WIDTH = 8
 const HEIGHT = 12
+const CROUCH_DIFF = 4
 const SHOT_COOLDOWN = 0.25
 const AIR_CONTROL = 0.04
 
@@ -34,20 +35,6 @@ export class Player extends GameEntity {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
 	}
-	get hurtboxBounds() {
-		return new Rectangle(
-			this.worldBounds.x + this.worldBounds.width / 4,
-			this.worldBounds.y + this.worldBounds.height / 4,
-			this.worldBounds.width / 2,
-			this.worldBounds.height / 2,
-		)
-	}
-	get width() {
-		return WIDTH
-	}
-	get height() {
-		return HEIGHT
-	}
 	get canJump() {
 		return (
 			this.aerialState.kind === 'grounded' ||
@@ -56,6 +43,21 @@ export class Player extends GameEntity {
 	}
 	get canShoot() {
 		return this.shotCooldown <= 0
+	}
+	protected get width(): number {
+		return WIDTH
+	}
+	protected get height(): number {
+		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
+	}
+	crouch() {
+		this.y += CROUCH_DIFF / 2
+		this.crouching = true
+	}
+	uncrouch() {
+		// TODO: Check if there's room to uncrouch, otherwise stay crouched
+		this.y -= CROUCH_DIFF / 2
+		this.crouching = false
 	}
 	update2(delta: number) {
 		if (!this.onGround()) {
@@ -67,11 +69,16 @@ export class Player extends GameEntity {
 				this.velX = 0
 			}
 		} else {
-			this.crouching = this.controlsManager.y > delta
+			const c = this.controlsManager.y > delta
+			if (c && !this.crouching) {
+				this.crouch()
+			} else if (!c && this.crouching) {
+				this.uncrouch()
+			}
 		}
 		this.controlsManager.update()
 		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {
-			this.velX = X_VELOCITY * this.controlsManager.x
+			this.velX = X_VELOCITY * this.controlsManager.x * (this.crouching ? 0.5 : 1)
 		} else if (this.aerialState.kind === 'aerial') {
 			this.velX += this.controlsManager.x * AIR_CONTROL
 		}

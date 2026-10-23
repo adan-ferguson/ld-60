@@ -4,11 +4,18 @@ import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
+import type { Rectangle } from 'pixi.js'
 
 const MOVE_SPEED = 14
 const LEDGE_LOOKAHEAD = 1
 
 export class Man extends Enemy {
+	protected get height(): number {
+		return 12
+	}
+	protected get width(): number {
+		return 8
+	}
 	get score(): number {
 		return 1000
 	}
@@ -22,11 +29,8 @@ export class Man extends Enemy {
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ManEl(gc, this)
 	}
-	get height(): number {
-		return 12
-	}
 	update2(delta: number): void {
-		if (this.worldBounds.intersects(this.game.player.hurtboxBounds)) {
+		if (this.worldBounds.intersects(this.game.player.worldBounds)) {
 			this.game.player.takeDamage(1)
 		}
 		if (!this.hasGroundAhead()) {
@@ -46,9 +50,6 @@ export class Man extends Enemy {
 		if (result.hitHorizontal) {
 			this.facing *= -1
 		}
-	}
-	get width(): number {
-		return 8
 	}
 	private hasGroundAhead(): boolean {
 		const body = this.worldBounds

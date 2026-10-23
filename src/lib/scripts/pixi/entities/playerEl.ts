@@ -2,6 +2,8 @@ import type { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+import { Graphics } from 'pixi.js'
+import { flatRect } from '#lib/scripts/utils/flatRect.ts'
 
 type PlayerAnimationType =
 	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouch-move' | 'crouch-attack'
@@ -22,7 +24,7 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 	attack: {
 		frames: [5, 6, 7],
-		speed: 0.2,
+		speed: 0.3,
 	},
 	crouch: {
 		frames: [9],
@@ -33,12 +35,13 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 	'crouch-attack': {
 		frames: [11, 12, 13],
-		speed: 0.2,
+		speed: 0.3,
 	},
 }
 
 export class PlayerEl extends WithManSprite {
 	private currentAnimation: PlayerAnimationType = 'idle'
+	private hitbox: Graphics
 	constructor(
 		gc: GameController,
 		private player: Player,
@@ -47,6 +50,7 @@ export class PlayerEl extends WithManSprite {
 		this.setAnimation(defs.idle)
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
+		this.addChild((this.hitbox = new Graphics()))
 		player.destroyed.listen(() => {
 			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
 		})
@@ -58,6 +62,11 @@ export class PlayerEl extends WithManSprite {
 			this.currentAnimation = nextAnimation
 		}
 		this.sprite.scale.x = Math.sign(this.player.facing)
+		this.sprite.y = this.player.crouching ? -2 : 0
+		this.hitbox
+			.clear()
+			.rect(...flatRect(this.player.localBounds))
+			.stroke({ color: 0x00ff00, width: 0.25 })
 	}
 
 	private getAnimation(): PlayerAnimationType {

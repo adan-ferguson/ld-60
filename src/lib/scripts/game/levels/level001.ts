@@ -18,7 +18,7 @@ x........xx..xx1xx..xxx........x
 x........xx.........xxx........x
 x....xx..................xx....x
 xt...xx..................xx...tx
-xxx..........................xxx
+xxx...x......................xxx
 xx1b...........t............c1xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,

@@ -20,9 +20,28 @@ function getTextures(frames: number[]): Texture[] {
 		if (!spritesheet) {
 			throw new Error('The man spritesheet has not been loaded')
 		}
-		cachedTextures = Object.values(spritesheet.textures)
+		cachedTextures = Object.keys(spritesheet.textures)
+			.map((name) => {
+				const match = name.match(/^man (\d+)\.aseprite$/)
+				if (!match) {
+					return undefined
+				}
+				return {
+					index: Number(match[1]),
+					texture: spritesheet.textures[name]!,
+				}
+			})
+			.filter((entry): entry is { index: number; texture: Texture } => entry !== undefined)
+			.sort((a, b) => a.index - b.index)
+			.map((entry) => entry.texture)
 	}
-	return frames.map((f) => cachedTextures![f]!)
+	return frames.map((frame) => {
+		const texture = cachedTextures?.[frame]
+		if (!texture) {
+			throw new Error(`Missing cached man frame ${frame}`)
+		}
+		return texture
+	})
 }
 
 export abstract class WithManSprite extends GameEntityEl {

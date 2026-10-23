@@ -16,24 +16,37 @@ export abstract class GameEntity {
 	protected constructor(protected game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
-	public abstract get width(): number
-	public abstract get height(): number
+	protected abstract get width(): number
+	protected abstract get height(): number
 	public destroyed = CoolEvents.createHandler()
 	public get maxHealth(): number {
 		return 1
 	}
 
-	public get worldBounds(): Rectangle {
-		return new Rectangle(
-			this.localBounds.x + this.x,
-			this.localBounds.y + this.y,
-			this.localBounds.width,
-			this.localBounds.height,
-		)
-	}
+	// public get worldBounds(): Rectangle {
+	// 	return new Rectangle(
+	// 		this.localBounds.x + this.x,
+	// 		this.localBounds.y + this.y,
+	// 		this.localBounds.width,
+	// 		this.localBounds.height,
+	// 	)
+	// }
 
 	public get localBounds(): Rectangle {
 		return new Rectangle(-this.width / 2, -this.height / 2, this.width, this.height)
+	}
+
+	public get worldBounds(): Rectangle {
+		return this.toWorldBounds(this.localBounds)
+	}
+
+	public toWorldBounds(localBounds: Rectangle): Rectangle {
+		return new Rectangle(
+			localBounds.x + this.x,
+			localBounds.y + this.y,
+			localBounds.width,
+			localBounds.height,
+		)
 	}
 
 	public set position(val: XY) {
