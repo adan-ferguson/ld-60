@@ -5,7 +5,6 @@ import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
-import { Rectangle } from 'pixi.js'
 
 export type AerialState =
 	| {
@@ -51,10 +50,16 @@ export class Player extends GameEntity {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
 	crouch() {
+		if (this.crouching) {
+			return
+		}
 		this.y += CROUCH_DIFF / 2
 		this.crouching = true
 	}
 	uncrouch() {
+		if (!this.crouching || !this.canUncrouch()) {
+			return
+		}
 		// TODO: Check if there's room to uncrouch, otherwise stay crouched
 		this.y -= CROUCH_DIFF / 2
 		this.crouching = false
@@ -69,10 +74,9 @@ export class Player extends GameEntity {
 				this.velX = 0
 			}
 		} else {
-			const c = this.controlsManager.y > delta
-			if (c && !this.crouching) {
+			if (this.controlsManager.y > delta) {
 				this.crouch()
-			} else if (!c && this.crouching) {
+			} else {
 				this.uncrouch()
 			}
 		}
@@ -98,24 +102,32 @@ export class Player extends GameEntity {
 	onGround() {
 		return this.game.level?.terrainCollision.isGrounded(this.worldBounds) ?? false
 	}
+	private calcShotInfo() {
+		if (this.crouching) {
+			return { x: this.facing, y: 0, crouching: true }
+		}
+		if (!this.controlsManager.y) {
+			return { x: this.facing, y: 0 }
+		}
+		return { x: 0, y: this.controlsManager.y }
+	}
 	shoot() {
 		this.shotCooldown = SHOT_COOLDOWN
 		if (this.aerialState.kind !== 'aerial') {
 			this.velX = 0
 		}
-		const y = this.controlsManager.y
-		const x = y ? 0 : this.facing
+		const { x, y, crouching } = this.calcShotInfo()
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
-				size: 5,
+				size: 4,
 				source: 'player',
 				lifetime: 0.8,
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),
-				x: this.x + this.facing * 5,
-				y: this.y - 2,
+				x: this.x + x * 3 + 3 * this.facing,
+				y: this.y + (crouching ? -0.5 : -2) + y * 3,
 				tint: 'cyan',
 			}),
 		)
@@ -153,5 +165,15 @@ export class Player extends GameEntity {
 		this.shotCooldown = 0
 		this.facing = 1
 		this.controlsManager.reset()
+	}
+
+	private canUncrouch() {
+		const worldBounds = this.worldBounds
+		return !this.game.level.terrainCollision.overlapsSolid({
+			x: worldBounds.x,
+			width: worldBounds.width,
+			y: worldBounds.y - CROUCH_DIFF,
+			height: HEIGHT,
+		})
 	}
 }
