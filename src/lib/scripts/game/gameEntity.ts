@@ -23,15 +23,6 @@ export abstract class GameEntity {
 		return 1
 	}
 
-	// public get worldBounds(): Rectangle {
-	// 	return new Rectangle(
-	// 		this.localBounds.x + this.x,
-	// 		this.localBounds.y + this.y,
-	// 		this.localBounds.width,
-	// 		this.localBounds.height,
-	// 	)
-	// }
-
 	public get localBounds(): Rectangle {
 		return new Rectangle(-this.width / 2, -this.height / 2, this.width, this.height)
 	}
@@ -68,7 +59,7 @@ export abstract class GameEntity {
 		if (!terrainCollision || !this.isActive) {
 			return
 		}
-		if (terrainCollision.overlapsLava(this.worldBounds)) {
+		if (terrainCollision.overlapsLava({ x: this.x, y: this.y, width: 0, height: 0 })) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

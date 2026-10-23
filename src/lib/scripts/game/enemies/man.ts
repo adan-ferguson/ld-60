@@ -4,7 +4,6 @@ import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
-import type { Rectangle } from 'pixi.js'
 
 const MOVE_SPEED = 14
 const LEDGE_LOOKAHEAD = 1
