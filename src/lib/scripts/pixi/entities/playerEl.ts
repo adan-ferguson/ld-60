@@ -1,4 +1,4 @@
-import type { Player } from '#lib/scripts/game/player/player.ts'
+import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
@@ -37,6 +37,8 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 }
 
+const FAILED_COYOTE_JUMP_THRESHOLD = 0.07
+
 export class PlayerEl extends WithManSprite {
 	private currentAnimation: PlayerAnimationType = 'idle'
 	constructor(
@@ -47,6 +49,17 @@ export class PlayerEl extends WithManSprite {
 		this.setAnimation(defs.idle)
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
+		player.jumped.listen((before, after) => {
+			const totalThreshold = FAILED_COYOTE_JUMP_THRESHOLD + Player.COYOTE_TIME
+			if (
+				before.kind === 'aerial' &&
+				after.kind === 'aerial' &&
+				after.doubleJumpUsed &&
+				before.time <= totalThreshold
+			) {
+				this.failedCoyoteJump()
+			}
+		})
 		player.destroyed.listen(() => {
 			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
 		})
@@ -59,6 +72,9 @@ export class PlayerEl extends WithManSprite {
 		}
 		this.sprite.scale.x = Math.sign(this.player.facing)
 		this.sprite.y = this.player.crouching ? -2 : 0
+	}
+	private failedCoyoteJump() {
+		// TODO: this
 	}
 
 	private getAnimation(): PlayerAnimationType {

@@ -5,14 +5,17 @@ import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
 export type AerialState =
 	| {
 			kind: 'grounded'
+			time: number
 	  }
 	| {
 			kind: 'aerial'
 			doubleJumpUsed: boolean
+			time: number
 	  }
 
 const JUMP_VELOCITY = 65
@@ -26,19 +29,16 @@ const SHOT_COOLDOWN = 0.25
 const AIR_CONTROL = 0.04
 
 export class Player extends GameEntity {
-	aerialState: Readonly<AerialState> = { kind: 'grounded' }
+	static COYOTE_TIME = 0.07
+	aerialState: AerialState = { kind: 'grounded', time: 0 }
 	private controlsManager: ControlsManager
+	public jumped =
+		CoolEvents.createHandler<(stateBefore: AerialState, stateAfter: AerialState) => void>()
 	shotCooldown = 0
 	crouching: boolean = false
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
-	}
-	get canJump() {
-		return (
-			this.aerialState.kind === 'grounded' ||
-			(this.aerialState.kind === 'aerial' && !this.aerialState.doubleJumpUsed)
-		)
 	}
 	get canShoot() {
 		return this.shotCooldown <= 0
@@ -65,12 +65,13 @@ export class Player extends GameEntity {
 		this.crouching = false
 	}
 	update2(delta: number) {
+		this.aerialState.time += delta
 		if (!this.onGround()) {
 			this.crouching = false
 			this.velY += GRAVITY * delta
 			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
-				this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
+				this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
 				this.velX = 0
 			}
 		} else {
@@ -90,14 +91,21 @@ export class Player extends GameEntity {
 		this.shotCooldown = Math.max(0, this.shotCooldown - delta)
 	}
 	jump() {
-		if (this.aerialState.kind === 'grounded') {
-			this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
-			this.velX = X_VELOCITY * this.controlsManager.x
-		} else if (this.aerialState.kind === 'aerial') {
-			this.aerialState = { kind: 'aerial', doubleJumpUsed: true }
-			this.velX = X_VELOCITY * this.controlsManager.x
+		const stateBefore = this.aerialState
+		if (
+			stateBefore.kind === 'grounded' ||
+			(stateBefore.kind === 'aerial' && stateBefore.time <= Player.COYOTE_TIME)
+		) {
+			this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
+		} else if (stateBefore.kind === 'aerial' && !stateBefore.doubleJumpUsed) {
+			this.aerialState = { kind: 'aerial', doubleJumpUsed: true, time: 0 }
+		} else {
+			return false
 		}
+		this.velX = X_VELOCITY * this.controlsManager.x
 		this.velY = -JUMP_VELOCITY
+		this.jumped.emit(stateBefore, this.aerialState)
+		return true
 	}
 	onGround() {
 		return this.game.level?.terrainCollision.isGrounded(this.worldBounds) ?? false
@@ -152,7 +160,7 @@ export class Player extends GameEntity {
 		}
 		if (result.hitVertical) {
 			if (this.velY > 0) {
-				this.aerialState = { kind: 'grounded' }
+				this.aerialState = { kind: 'grounded', time: 0 }
 			}
 			this.velY = 0
 		}
@@ -161,7 +169,7 @@ export class Player extends GameEntity {
 	resetState() {
 		this.velX = 0
 		this.velY = 0
-		this.aerialState = { kind: 'grounded' }
+		this.aerialState = { kind: 'grounded', time: 0 }
 		this.shotCooldown = 0
 		this.facing = 1
 		this.controlsManager.reset()

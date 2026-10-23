@@ -20,11 +20,14 @@ export class ControlsManager {
 		if (!this.inputState?.button2) {
 			this.button2Ready = true
 			return
-		} else if (!this.button2Ready || !this.player.canJump) {
+		}
+		if (!this.button2Ready) {
+			return
+		}
+		if (!this.player.jump()) {
 			return
 		}
 		this.button2Ready = false
-		this.player.jump()
 		this.x = this.inputState.moveX
 	}
 	private tryShoot() {
