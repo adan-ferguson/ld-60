@@ -22,6 +22,7 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 	attack: {
 		frames: [5, 6, 7],
+		speed: 0.2,
 	},
 	crouch: {
 		frames: [9],
@@ -32,6 +33,7 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 	'crouch-attack': {
 		frames: [11, 12, 13],
+		speed: 0.2,
 	},
 }
 

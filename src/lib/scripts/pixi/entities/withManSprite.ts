@@ -10,6 +10,7 @@ AssetUtils.requestPreload({
 export type AnimationDef = {
 	frames: number[]
 	loop?: boolean
+	speed?: number
 }
 
 let cachedTextures: Texture[] | undefined = undefined
@@ -36,7 +37,7 @@ export abstract class WithManSprite extends GameEntityEl {
 			this.sprite.stop()
 			this.sprite.textures = textures
 		}
-		this.sprite.animationSpeed = 0.12
+		this.sprite.animationSpeed = def.speed ?? 0.12
 		this.sprite.loop = def.loop ?? false
 		this.sprite.gotoAndPlay(0)
 	}
