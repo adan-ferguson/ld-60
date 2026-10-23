@@ -67,7 +67,7 @@ export class Player extends GameEntity {
 				this.velX = 0
 			}
 		} else {
-			this.crouching = this.controlsManager.y <= delta
+			this.crouching = this.controlsManager.y > delta
 		}
 		this.controlsManager.update()
 		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {

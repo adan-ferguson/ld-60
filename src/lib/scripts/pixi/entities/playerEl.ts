@@ -1,15 +1,48 @@
 import type { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
-import { type ManAnimationType, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+
+type PlayerAnimationType =
+	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouch-move' | 'crouch-attack'
+
+const defs: Record<PlayerAnimationType, AnimationDef> = {
+	idle: {
+		frames: [0],
+	},
+	run: {
+		frames: [0, 2, 3, 4],
+		loop: true,
+	},
+	jump: {
+		frames: [1],
+	},
+	fall: {
+		frames: [8],
+	},
+	attack: {
+		frames: [5, 6, 7],
+	},
+	crouch: {
+		frames: [9],
+	},
+	'crouch-move': {
+		frames: [9, 10],
+		loop: true,
+	},
+	'crouch-attack': {
+		frames: [11, 12, 13],
+	},
+}
 
 export class PlayerEl extends WithManSprite {
+	private currentAnimation: PlayerAnimationType = 'idle'
 	constructor(
 		gc: GameController,
 		private player: Player,
 	) {
 		super(gc, player)
-		this.setAnimation('idle')
+		this.setAnimation(defs.idle)
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
 		player.destroyed.listen(() => {
@@ -19,12 +52,13 @@ export class PlayerEl extends WithManSprite {
 	draw() {
 		const nextAnimation = this.getAnimation()
 		if (nextAnimation !== this.currentAnimation) {
-			this.setAnimation(nextAnimation)
+			this.setAnimation(defs[nextAnimation])
+			this.currentAnimation = nextAnimation
 		}
 		this.sprite.scale.x = Math.sign(this.player.facing)
 	}
 
-	private getAnimation(): ManAnimationType {
+	private getAnimation(): PlayerAnimationType {
 		if (this.player.shotCooldown > 0) {
 			if (this.player.crouching) {
 				return 'crouch-attack'
