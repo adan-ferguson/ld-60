@@ -13,7 +13,7 @@ type ManAnimationDef = {
 }
 
 export type ManAnimationType =
-	'idle' | 'jump' | 'run' | 'fall' | 'throw' | 'crouch' | 'crouch-move' | 'crouch-attack'
+	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouch-move' | 'crouch-attack'
 
 const defs: Record<ManAnimationType, ManAnimationDef> = {
 	idle: {
@@ -29,7 +29,7 @@ const defs: Record<ManAnimationType, ManAnimationDef> = {
 	fall: {
 		frames: [8],
 	},
-	throw: {
+	attack: {
 		frames: [5, 6, 7],
 	},
 	crouch: {

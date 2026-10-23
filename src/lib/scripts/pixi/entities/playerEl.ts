@@ -26,10 +26,19 @@ export class PlayerEl extends WithManSprite {
 
 	private getAnimation(): ManAnimationType {
 		if (this.player.shotCooldown > 0) {
-			return 'throw'
+			if (this.player.crouching) {
+				return 'crouch-attack'
+			}
+			return 'attack'
 		}
 		if (this.player.aerialState.kind === 'aerial') {
 			return this.player.velX == 0 ? 'fall' : 'jump'
+		}
+		if (this.player.crouching) {
+			if (this.player.velX !== 0) {
+				return 'crouch-move'
+			}
+			return 'crouch'
 		}
 		if (this.player.velX !== 0) {
 			return 'run'

@@ -29,6 +29,7 @@ export class Player extends GameEntity {
 	aerialState: Readonly<AerialState> = { kind: 'grounded' }
 	private controlsManager: ControlsManager
 	shotCooldown = 0
+	crouching: boolean = false
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
@@ -58,12 +59,15 @@ export class Player extends GameEntity {
 	}
 	update2(delta: number) {
 		if (!this.onGround()) {
+			this.crouching = false
 			this.velY += GRAVITY * delta
 			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
 				this.aerialState = { kind: 'aerial', doubleJumpUsed: false }
 				this.velX = 0
 			}
+		} else {
+			this.crouching = this.controlsManager.y <= delta
 		}
 		this.controlsManager.update()
 		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {
