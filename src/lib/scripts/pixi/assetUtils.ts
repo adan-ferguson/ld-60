@@ -1,11 +1,6 @@
 import { Assets, type UnresolvedAsset } from 'pixi.js'
 
-const toPreload: UnresolvedAsset[] = [
-	{
-		alias: 'man-spritesheet',
-		src: '/assets/sprites/man.json',
-	},
-]
+const toPreload: UnresolvedAsset[] = []
 
 // Might use this more if loading becomes an issue
 export const AssetUtils = {

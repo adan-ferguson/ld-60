@@ -1,7 +1,7 @@
 import type { GameController } from '#lib/scripts/gameController.ts'
 import type { Man } from '#lib/scripts/game/enemies/man.ts'
-import { WithManSprite } from '#lib/scripts/pixi/entities/playerEl.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
+import { WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
 
 export class ManEl extends WithManSprite {
 	constructor(
