@@ -29,6 +29,7 @@ export class VfxAnimation {
 		this.options.draw(this.timeMS / this.options.duration)
 		if (this.timeMS >= this.options.duration) {
 			this.options.finished()
+			this.pixiEl.destroy()
 			this.isFinished = true
 		}
 	}

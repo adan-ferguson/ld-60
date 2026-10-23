@@ -25,7 +25,7 @@ const MAX_FALL_SPEED = 200
 const WIDTH = 8
 const HEIGHT = 12
 const CROUCH_DIFF = 4
-const SHOT_COOLDOWN = 0.25
+const SHOT_COOLDOWN = 0.21
 const AIR_CONTROL = 0.04
 
 export class Player extends GameEntity {
@@ -34,14 +34,15 @@ export class Player extends GameEntity {
 	private controlsManager: ControlsManager
 	public jumped =
 		CoolEvents.createHandler<(stateBefore: AerialState, stateAfter: AerialState) => void>()
-	shotCooldown = 0
+	lastShotTime = 0
 	crouching: boolean = false
+	public shotFired = CoolEvents.createHandler()
 	constructor(game: Game) {
 		super(game)
 		this.controlsManager = new ControlsManager(this)
 	}
 	get canShoot() {
-		return this.shotCooldown <= 0
+		return this.time - this.lastShotTime >= SHOT_COOLDOWN
 	}
 	protected get width(): number {
 		return WIDTH
@@ -82,13 +83,12 @@ export class Player extends GameEntity {
 			}
 		}
 		this.controlsManager.update()
-		if (this.aerialState.kind === 'grounded' && this.shotCooldown === 0) {
+		if (this.aerialState.kind === 'grounded' && this.canShoot) {
 			this.velX = X_VELOCITY * this.controlsManager.x * (this.crouching ? 0.5 : 1)
 		} else if (this.aerialState.kind === 'aerial') {
 			this.velX += this.controlsManager.x * AIR_CONTROL
 		}
 		this.facing = this.controlsManager.x > 0 ? 1 : this.controlsManager.x < 0 ? -1 : this.facing
-		this.shotCooldown = Math.max(0, this.shotCooldown - delta)
 	}
 	jump() {
 		const stateBefore = this.aerialState
@@ -120,7 +120,7 @@ export class Player extends GameEntity {
 		return { x: 0, y: this.controlsManager.y }
 	}
 	shoot() {
-		this.shotCooldown = SHOT_COOLDOWN
+		this.lastShotTime = this.time
 		if (this.aerialState.kind !== 'aerial') {
 			this.velX = 0
 		}
@@ -139,6 +139,7 @@ export class Player extends GameEntity {
 				tint: 'cyan',
 			}),
 		)
+		this.shotFired.emit()
 	}
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new PlayerEl(gc, this)
@@ -170,7 +171,6 @@ export class Player extends GameEntity {
 		this.velX = 0
 		this.velY = 0
 		this.aerialState = { kind: 'grounded', time: 0 }
-		this.shotCooldown = 0
 		this.facing = 1
 		this.controlsManager.reset()
 	}

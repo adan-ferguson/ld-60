@@ -16,7 +16,7 @@ export abstract class GameEntityEl extends Container {
 		this.zIndex = 0
 		this.addChild((this.hitbox = new Graphics()))
 	}
-	public update() {
+	public update(delta: number) {
 		this.x = Math.round(this.entity.x * Consts.RESOLUTION) / Consts.RESOLUTION
 		this.y = Math.round(this.entity.y * Consts.RESOLUTION) / Consts.RESOLUTION
 		if (DEBUG) {
@@ -25,7 +25,7 @@ export abstract class GameEntityEl extends Container {
 				.rect(...flatRect(this.entity.localBounds))
 				.stroke({ color: 0x00ff00, width: 0.25 })
 		}
-		this.draw()
+		this.update2(delta)
 	}
-	public draw() {}
+	public update2(_delta: number) {}
 }

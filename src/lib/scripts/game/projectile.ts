@@ -21,7 +21,6 @@ type Options = {
 }
 
 export class Projectile extends GameEntity {
-	private time = 0
 	constructor(
 		game: Game,
 		public options: Options,

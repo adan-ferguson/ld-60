@@ -33,7 +33,7 @@ export class MainContainer extends Container {
 		if (!this.visible) {
 			return
 		}
-		this.entitiesLayer.update()
+		this.entitiesLayer.update(delta)
 		this.vfxLayer.update(delta)
 	}
 	beginLevel() {}

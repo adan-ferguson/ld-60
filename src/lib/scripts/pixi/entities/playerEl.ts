@@ -2,6 +2,8 @@ import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
+import { Graphics } from 'pixi.js'
 
 type PlayerAnimationType =
 	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouch-move' | 'crouch-attack'
@@ -37,10 +39,9 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 }
 
-const FAILED_COYOTE_JUMP_THRESHOLD = 0.07
-
 export class PlayerEl extends WithManSprite {
 	private currentAnimation: PlayerAnimationType = 'idle'
+	private shotAnimationTime = 0
 	constructor(
 		gc: GameController,
 		private player: Player,
@@ -50,39 +51,60 @@ export class PlayerEl extends WithManSprite {
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
 		player.jumped.listen((before, after) => {
-			const totalThreshold = FAILED_COYOTE_JUMP_THRESHOLD + Player.COYOTE_TIME
-			if (
-				before.kind === 'aerial' &&
-				after.kind === 'aerial' &&
-				after.doubleJumpUsed &&
-				before.time <= totalThreshold
-			) {
-				this.failedCoyoteJump()
+			if (after.kind === 'aerial' && after.doubleJumpUsed) {
+				this.airJumpFx()
 			}
 		})
 		player.destroyed.listen(() => {
 			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
 		})
+		player.shotFired.listen(() => {
+			this.setAnimationType(this.player.crouching ? 'crouch-attack' : 'attack')
+			this.shotAnimationTime = 0.3
+		})
 	}
-	draw() {
+
+	update2(delta: number) {
+		this.shotAnimationTime = Math.max(0, this.shotAnimationTime - delta)
 		const nextAnimation = this.getAnimation()
-		if (nextAnimation !== this.currentAnimation) {
-			this.setAnimation(defs[nextAnimation])
-			this.currentAnimation = nextAnimation
+		if (nextAnimation && nextAnimation !== this.currentAnimation) {
+			this.setAnimationType(nextAnimation)
 		}
 		this.sprite.scale.x = Math.sign(this.player.facing)
 		this.sprite.y = this.player.crouching ? -2 : 0
 	}
-	private failedCoyoteJump() {
-		// TODO: this
+
+	private setAnimationType(animationType: PlayerAnimationType) {
+		this.currentAnimation = animationType
+		this.setAnimation(defs[animationType])
 	}
 
-	private getAnimation(): PlayerAnimationType {
-		if (this.player.shotCooldown > 0) {
-			if (this.player.crouching) {
-				return 'crouch-attack'
-			}
-			return 'attack'
+	private airJumpFx() {
+		const gfx = new Graphics()
+		const WIDTH = 16
+		gfx.x = this.player.x
+		gfx.y = this.player.y
+		const animation = new VfxAnimation(gfx, {
+			draw: (t) => {
+				const x = WIDTH * t
+				gfx
+					.clear()
+					.moveTo(-x / 2, 0)
+					.lineTo(x / 2, 0)
+					.stroke({
+						color: 'white',
+						alpha: 1 - t,
+						width: 2,
+					})
+			},
+			duration: 0.5,
+		})
+		this.gc.addAnimation(animation)
+	}
+
+	private getAnimation(): PlayerAnimationType | false {
+		if (this.shotAnimationTime > 0) {
+			return false
 		}
 		if (this.player.aerialState.kind === 'aerial') {
 			return this.player.velX == 0 ? 'fall' : 'jump'

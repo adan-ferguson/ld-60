@@ -12,6 +12,7 @@ export abstract class GameEntity {
 	public velX = 0
 	public velY = 0
 	public facing = 1
+	public time = 0
 	private damageTaken = 0
 	protected constructor(protected game: Game) {}
 	public abstract update2(delta: number): void
@@ -46,6 +47,7 @@ export abstract class GameEntity {
 	}
 
 	public update(delta: number) {
+		this.time += delta
 		if (!this.isActive) {
 			return
 		}

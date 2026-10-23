@@ -25,7 +25,7 @@ export class ManEl extends WithManSprite {
 		})
 	}
 
-	draw() {
+	update2() {
 		this.sprite.scale.x = Math.sign(this.man.facing)
 	}
 }

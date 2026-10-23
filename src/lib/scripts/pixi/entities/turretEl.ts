@@ -17,7 +17,7 @@ export class TurretEl extends GameEntityEl {
 			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, 'magenta'))
 		})
 	}
-	draw() {
+	update2() {
 		this.gfx.clear()
 		this.gfx
 			.rect(-this.turret.width / 2, -this.turret.height / 2, this.turret.width, this.turret.height)

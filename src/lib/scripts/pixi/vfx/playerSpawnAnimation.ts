@@ -35,7 +35,6 @@ export function playerSpawnAnimation(options: Options) {
 	sprites.forEach((s) => container.addChild(s))
 	return new VfxAnimation(container, {
 		finished: () => {
-			container.destroy()
 			options.onFinished()
 		},
 		duration: 1.5,

@@ -8,7 +8,7 @@ export class EntitiesLayer extends Container {
 	constructor(private gc: GameController) {
 		super()
 	}
-	update() {
+	update(delta: number) {
 		if (!this.gc.game?.playing) {
 			return
 		}
@@ -18,7 +18,7 @@ export class EntitiesLayer extends Container {
 				this.onScreen.set(entity, pixiEl)
 				this.addChild(pixiEl)
 			} else {
-				this.onScreen.get(entity)!.update()
+				this.onScreen.get(entity)!.update(delta)
 			}
 		}
 		for (const [entity, pixiEl] of this.onScreen) {
