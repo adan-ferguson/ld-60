@@ -1,8 +1,11 @@
-import type { EnemyKind } from '#lib/scripts/game/enemies/enemy.ts'
+type Man = {
+	kind: 'man'
+	facing?: 1 | -1
+	behavior?: 'patrol'
+}
 
-type Enemy = {
-	kind: 'enemy'
-	enemyKind: EnemyKind
+type Turret = {
+	kind: 'turret'
 }
 
 type PlayerSpawn = {
@@ -21,11 +24,12 @@ type TreasureSpawn = {
 	kind: 'treasureSpawn'
 }
 
-export type TileContents = Enemy | PlayerSpawn | Wall | Lava | TreasureSpawn
+export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn
 
 export type VariableContents = TileContents & {
 	minLoop?: 2 | 3
 	maxLoop?: 1 | 2
+	loop?: 1 | 2 | 3
 }
 
 type TileDefs = Record<string, VariableContents>

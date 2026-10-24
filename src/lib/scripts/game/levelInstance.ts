@@ -20,9 +20,6 @@ export class LevelInstance {
 		this.playerSpawnPosition = TileDef.toWorldXY(spawnPosition)
 		this.terrainCollision = new TerrainCollision(tiles)
 	}
-	get enemySpawns() {
-		return this.tiles.values.filter((t) => TileDef.isEnemy(t))
-	}
 	getTreasureSpawnPosition() {
 		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')
 		const xy = Random.chooseOne(treasures)?.tileXY ?? { x: 0, y: 0 }

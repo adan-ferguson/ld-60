@@ -1,6 +1,6 @@
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import { createEnemy } from '#lib/scripts/game/enemies/enemyFactory.ts'
+import { tryCreateEnemy } from '#lib/scripts/game/enemies/enemyFactory.ts'
 import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
 import { Turret } from '#lib/scripts/game/enemies/turret.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
@@ -35,8 +35,11 @@ export class EntitiesManager {
 
 	reset() {
 		this.entities.clear()
-		this.game.level?.enemySpawns.forEach((tileDef) => {
-			this.entities.add(createEnemy(this.game, tileDef))
+		this.game.level?.tiles.values.forEach((tileDef) => {
+			const enemy = tryCreateEnemy(this.game, tileDef)
+			if (enemy) {
+				this.entities.add(enemy)
+			}
 		})
 	}
 

@@ -14,7 +14,7 @@ export abstract class GameEntity {
 	public facing = 1
 	public time = 0
 	private damageTaken = 0
-	protected constructor(protected game: Game) {}
+	protected constructor(public game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	protected abstract get width(): number

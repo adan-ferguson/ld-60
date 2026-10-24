@@ -25,13 +25,15 @@ xllllllllllllllllllllllllllllllx
 	contents: {
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn' },
+		u: { kind: 'treasureSpawn', minLoop: 2 },
 		x: { kind: 'wall' },
+		y: { kind: 'wall', minLoop: 2 },
 		l: { kind: 'lava' },
 		1: { kind: 'turret' },
 		2: { kind: 'turret', minLoop: 2 },
 		3: { kind: 'turret', minLoop: 3 },
-		a: { kind: 'enemy', enemyKind: 'man' },
-		b: { kind: 'enemy', enemyKind: 'man', minLoop: 2 },
-		c: { kind: 'enemy', enemyKind: 'man', minLoop: 3 },
+		a: { kind: 'man' },
+		b: { kind: 'man', minLoop: 2 },
+		c: { kind: 'man', minLoop: 3 },
 	},
 }

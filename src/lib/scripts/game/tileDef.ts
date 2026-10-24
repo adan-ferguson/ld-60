@@ -8,10 +8,6 @@ export type TileDef = {
 	contents: TileContents
 }
 
-export type EnemyTileDef = Omit<TileDef, 'contents'> & {
-	contents: Extract<TileContents, { kind: 'enemy' }>
-}
-
 function parseLevelTiles(level: LevelDef, loops: number) {
 	const rows = level.tiles.split('\n').filter((line) => line.trim().length > 0)
 	if (rows.length !== Consts.TILES_Y) {
@@ -55,6 +51,9 @@ function parseLevelTiles(level: LevelDef, loops: number) {
 function makeContentsMap(contents: LevelDef['contents'], loops: number) {
 	const map = new Map<string, TileContents>()
 	for (const [id, content] of Object.entries(contents)) {
+		if (content.loop && loops !== content.loop) {
+			continue
+		}
 		if (content.minLoop && loops < content.minLoop) {
 			continue
 		}
@@ -73,8 +72,5 @@ export const TileDef = {
 			x: tileXY.x * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
 			y: tileXY.y * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
 		}
-	},
-	isEnemy(tileDef: TileDef): tileDef is EnemyTileDef {
-		return tileDef.contents.kind === 'enemy'
 	},
 }

@@ -6,7 +6,7 @@ import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Graphics } from 'pixi.js'
 
 type PlayerAnimationType =
-	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouch-move' | 'crouch-attack'
+	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouchMove' | 'crouchAttack'
 
 const defs: Record<PlayerAnimationType, AnimationDef> = {
 	idle: {
@@ -29,11 +29,11 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	crouch: {
 		frames: [9],
 	},
-	'crouch-move': {
+	crouchMove: {
 		frames: [9, 10],
 		loop: true,
 	},
-	'crouch-attack': {
+	crouchAttack: {
 		frames: [11, 12, 13],
 		speed: 0.3,
 	},
@@ -59,7 +59,7 @@ export class PlayerEl extends WithManSprite {
 			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
 		})
 		player.shotFired.listen(() => {
-			this.setAnimationType(this.player.crouching ? 'crouch-attack' : 'attack')
+			this.setAnimationType(this.player.crouching ? 'crouchAttack' : 'attack')
 			this.shotAnimationTime = 0.3
 		})
 	}
@@ -111,7 +111,7 @@ export class PlayerEl extends WithManSprite {
 		}
 		if (this.player.crouching) {
 			if (this.player.velX !== 0) {
-				return 'crouch-move'
+				return 'crouchMove'
 			}
 			return 'crouch'
 		}

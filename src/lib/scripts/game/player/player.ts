@@ -139,7 +139,7 @@ export class Player extends GameEntity {
 				style: 'small',
 				size: 4,
 				source: 'player',
-				lifetime: 0.8,
+				lifetime: 1.2,
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),

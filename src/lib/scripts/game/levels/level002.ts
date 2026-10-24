@@ -11,11 +11,11 @@ x....1...xxxxxx..xxxxxx...1....x
 x........x............x........x
 x........x.....a......x........x
 x.......xx...xxxxxx...xx.......x
-x.......3x.....11.....x3.......x
+x.......3x.....11.....x3......tx
 xx.......x............x.......xx
 x........x.c........b.x........x
 x.......xxxxx......xxxxx.......x
-xt............................tx
+x.............................tx
 xx.............a..............xx
 x.............xxxx.............x
 x..............................x
@@ -25,13 +25,15 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	contents: {
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn' },
+		u: { kind: 'treasureSpawn', minLoop: 2 },
 		x: { kind: 'wall' },
+		y: { kind: 'wall', minLoop: 2 },
 		l: { kind: 'lava' },
 		1: { kind: 'turret' },
 		2: { kind: 'turret', minLoop: 2 },
 		3: { kind: 'turret', minLoop: 3 },
-		a: { kind: 'enemy', enemyKind: 'man' },
-		b: { kind: 'enemy', enemyKind: 'man', minLoop: 2 },
-		c: { kind: 'enemy', enemyKind: 'man', minLoop: 3 },
+		a: { kind: 'man' },
+		b: { kind: 'man', minLoop: 2 },
+		c: { kind: 'man', minLoop: 3 },
 	},
 }
