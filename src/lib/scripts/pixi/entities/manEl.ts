@@ -44,6 +44,10 @@ export class ManEl extends WithManSprite {
 		})
 	}
 
+	override get debugRects() {
+		return [this.man.visionRect]
+	}
+
 	update2() {
 		this.sprite.scale.x = Math.sign(this.man.facing)
 	}

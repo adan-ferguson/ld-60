@@ -5,10 +5,11 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import { Rectangle } from 'pixi.js'
 
 const MOVE_SPEED = 14
 const LEDGE_LOOKAHEAD = 1
-const ATTACK_COOLDOWN = 2.4
+const ATTACK_COOLDOWN = 1.4
 const ATTACK_WINDUP = 0.8
 const ATTACK_DURATION = 0.4
 
@@ -35,6 +36,11 @@ export class Man extends Enemy {
 	}
 	public get maxHealth(): number {
 		return 1
+	}
+	get visionRect(): Rectangle {
+		const HEIGHT = 12
+		const WIDTH = 96
+		return new Rectangle(0, -HEIGHT / 2, WIDTH, HEIGHT)
 	}
 	private attackCooldown = ATTACK_COOLDOWN
 	constructor(
@@ -88,8 +94,7 @@ export class Man extends Enemy {
 	private beginAttack() {}
 
 	public seesPlayer() {
-		// TODO
-		return false
+		return this.game.player.worldBounds.intersects(this.toWorldBounds(this.visionRect))
 	}
 }
 
@@ -104,12 +109,12 @@ abstract class State {
 }
 
 class IdleState extends State {
-	update2(man: Man, _delta: number): void {
+	update2(man: Man, delta: number): void {
 		if (man.behavior === 'patrol') {
 			if (!man.hasGroundAhead()) {
 				man.facing *= -1
 			}
-			man.velX = man.facing * MOVE_SPEED * man.game.loops
+			man.x += man.facing * MOVE_SPEED * man.game.loops * delta
 		}
 		if (this.time >= ATTACK_COOLDOWN && man.seesPlayer()) {
 			man.state = new AttackWindupState()

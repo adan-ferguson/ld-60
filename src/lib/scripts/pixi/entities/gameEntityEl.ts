@@ -1,4 +1,4 @@
-import { Container, Graphics } from 'pixi.js'
+import { Container, Graphics, type Rectangle } from 'pixi.js'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
@@ -7,23 +7,29 @@ import { flatRect } from '#lib/scripts/utils/flatRect.ts'
 const DEBUG = true
 
 export abstract class GameEntityEl extends Container {
-	private hitbox: Graphics
+	private debugGfx: Graphics
+	protected get debugRects(): Rectangle[] {
+		return []
+	}
 	constructor(
 		protected gc: GameController,
 		protected entity: GameEntity,
 	) {
 		super()
 		this.zIndex = 0
-		this.addChild((this.hitbox = new Graphics()))
+		this.addChild((this.debugGfx = new Graphics()))
 	}
 	public update(delta: number) {
 		this.x = Math.round(this.entity.x * Consts.RESOLUTION) / Consts.RESOLUTION
 		this.y = Math.round(this.entity.y * Consts.RESOLUTION) / Consts.RESOLUTION
 		if (DEBUG) {
-			this.hitbox
+			this.debugGfx
 				.clear()
 				.rect(...flatRect(this.entity.localBounds))
 				.stroke({ color: 0x00ff00, width: 0.25 })
+			this.debugRects.forEach((r) => {
+				this.debugGfx.rect(...flatRect(r)).stroke({ color: 0x0000ff, width: 0.25 })
+			})
 		}
 		this.update2(delta)
 	}
