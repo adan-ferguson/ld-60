@@ -22,7 +22,7 @@ const JUMP_VELOCITY = 65
 const X_VELOCITY = 36
 const GRAVITY = 125
 const MAX_FALL_SPEED = 200
-const WIDTH = 8
+const WIDTH = 7.5
 const HEIGHT = 12
 const CROUCH_DIFF = 4
 const SHOT_COOLDOWN = 0.21
@@ -145,7 +145,7 @@ export class Player extends GameEntity {
 				w: 6,
 				h: 2,
 				x: this.x + x * 3 + 3 * this.facing,
-				y: this.y + (crouching ? -0.5 : -3) + y * 3,
+				y: this.y + (crouching ? -0.5 : -2) + y * 3,
 				tint: 'cyan',
 			}),
 		)
