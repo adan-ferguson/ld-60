@@ -6,11 +6,12 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Rectangle } from 'pixi.js'
+import { Projectile } from '#lib/scripts/game/projectile.ts'
 
 const MOVE_SPEED = 14
 const LEDGE_LOOKAHEAD = 1
 const ATTACK_COOLDOWN = 1.4
-const ATTACK_WINDUP = 0.8
+const ATTACK_WINDUP = 0.6
 const ATTACK_DURATION = 0.4
 
 export type ManBehavior = 'patrol' | 'stand'
@@ -40,9 +41,8 @@ export class Man extends Enemy {
 	get visionRect(): Rectangle {
 		const HEIGHT = 12
 		const WIDTH = 96
-		return new Rectangle(0, -HEIGHT / 2, WIDTH, HEIGHT)
+		return new Rectangle(this.facing === 1 ? 0 : -WIDTH, -HEIGHT / 2, WIDTH, HEIGHT)
 	}
-	private attackCooldown = ATTACK_COOLDOWN
 	constructor(
 		game: Game,
 		tileXY: XY,
@@ -91,7 +91,22 @@ export class Man extends Enemy {
 		})
 	}
 
-	private beginAttack() {}
+	public fire() {
+		this.game.entitiesManager.spawn(
+			new Projectile(this.game, {
+				style: 'small',
+				size: 1,
+				source: 'enemy',
+				lifetime: 10,
+				velX: 80 * this.facing,
+				velY: 0,
+				angle: Math.atan2(0, this.facing),
+				x: this.x + 3 * this.facing,
+				y: this.y,
+				tint: 'red',
+			}),
+		)
+	}
 
 	public seesPlayer() {
 		return this.game.player.worldBounds.intersects(this.toWorldBounds(this.visionRect))
@@ -125,6 +140,7 @@ class IdleState extends State {
 class AttackWindupState extends State {
 	update2(man: Man, _delta: number): void {
 		if (this.time >= ATTACK_WINDUP) {
+			man.fire()
 			man.state = new AttackState()
 		}
 	}
@@ -132,7 +148,6 @@ class AttackWindupState extends State {
 
 class AttackState extends State {
 	update2(man: Man, _delta: number): void {
-		// TODO spawn projectile
 		if (this.time >= ATTACK_DURATION) {
 			man.state = new IdleState()
 		}
