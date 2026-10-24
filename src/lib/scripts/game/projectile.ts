@@ -2,14 +2,15 @@ import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import Game from '#lib/scripts/game/game.ts'
-import type { ColorSource, Rectangle } from 'pixi.js'
+import type { ColorSource } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 
 export type ProjectileStyle = 'small' | 'large' | 'dot'
 
 type Options = {
 	style: ProjectileStyle
-	size: number
+	w: number
+	h: number
 	source: 'player' | 'enemy'
 	lifetime: number
 	x: number
@@ -58,9 +59,9 @@ export class Projectile extends GameEntity {
 		return new ProjectileEl(gc, this)
 	}
 	public get width(): number {
-		return this.options.size
+		return this.options.w
 	}
 	public get height(): number {
-		return this.options.size
+		return this.options.h
 	}
 }

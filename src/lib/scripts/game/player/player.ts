@@ -137,14 +137,15 @@ export class Player extends GameEntity {
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
-				size: 4,
 				source: 'player',
 				lifetime: 1.2,
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),
+				w: 6,
+				h: 2,
 				x: this.x + x * 3 + 3 * this.facing,
-				y: this.y + (crouching ? -0.5 : -2) + y * 3,
+				y: this.y + (crouching ? -0.5 : -3) + y * 3,
 				tint: 'cyan',
 			}),
 		)

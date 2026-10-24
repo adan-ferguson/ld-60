@@ -9,7 +9,6 @@ import { Rectangle } from 'pixi.js'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 
 const MOVE_SPEED = 14
-const LEDGE_LOOKAHEAD = 1
 const ATTACK_COOLDOWN = 1.4
 const ATTACK_WINDUP = 0.6
 const ATTACK_DURATION = 0.4
@@ -18,7 +17,7 @@ export type ManBehavior = 'patrol' | 'stand'
 
 export type ManProps = {
 	facing: 1 | -1
-	behavior: 'patrol'
+	behavior: ManBehavior
 	maxHealth: number
 }
 
@@ -47,7 +46,7 @@ export class Man extends Enemy {
 	}
 	get visionRect(): Rectangle {
 		const HEIGHT = 12
-		const WIDTH = 96
+		const WIDTH = 72
 		return new Rectangle(this.facing === 1 ? 0 : -WIDTH, -HEIGHT / 2, WIDTH, HEIGHT)
 	}
 	constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
@@ -77,24 +76,19 @@ export class Man extends Enemy {
 			this.velX * delta,
 			0,
 		)
-
 		this.x += result.x - this.worldBounds.x
-
 		if (result.hitHorizontal) {
 			this.facing *= -1
 		}
 	}
 	hasGroundAhead(): boolean {
 		const body = this.worldBounds
-		const probeWidth = 0.25
-		const probeX =
-			this.facing > 0
-				? body.x + body.width + LEDGE_LOOKAHEAD
-				: body.x - probeWidth - LEDGE_LOOKAHEAD
+		const LEDGE_LOOKAHEAD = -1.5
+		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
 		return this.game.level.terrainCollision.isGrounded({
-			x: probeX,
+			x,
 			y: body.y,
-			width: probeWidth,
+			width: 0.1,
 			height: body.height,
 		})
 	}
@@ -103,14 +97,15 @@ export class Man extends Enemy {
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
-				size: 1,
+				w: 4,
+				h: 1,
 				source: 'enemy',
 				lifetime: 10,
 				velX: 80 * this.facing,
 				velY: 0,
 				angle: Math.atan2(0, this.facing),
 				x: this.x + 3 * this.facing,
-				y: this.y,
+				y: this.y - 2,
 				tint: 'red',
 			}),
 		)
@@ -132,14 +127,17 @@ abstract class State {
 }
 
 class IdleState extends State {
-	update2(man: Man, delta: number): void {
+	update2(man: Man, _delta: number): void {
 		if (man.props.behavior === 'patrol') {
 			if (!man.hasGroundAhead()) {
 				man.facing *= -1
 			}
-			man.x += man.facing * MOVE_SPEED * man.game.loops * delta
+			man.velX = man.facing * MOVE_SPEED * man.game.loops
+		} else {
+			man.velX = 0
 		}
 		if (this.time >= ATTACK_COOLDOWN && man.seesPlayer()) {
+			man.velX = 0
 			man.state = new AttackWindupState()
 		}
 	}
