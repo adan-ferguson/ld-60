@@ -11,7 +11,7 @@ x..........................x.3.x
 x...t.........b................x
 x.............xx...............x
 x........xx...xx....xx.....x...x
-xrrrrr...xx.........xx.....x...x
+xlllll...xx.........xx.....x...x
 xxxxxx...xx....................x
 x.1.xx...xx...a............t...x
 x...xx........xx.....t.....x.3.x
@@ -20,6 +20,18 @@ x........c..........xx.....x...x
 x........xx.........xx...x.x...x
 x.t.xx...xx...c.....1x.....x...x
 x...xx.2.xx...xx....xx.....x...x
-xrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrx
+xllllllllllllllllllllllllllllllx
 `,
+	contents: {
+		s: { kind: 'playerSpawn' },
+		t: { kind: 'treasureSpawn' },
+		x: { kind: 'wall' },
+		l: { kind: 'lava' },
+		1: { kind: 'turret' },
+		2: { kind: 'turret', minLoop: 2 },
+		3: { kind: 'turret', minLoop: 3 },
+		a: { kind: 'enemy', enemyKind: 'man' },
+		b: { kind: 'enemy', enemyKind: 'man', minLoop: 2 },
+		c: { kind: 'enemy', enemyKind: 'man', minLoop: 3 },
+	},
 }

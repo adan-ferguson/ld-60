@@ -20,6 +20,18 @@ x......x...........xx..........x
 xts................x1....c....2x
 xxxx...............xx....xx....x
 xxxx...b....a......1x.........3x
-xxxxxxxxxxxxxxxxxxxxxrrrrrrrrrrx
+xxxxxxxxxxxxxxxxxxxxxllllllllllx
 `,
+	contents: {
+		s: { kind: 'playerSpawn' },
+		t: { kind: 'treasureSpawn' },
+		x: { kind: 'wall' },
+		l: { kind: 'lava' },
+		1: { kind: 'turret' },
+		2: { kind: 'turret', minLoop: 2 },
+		3: { kind: 'turret', minLoop: 3 },
+		a: { kind: 'enemy', enemyKind: 'man' },
+		b: { kind: 'enemy', enemyKind: 'man', minLoop: 2 },
+		c: { kind: 'enemy', enemyKind: 'man', minLoop: 3 },
+	},
 }

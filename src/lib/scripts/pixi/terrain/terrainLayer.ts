@@ -9,9 +9,10 @@ export class TerrainLayer extends Graphics {
 		for (const tile of level.tiles.values) {
 			const x = tile.tileXY.x * TILE_SIZE_PX
 			const y = tile.tileXY.y * TILE_SIZE_PX
-			if (tile.type === 'wall') {
+			const { kind } = tile.contents
+			if (kind === 'wall') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('#DDD')
-			} else if (tile.type === 'lava') {
+			} else if (kind === 'lava') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('red')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')

@@ -35,8 +35,8 @@ export class EntitiesManager {
 
 	reset() {
 		this.entities.clear()
-		this.game.level?.enemySpawns.forEach((enemySpawnData) => {
-			this.entities.add(createEnemy(this.game, enemySpawnData))
+		this.game.level?.enemySpawns.forEach((tileDef) => {
+			this.entities.add(createEnemy(this.game, tileDef))
 		})
 	}
 

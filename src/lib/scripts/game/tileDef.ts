@@ -1,32 +1,26 @@
 import { Consts } from '#lib/scripts/consts.ts'
 import { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
+import type { LevelDef, TileContents } from '#lib/scripts/game/levelDef.ts'
 
 export type TileDef = {
 	tileXY: XY
-	type: TileType
+	contents: TileContents
 }
 
-export type TileType =
-	| 'wall'
-	| 'spawn'
-	| 'turret1'
-	| 'turret2'
-	| 'turret3'
-	| 'man1'
-	| 'man2'
-	| 'man3'
-	| 'lava'
-	| 'treasure'
+export type EnemyTileDef = Omit<TileDef, 'contents'> & {
+	contents: Extract<TileContents, { kind: 'enemy' }>
+}
 
-function parseLevel(levelTiles: string) {
-	const rows = levelTiles.split('\n').filter((line) => line.trim().length > 0)
+function parseLevelTiles(level: LevelDef, loops: number) {
+	const rows = level.tiles.split('\n').filter((line) => line.trim().length > 0)
 	if (rows.length !== Consts.TILES_Y) {
 		throw new Error(
 			`Invalid number of rows in tiles. Expected ${Consts.TILES_Y}, got ${rows.length}`,
 		)
 	}
 	const parsed: XYMap<TileDef> = new XYMap()
+	const contentsMap = makeContentsMap(level.contents, loops)
 	let spawnPosition: XY | undefined = undefined
 	for (let y = 0; y < rows.length; y++) {
 		const row = rows[y]!
@@ -36,11 +30,10 @@ function parseLevel(levelTiles: string) {
 			)
 		}
 		for (let x = 0; x < row.length; x++) {
-			const tile = row[x]!
-			const type = getTileType(tile)
+			const contents = contentsMap.get(row[x]!)
 			const XY = { x, y }
-			if (type) {
-				if (type === 'spawn') {
+			if (contents) {
+				if (contents.kind === 'playerSpawn') {
 					if (spawnPosition) {
 						throw new Error(
 							`Multiple spawn points found in tiles. Only one spawn point is allowed.`,
@@ -48,7 +41,7 @@ function parseLevel(levelTiles: string) {
 					}
 					spawnPosition = XY
 				}
-				parsed.set({ x, y }, { tileXY: XY, type })
+				parsed.set({ x, y }, { tileXY: XY, contents })
 			} else if (x == 0 || x == Consts.TILES_X - 1 || y == 0 || y == Consts.TILES_Y - 1) {
 				throw new Error(
 					"Invalid tile at border. Borders must be walls. I know I should have done this programmatically but I didn't! It's a game jam geez leave me alone.",
@@ -59,49 +52,29 @@ function parseLevel(levelTiles: string) {
 	return { spawnPosition: spawnPosition!, tiles: parsed }
 }
 
-function getTileType(char: string): TileType | null {
-	if (char == '.') {
-		return null
+function makeContentsMap(contents: LevelDef['contents'], loops: number) {
+	const map = new Map<string, TileContents>()
+	for (const [id, content] of Object.entries(contents)) {
+		if (content.minLoop && loops < content.minLoop) {
+			continue
+		}
+		if (content.maxLoop && loops > content.maxLoop) {
+			continue
+		}
+		map.set(id, content)
 	}
-	if (char == 'x') {
-		return 'wall'
-	}
-	if (char == 's') {
-		return 'spawn'
-	}
-	if (char == '1') {
-		return 'turret1'
-	}
-	if (char == '2') {
-		return 'turret2'
-	}
-	if (char == '3') {
-		return 'turret3'
-	}
-	if (char == 'a') {
-		return 'man1'
-	}
-	if (char == 'b') {
-		return 'man2'
-	}
-	if (char == 'c') {
-		return 'man3'
-	}
-	if (char == 'r') {
-		return 'lava'
-	}
-	if (char == 't') {
-		return 'treasure'
-	}
-	throw new Error(`Invalid character in tiles: ${char}`)
+	return map
 }
 
 export const TileDef = {
-	parseLevel,
+	parseLevelTiles,
 	toWorldXY(tileXY: XY): XY {
 		return {
 			x: tileXY.x * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
 			y: tileXY.y * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
 		}
+	},
+	isEnemy(tileDef: TileDef): tileDef is EnemyTileDef {
+		return tileDef.contents.kind === 'enemy'
 	},
 }

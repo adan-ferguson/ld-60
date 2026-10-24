@@ -1,6 +1,7 @@
 import type { TileDef } from '#lib/scripts/game/tileDef.ts'
 import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import { Consts } from '#lib/scripts/consts.ts'
+import type { TileContents } from '#lib/scripts/game/levelDef.ts'
 
 const EPSILON = 0.001
 
@@ -38,7 +39,7 @@ export class TerrainCollision {
 	}
 
 	overlapsLava(body: Body): boolean {
-		return this.overlapsTileType(body, 'lava')
+		return this.overlapsTileKind(body, 'lava')
 	}
 
 	resolveMovement(body: Body, deltaX: number, deltaY: number): MovementResult {
@@ -131,10 +132,10 @@ export class TerrainCollision {
 	}
 
 	public overlapsSolid(body: Body): boolean {
-		return this.overlapsTileType(body, 'wall')
+		return this.overlapsTileKind(body, 'wall')
 	}
 
-	private overlapsTileType(body: Body, tileType: TileDef['type']): boolean {
+	private overlapsTileKind(body: Body, tileType: TileContents['kind']): boolean {
 		const left = body.x
 		const right = body.x + body.width
 		const top = body.y
@@ -150,7 +151,7 @@ export class TerrainCollision {
 			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {
 				const tile = this.tiles.get({ x: tileX, y: tileY })
 
-				if (tile?.type === tileType) {
+				if (tile?.contents.kind === tileType) {
 					return true
 				}
 			}
@@ -160,6 +161,6 @@ export class TerrainCollision {
 	}
 
 	private isSolidTile(x: number, y: number): boolean {
-		return this.tiles.get({ x, y })?.type === 'wall'
+		return this.tiles.get({ x, y })?.contents.kind === 'wall'
 	}
 }

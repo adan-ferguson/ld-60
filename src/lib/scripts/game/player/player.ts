@@ -29,7 +29,7 @@ const SHOT_COOLDOWN = 0.21
 const AIR_CONTROL = 0.04
 
 export class Player extends GameEntity {
-	static COYOTE_TIME = 0.07
+	static COYOTE_TIME = 0.06
 	aerialState: AerialState = { kind: 'grounded', time: 0 }
 	private controlsManager: ControlsManager
 	public jumped =

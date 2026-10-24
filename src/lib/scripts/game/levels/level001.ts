@@ -19,7 +19,19 @@ x........xx.........xxx........x
 x....xx..................xx....x
 xt...xx..................xx...tx
 xxx...x......................xxx
-xx1b...........t............c1xx
+xx1b........................c1xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
+	contents: {
+		s: { kind: 'playerSpawn' },
+		t: { kind: 'treasureSpawn' },
+		x: { kind: 'wall' },
+		l: { kind: 'lava' },
+		1: { kind: 'enemy', enemyKind: 'turret' },
+		2: { kind: 'enemy', enemyKind: 'turret', minLoop: 2 },
+		3: { kind: 'enemy', enemyKind: 'turret', minLoop: 3 },
+		a: { kind: 'enemy', enemyKind: 'man' },
+		b: { kind: 'enemy', enemyKind: 'man', minLoop: 2 },
+		c: { kind: 'enemy', enemyKind: 'man', minLoop: 3 },
+	},
 }

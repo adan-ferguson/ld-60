@@ -3,12 +3,7 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import Game from '#lib/scripts/game/game.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 
-export type EnemyType = 'turret' | 'man'
-
-export type EnemySpawnDef = {
-	tileXY: XY
-	enemyType: EnemyType
-}
+export type EnemyKind = 'turret' | 'man'
 
 export abstract class Enemy extends GameEntity {
 	constructor(game: Game, tileXY: XY) {

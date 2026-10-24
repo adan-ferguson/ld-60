@@ -3,7 +3,6 @@ import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { TerrainCollision } from '#lib/scripts/game/terrainCollision.ts'
-import type { EnemySpawnDef } from '#lib/scripts/game/enemies/enemy.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
@@ -16,42 +15,16 @@ export class LevelInstance {
 		public levelDef: LevelDef,
 		public loops: number,
 	) {
-		const { spawnPosition, tiles } = TileDef.parseLevel(levelDef.tiles)
+		const { spawnPosition, tiles } = TileDef.parseLevelTiles(levelDef, this.loops)
 		this.tiles = tiles
 		this.playerSpawnPosition = TileDef.toWorldXY(spawnPosition)
 		this.terrainCollision = new TerrainCollision(tiles)
 	}
 	get enemySpawns() {
-		const enemySpawns: EnemySpawnDef[] = []
-		const addMaybe = (loop: number, type: 'turret' | 'man', xy: XY) => {
-			if (this.loops < loop) {
-				return
-			}
-			enemySpawns.push({
-				tileXY: xy,
-				enemyType: type,
-			})
-		}
-		for (const tileDef of this.tiles.values) {
-			const xy = tileDef.tileXY
-			if (tileDef.type == 'turret1') {
-				addMaybe(1, 'turret', xy)
-			} else if (tileDef.type == 'turret2') {
-				addMaybe(2, 'turret', xy)
-			} else if (tileDef.type == 'turret3') {
-				addMaybe(3, 'turret', xy)
-			} else if (tileDef.type == 'man1') {
-				addMaybe(1, 'man', xy)
-			} else if (tileDef.type == 'man2') {
-				addMaybe(2, 'man', xy)
-			} else if (tileDef.type == 'man3') {
-				addMaybe(3, 'man', xy)
-			}
-		}
-		return enemySpawns
+		return this.tiles.values.filter((t) => TileDef.isEnemy(t))
 	}
 	getTreasureSpawnPosition() {
-		const treasures = this.tiles.values.filter((t) => t.type === 'treasure')
+		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')
 		const xy = Random.chooseOne(treasures)?.tileXY ?? { x: 0, y: 0 }
 		return TileDef.toWorldXY(xy)
 	}
