@@ -16,9 +16,16 @@ const ATTACK_DURATION = 0.4
 
 export type ManBehavior = 'patrol' | 'stand'
 
+export type ManProps = {
+	facing: 1 | -1
+	behavior: 'patrol'
+	maxHealth: number
+}
+
 export class Man extends Enemy {
 	public stateChanged = CoolEvents.createHandler<(state: State) => void>()
 	#state: State
+	props: ManProps
 	public get state(): State {
 		return this.#state
 	}
@@ -33,24 +40,25 @@ export class Man extends Enemy {
 		return 8
 	}
 	get score(): number {
-		return 1000
+		return 1000 * this.props.maxHealth
 	}
 	public get maxHealth(): number {
-		return 1
+		return this.props.maxHealth
 	}
 	get visionRect(): Rectangle {
 		const HEIGHT = 12
 		const WIDTH = 96
 		return new Rectangle(this.facing === 1 ? 0 : -WIDTH, -HEIGHT / 2, WIDTH, HEIGHT)
 	}
-	constructor(
-		game: Game,
-		tileXY: XY,
-		public behavior: ManBehavior = 'patrol',
-		facing: 1 | -1 = 1,
-	) {
+	constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
 		super(game, tileXY)
-		this.facing = facing
+		this.props = {
+			maxHealth: 1,
+			facing: 1,
+			behavior: 'patrol',
+			...props,
+		}
+		this.facing = this.props.facing
 		this.y -= 2
 		this.#state = new IdleState()
 	}
@@ -78,7 +86,7 @@ export class Man extends Enemy {
 	}
 	hasGroundAhead(): boolean {
 		const body = this.worldBounds
-		const probeWidth = 0.5
+		const probeWidth = 0.25
 		const probeX =
 			this.facing > 0
 				? body.x + body.width + LEDGE_LOOKAHEAD
@@ -125,7 +133,7 @@ abstract class State {
 
 class IdleState extends State {
 	update2(man: Man, delta: number): void {
-		if (man.behavior === 'patrol') {
+		if (man.props.behavior === 'patrol') {
 			if (!man.hasGroundAhead()) {
 				man.facing *= -1
 			}

@@ -7,7 +7,7 @@ export function tryCreateEnemy(game: Game, def: TileDef) {
 	if (def.contents.kind === 'turret') {
 		return new Turret(game, def.tileXY)
 	} else if (def.contents.kind === 'man') {
-		return new Man(game, def.tileXY, def.contents.behavior, def.contents.facing)
+		return new Man(game, def.tileXY, def.contents)
 	}
 	return false
 }

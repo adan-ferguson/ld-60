@@ -53,7 +53,7 @@ export class ManEl extends WithManSprite {
 	}
 
 	private setIdleAnimation() {
-		if (this.man.behavior === 'patrol') {
+		if (this.man.props.behavior === 'patrol') {
 			this.setAnimation(defs.run)
 		} else {
 			this.setAnimation(defs.stand)

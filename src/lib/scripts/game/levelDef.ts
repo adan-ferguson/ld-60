@@ -1,8 +1,8 @@
-type Man = {
+import type { ManProps } from '#lib/scripts/game/enemies/man.ts'
+
+export type Man = {
 	kind: 'man'
-	facing?: 1 | -1
-	behavior?: 'patrol'
-}
+} & Partial<ManProps>
 
 type Turret = {
 	kind: 'turret'
