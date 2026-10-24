@@ -11,10 +11,10 @@ export class ControlsManager {
 	constructor(private player: Player) {}
 	update() {
 		this.inputState = getInputState()
-		this.tryJump()
-		this.tryShoot()
 		this.x = this.inputState.moveX
 		this.y = this.inputState.moveY
+		this.tryJump()
+		this.tryShoot()
 	}
 	private tryJump() {
 		if (!this.inputState?.button2) {

@@ -47,7 +47,7 @@ export class Turret extends Enemy {
 				style: 'dot',
 				size: 2,
 				source: 'enemy',
-				lifetime: 5,
+				lifetime: 10,
 				velX: Math.cos(angle) * SPEED,
 				velY: Math.sin(angle) * SPEED,
 				x: this.x,

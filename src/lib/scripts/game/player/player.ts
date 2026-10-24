@@ -57,18 +57,24 @@ export class Player extends GameEntity {
 		this.y += CROUCH_DIFF / 2
 		this.crouching = true
 	}
-	uncrouch() {
-		if (!this.crouching || !this.canUncrouch()) {
-			return
+	/**
+	 * Returns false if we are crouching and there's not enough room to uncrouch.
+	 */
+	tryUncrouch() {
+		if (!this.crouching) {
+			return true
 		}
-		// TODO: Check if there's room to uncrouch, otherwise stay crouched
+		if (!this.roomToUncrouch()) {
+			return false
+		}
 		this.y -= CROUCH_DIFF / 2
 		this.crouching = false
+		return true
 	}
 	update2(delta: number) {
 		this.aerialState.time += delta
 		if (!this.onGround()) {
-			this.crouching = false
+			this.tryUncrouch()
 			this.velY += GRAVITY * delta
 			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
@@ -79,7 +85,7 @@ export class Player extends GameEntity {
 			if (this.controlsManager.y > delta) {
 				this.crouch()
 			} else {
-				this.uncrouch()
+				this.tryUncrouch()
 			}
 		}
 		this.controlsManager.update()
@@ -96,6 +102,9 @@ export class Player extends GameEntity {
 			stateBefore.kind === 'grounded' ||
 			(stateBefore.kind === 'aerial' && stateBefore.time <= Player.COYOTE_TIME)
 		) {
+			if (!this.tryUncrouch()) {
+				return false
+			}
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
 		} else if (stateBefore.kind === 'aerial' && !stateBefore.doubleJumpUsed) {
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true, time: 0 }
@@ -175,7 +184,7 @@ export class Player extends GameEntity {
 		this.controlsManager.reset()
 	}
 
-	private canUncrouch() {
+	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
 		return !this.game.level.terrainCollision.overlapsSolid({
 			x: worldBounds.x,
