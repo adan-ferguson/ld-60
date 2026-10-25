@@ -35,12 +35,10 @@ type MovingBlock = {
 export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlock
 
 export type VariableContents = TileContents & {
-	minLoop?: 2 | 3
-	maxLoop?: 1 | 2
-	loop?: 1 | 2 | 3
+	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]
 }
 
-type TileDefs = Record<string, VariableContents>
+type TileDefs = Record<string, VariableContents | VariableContents[]>
 
 export type LevelDef = {
 	displayName: string

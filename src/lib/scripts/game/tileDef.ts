@@ -1,7 +1,7 @@
 import { Consts } from '#lib/scripts/consts.ts'
 import { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import type { LevelDef, TileContents } from '#lib/scripts/game/levelDef.ts'
+import type { LevelDef, TileContents, VariableContents } from '#lib/scripts/game/levelDef.ts'
 
 export type TileDef = {
 	tileXY: XY
@@ -51,18 +51,28 @@ function parseLevelTiles(level: LevelDef, loops: number) {
 function makeContentsMap(contents: LevelDef['contents'], loops: number) {
 	const map = new Map<string, TileContents>()
 	for (const [id, content] of Object.entries(contents)) {
-		if (content.loop && loops !== content.loop) {
-			continue
+		let validContent: TileContents | undefined
+		if (Array.isArray(content)) {
+			validContent = content.find((c) => loopMatch(c.loop, loops))
+		} else {
+			validContent = loopMatch(content.loop, loops) ? content : undefined
 		}
-		if (content.minLoop && loops < content.minLoop) {
-			continue
+		if (validContent) {
+			map.set(id, validContent)
 		}
-		if (content.maxLoop && loops > content.maxLoop) {
-			continue
-		}
-		map.set(id, content)
 	}
 	return map
+}
+
+function loopMatch(loops: VariableContents['loop'], currentLoop: number) {
+	const l: 1 | 2 | 3 = Math.min(3, currentLoop) as 1 | 2 | 3
+	if (loops === undefined) {
+		return true
+	}
+	if (Array.isArray(loops)) {
+		return loops.includes(l)
+	}
+	return loops === currentLoop
 }
 
 export const TileDef = {
