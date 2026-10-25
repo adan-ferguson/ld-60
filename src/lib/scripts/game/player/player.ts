@@ -117,7 +117,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	onGround() {
-		return this.game.level?.terrainCollision.isGrounded(this.worldBounds) ?? false
+		return this.game.terrainCollision.isGrounded(this.worldBounds) ?? false
 	}
 	private calcShotInfo() {
 		if (this.crouching) {
@@ -155,11 +155,7 @@ export class Player extends GameEntity {
 		return new PlayerEl(gc, this)
 	}
 	protected override move(delta: number) {
-		const terrainCollision = this.game.level?.terrainCollision
-		if (!terrainCollision) {
-			return
-		}
-		const result = terrainCollision.resolveMovement(
+		const result = this.game.terrainCollision.resolveMovement(
 			this.worldBounds,
 			this.velX * delta,
 			this.velY * delta,
@@ -187,7 +183,7 @@ export class Player extends GameEntity {
 
 	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
-		return !this.game.level.terrainCollision.overlapsSolid({
+		return !this.game.terrainCollision.overlapsSolid({
 			x: worldBounds.x,
 			width: worldBounds.width,
 			y: worldBounds.y - CROUCH_DIFF,

@@ -57,11 +57,10 @@ export abstract class GameEntity {
 	}
 
 	protected checkHazards() {
-		const terrainCollision = this.game.level?.terrainCollision
-		if (!terrainCollision || !this.isActive) {
+		if (!this.isActive) {
 			return
 		}
-		if (terrainCollision.overlapsLava({ x: this.x, y: this.y, width: 0, height: 0 })) {
+		if (this.game.terrainCollision.overlapsLava({ x: this.x, y: this.y, width: 0, height: 0 })) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

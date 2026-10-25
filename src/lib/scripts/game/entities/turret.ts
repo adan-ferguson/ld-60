@@ -1,5 +1,5 @@
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
+import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { TurretEl } from '#lib/scripts/pixi/entities/turretEl.ts'

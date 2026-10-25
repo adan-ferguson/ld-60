@@ -1,9 +1,11 @@
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import { tryCreateEnemy } from '#lib/scripts/game/enemies/enemyFactory.ts'
-import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
-import { Turret } from '#lib/scripts/game/enemies/turret.ts'
+import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
+import { Turret } from '#lib/scripts/game/entities/turret.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
+import type { TileDef } from '#lib/scripts/game/tileDef.ts'
+import { Man } from '#lib/scripts/game/entities/man.ts'
+import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 
 export class EntitiesManager {
 	public entities: Set<GameEntity> = new Set()
@@ -36,9 +38,9 @@ export class EntitiesManager {
 	reset() {
 		this.entities.clear()
 		this.game.level?.tiles.values.forEach((tileDef) => {
-			const enemy = tryCreateEnemy(this.game, tileDef)
-			if (enemy) {
-				this.entities.add(enemy)
+			const entity = tryCreateEntity(this.game, tileDef)
+			if (entity) {
+				this.entities.add(entity)
 			}
 		})
 	}
@@ -49,4 +51,15 @@ export class EntitiesManager {
 			Random.chooseOne(turrets.filter((t) => !t.fireTimeout)) ?? Random.chooseOne(turrets)
 		turret?.queueFire()
 	}
+}
+
+export function tryCreateEntity(game: Game, def: TileDef) {
+	if (def.contents.kind === 'turret') {
+		return new Turret(game, def.tileXY)
+	} else if (def.contents.kind === 'man') {
+		return new Man(game, def.tileXY, def.contents)
+	} else if (def.contents.kind === 'movingBlock') {
+		return new MovingBlock(game, def.tileXY, def.contents)
+	}
+	return false
 }

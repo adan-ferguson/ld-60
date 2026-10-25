@@ -1,5 +1,5 @@
 import type { GameController } from '#lib/scripts/gameController.ts'
-import { type Man, ManStateTypes } from '#lib/scripts/game/enemies/man.ts'
+import { type Man, ManStateTypes } from '#lib/scripts/game/entities/man.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
 

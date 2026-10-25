@@ -1,5 +1,5 @@
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { Enemy } from '#lib/scripts/game/enemies/enemy.ts'
+import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
@@ -71,7 +71,7 @@ export class Man extends Enemy {
 		this.state.update(this, delta)
 	}
 	protected override move(delta: number) {
-		const result = this.game.level.terrainCollision.resolveMovement(
+		const result = this.game.terrainCollision.resolveMovement(
 			this.worldBounds,
 			this.velX * delta,
 			0,
@@ -85,7 +85,7 @@ export class Man extends Enemy {
 		const body = this.worldBounds
 		const LEDGE_LOOKAHEAD = -1.5
 		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
-		return this.game.level.terrainCollision.isGrounded({
+		return this.game.terrainCollision.isGrounded({
 			x,
 			y: body.y,
 			width: 0.1,

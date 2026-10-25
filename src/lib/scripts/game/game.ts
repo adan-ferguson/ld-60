@@ -6,6 +6,7 @@ import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Treasure } from '#lib/scripts/game/treasure.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
+import { TerrainCollision } from '#lib/scripts/game/terrainCollision.ts'
 
 const EXTRA_LIFE = 25000
 const TREASURE_SPAWN_TIME = 10
@@ -32,6 +33,7 @@ class Game {
 	public playerDied = CoolEvents.createHandler()
 	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
+	public terrainCollision: TerrainCollision
 	private waveClearedEmitted = false
 	get score() {
 		return this.rollingScore
@@ -49,6 +51,7 @@ class Game {
 		})
 		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
+		this.terrainCollision = new TerrainCollision(this)
 		this.setWave(wave)
 	}
 	get activeEntites(): GameEntity[] {

@@ -1,5 +1,5 @@
 import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
-import type { Turret } from '#lib/scripts/game/enemies/turret.ts'
+import type { Turret } from '#lib/scripts/game/entities/turret.ts'
 import { Graphics } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'

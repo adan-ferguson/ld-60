@@ -1,4 +1,4 @@
-import type { ManProps } from '#lib/scripts/game/enemies/man.ts'
+import type { ManProps } from '#lib/scripts/game/entities/man.ts'
 
 export type Man = {
 	kind: 'man'
@@ -24,15 +24,15 @@ type TreasureSpawn = {
 	kind: 'treasureSpawn'
 }
 
-type MovingBlock = {
+export type MovingBlockDef = {
 	kind: 'movingBlock'
-	left: number
-	right: number
-	up: number
-	down: number
+	axis: 'h' | 'v'
+	initialDir?: -1 | 1
+	speed?: number
+	dist: [number, number]
 }
 
-export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlock
+export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlockDef
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

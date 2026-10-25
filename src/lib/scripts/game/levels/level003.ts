@@ -1,25 +1,25 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level003: LevelDef = {
-	displayName: 'Level 3',
+	displayName: 'Moving Blocks 1',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x2.............1..............3x
 x..t.........b...a..........t..x
-x..x.......xxxxxxxxxx.......x..x
+x..........xxxxxxxxxx.......x..x
 x..............1...............x
-x......x................x......x
+x.......................x......x
 x..............................x
-x..........x........x..........x
-x..............b...............x
-x..............xx..............x
-x...................t..........x
-x..........x.......xx..........x
+x..............................x
 x..................xx..........x
-x......x...........xx..........x
-xts................x1....c....2x
-xxxx...............xx....xx....x
-xxxx...b....a......1x.........3x
+x..................xx..........x
+x..................xx..........x
+x..................xx..........x
+x..................xx..........x
+x.........m........xx..........x
+x..................xx....c....2x
+x..................xx....xx....x
+xs.................xx.........3x
 xxxxxxxxxxxxxxxxxxxxxllllllllllx
 `,
 	contents: {
@@ -35,5 +35,7 @@ xxxxxxxxxxxxxxxxxxxxxllllllllllx
 		a: { kind: 'man' },
 		b: { kind: 'man', loop: [2, 3] },
 		c: { kind: 'man', loop: [3] },
+		m: { kind: 'movingBlock', axis: 'v', dist: [-5, 0] },
+		n: { kind: 'movingBlock', axis: 'h', dist: [0, 5], loop: [2, 3] },
 	},
 }

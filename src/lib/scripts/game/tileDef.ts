@@ -72,7 +72,7 @@ function loopMatch(loops: VariableContents['loop'], currentLoop: number) {
 	if (Array.isArray(loops)) {
 		return loops.includes(l)
 	}
-	return loops === currentLoop
+	return loops === l
 }
 
 export const TileDef = {

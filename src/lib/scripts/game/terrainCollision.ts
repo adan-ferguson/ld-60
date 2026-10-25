@@ -1,7 +1,6 @@
-import type { TileDef } from '#lib/scripts/game/tileDef.ts'
-import type { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import type { TileContents } from '#lib/scripts/game/levelDef.ts'
+import type Game from '#lib/scripts/game/game.ts'
 
 const EPSILON = 0.001
 
@@ -29,7 +28,10 @@ type MovementResult = {
 const FEET_CHECK_HEIGHT = 0.5
 
 export class TerrainCollision {
-	constructor(private tiles: XYMap<TileDef>) {}
+	constructor(private game: Game) {}
+	get tiles() {
+		return this.game.level.tiles
+	}
 	isGrounded(body: Body) {
 		return this.overlapsSolid({
 			...body,

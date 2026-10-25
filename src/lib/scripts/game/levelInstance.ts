@@ -9,7 +9,6 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 export class LevelInstance {
 	tiles: XYMap<TileDef>
 	playerSpawnPosition: XY
-	public terrainCollision: TerrainCollision
 	constructor(
 		game: Game,
 		public levelDef: LevelDef,
@@ -18,7 +17,6 @@ export class LevelInstance {
 		const { spawnPosition, tiles } = TileDef.parseLevelTiles(levelDef, this.loops)
 		this.tiles = tiles
 		this.playerSpawnPosition = TileDef.toWorldXY(spawnPosition)
-		this.terrainCollision = new TerrainCollision(tiles)
 	}
 	getTreasureSpawnPosition() {
 		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')
