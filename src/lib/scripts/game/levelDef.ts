@@ -24,7 +24,15 @@ type TreasureSpawn = {
 	kind: 'treasureSpawn'
 }
 
-export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn
+type MovingBlock = {
+	kind: 'movingBlock'
+	left: number
+	right: number
+	up: number
+	down: number
+}
+
+export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlock
 
 export type VariableContents = TileContents & {
 	minLoop?: 2 | 3

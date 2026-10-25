@@ -4,7 +4,7 @@ import { Level004 } from '#lib/scripts/game/levels/level004.ts'
 import { Level003 } from '#lib/scripts/game/levels/level003.ts'
 import { LevelTight } from '#lib/scripts/game/levels/levelTight.ts'
 
-const levels = [Level001, Level002, LevelTight, Level003, Level004] as const
+const levels = [Level001, Level002, Level003, Level004, LevelTight] as const
 
 const LEVEL_COUNT = levels.length
 

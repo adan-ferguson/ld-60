@@ -29,7 +29,7 @@ const SHOT_COOLDOWN = 0.21
 const AIR_CONTROL = 0.04
 
 export class Player extends GameEntity {
-	static COYOTE_TIME = 0.06
+	static COYOTE_TIME = 0.07
 	aerialState: AerialState = { kind: 'grounded', time: 0 }
 	private controlsManager: ControlsManager
 	public jumped =
@@ -144,7 +144,7 @@ export class Player extends GameEntity {
 				angle: Math.atan2(y, x),
 				w: 6,
 				h: 2,
-				x: this.x + x * 3 + 3 * this.facing,
+				x: this.x + x * 3 + (y ? 0 : 3 * this.facing),
 				y: this.y + (crouching ? -0.5 : -2) + y * 3,
 				tint: 'cyan',
 			}),
