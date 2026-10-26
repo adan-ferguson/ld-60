@@ -4,6 +4,8 @@ import type Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
+import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
+import { XY } from '#lib/scripts/utils/XY.ts'
 
 type Solid = {
 	rect: CoolRect
@@ -97,65 +99,42 @@ export class WorldCollision {
 				collided: false,
 			}
 		}
-		const currentPosition = rect[axis]
-		const nextPosition = currentPosition + delta
 
-		const size = axis === 'x' ? rect.width : rect.height
-		const perpendicularStart = axis === 'x' ? rect.y : rect.x
-		const perpendicularEnd = axis === 'x' ? rect.bottom : rect.right
+		const cardinal = Cardinal.fromAxis(axis === 'x', delta > 0)
+		const edge = cardinal.edge
 
-		const currentLeadingEdge = delta > 0 ? currentPosition + size : currentPosition
-		const nextLeadingEdge = delta > 0 ? nextPosition + size : nextPosition
+		const leadingEdge = rect[edge]
+		const nextRect = rect.shift(XY.scale(cardinal.xy, delta))
+		const nextLeadingEdge = nextRect[edge]
 
-		let bestPosition = nextPosition
-		let bestTravel = Math.abs(delta)
+		const bestDistance = Math.abs(delta)
+		let bestPosition = nextRect[axis]
 		let collided = false
 
 		for (const solid of this.solids) {
-			const obstacle = solid.rect
-
-			const obstaclePerpendicularStart = axis === 'x' ? obstacle.y : obstacle.x
-
-			const obstaclePerpendicularEnd = axis === 'x' ? obstacle.bottom : obstacle.right
-
-			// The body and obstacle need positive overlap on the
-			// perpendicular axis for this to be a collision.
-			const overlapsPerpendicular =
-				perpendicularStart < obstaclePerpendicularEnd &&
-				perpendicularEnd > obstaclePerpendicularStart
-
-			if (!overlapsPerpendicular) {
+			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
 				continue
 			}
 
-			const obstacleLeadingEdge =
-				delta > 0
-					? axis === 'x'
-						? obstacle.x
-						: obstacle.y
-					: axis === 'x'
-						? obstacle.right
-						: obstacle.bottom
+			const obstacleEdge = solid.rect[cardinal.oppositeEdge]
 
-			const crossedObstacle =
-				delta > 0
-					? currentLeadingEdge <= obstacleLeadingEdge && nextLeadingEdge >= obstacleLeadingEdge
-					: currentLeadingEdge >= obstacleLeadingEdge && nextLeadingEdge <= obstacleLeadingEdge
+			const crossed =
+				cardinal.sign < 0
+					? leadingEdge >= obstacleEdge && nextLeadingEdge <= obstacleEdge
+					: leadingEdge <= obstacleEdge && nextLeadingEdge >= obstacleEdge
 
-			if (!crossedObstacle) {
+			if (!crossed) {
 				continue
 			}
 
-			const collisionDistance = obstacleLeadingEdge - currentLeadingEdge
-			const collisionPosition = currentPosition + collisionDistance
-			const travel = Math.abs(collisionDistance)
+			const distance = Math.abs(obstacleEdge - leadingEdge)
 
-			if (travel > bestTravel) {
+			if (distance > bestDistance) {
 				continue
 			}
 
-			bestTravel = travel
-			bestPosition = collisionPosition
+			// bestDistance = distance
+			bestPosition = obstacleEdge - this.leadingEdgeOffset(rect, cardinal.edge)
 			collided = true
 		}
 
@@ -250,5 +229,24 @@ export class WorldCollision {
 
 		const preferred = candidates.filter((candidate) => candidate.preferred)
 		return preferred.length > 0 ? preferred : candidates
+	}
+
+	private overlapsOnAdjacentAxis(rect: CoolRect, solid: CoolRect, cardinal: Cardinal): boolean {
+		return (
+			rect[cardinal.adjacentEdgeLower] < solid[cardinal.adjacentEdgeUpper] &&
+			rect[cardinal.adjacentEdgeUpper] > solid[cardinal.adjacentEdgeLower]
+		)
+	}
+
+	private leadingEdgeOffset(rect: CoolRect, edge: 'top' | 'bottom' | 'left' | 'right'): number {
+		switch (edge) {
+			case 'top':
+			case 'left':
+				return 0
+			case 'bottom':
+				return rect.height
+			case 'right':
+				return rect.width
+		}
 	}
 }
