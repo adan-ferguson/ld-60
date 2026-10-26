@@ -81,7 +81,7 @@ export class PlayerEl extends WithManSprite {
 
 	private airJumpFx() {
 		const gfx = new Graphics()
-		const WIDTH = 16
+		const WIDTH = 12
 		gfx.x = this.player.x
 		gfx.y = this.player.y
 		const animation = new VfxAnimation(gfx, {
@@ -93,11 +93,10 @@ export class PlayerEl extends WithManSprite {
 					.lineTo(x / 2, 0)
 					.stroke({
 						color: 'white',
-						alpha: 1 - t,
-						width: 2,
+						width: 1,
 					})
 			},
-			duration: 0.5,
+			duration: 0.2,
 		})
 		this.gc.addAnimation(animation)
 	}

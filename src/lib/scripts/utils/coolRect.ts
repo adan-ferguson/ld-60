@@ -1,6 +1,4 @@
 import { Rectangle } from 'pixi.js'
-import { TileDef } from '#lib/scripts/game/tileDef.ts'
-import type { XY } from '#lib/scripts/utils/XY.ts'
 
 type Coords = {
 	x?: number

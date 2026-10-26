@@ -201,7 +201,7 @@ export class TerrainCollision {
 		for (let i = 0; i < MAX_PUSHES; i++) {
 			const rect = entity.worldBounds
 			const overlaps = this.solids
-				.filter((solid) => rect.intersects(solid.rect))
+				.filter((solid) => rect.intersects(solid.rect, true))
 				.map((solid) => this.getPushCandidates(entity, solid))
 			if (overlaps.length === 0) {
 				return

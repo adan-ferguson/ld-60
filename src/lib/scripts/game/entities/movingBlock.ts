@@ -32,11 +32,9 @@ export class MovingBlock extends GameEntity {
 		private def: MovingBlockDef,
 	) {
 		super(game)
-		const worldXY = TileDef.toWorldMidpoint(tileXY)
-		this.x = worldXY.x
-		this.y = worldXY.y
-		this.min = TileDef.toWorld(tileXY[def.axis] + def.range[0])
-		this.max = TileDef.toWorld(tileXY[def.axis] + def.range[1])
+		this.setTileXY(tileXY)
+		this.min = TileDef.toWorld(tileXY[def.axis] + def.range[0]) + Consts.TILE_SIZE_PX / 2
+		this.max = TileDef.toWorld(tileXY[def.axis] + def.range[1]) + Consts.TILE_SIZE_PX / 2
 		this.dir = def.initialDir ?? 1
 	}
 	private get current() {

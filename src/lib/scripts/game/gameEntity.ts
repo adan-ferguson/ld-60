@@ -5,6 +5,7 @@ import { Rectangle } from 'pixi.js'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import { TileDef } from '#lib/scripts/game/tileDef.ts'
 
 export abstract class GameEntity {
 	public isActive = true
@@ -20,6 +21,11 @@ export abstract class GameEntity {
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get w(): number
 	public abstract get h(): number
+	public setTileXY(tileXY: XY) {
+		const worldXY = TileDef.toWorldMidpoint(tileXY)
+		this.x = worldXY.x
+		this.y = worldXY.y
+	}
 	public get isSolid() {
 		return false
 	}
