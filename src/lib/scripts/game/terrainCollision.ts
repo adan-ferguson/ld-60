@@ -12,6 +12,13 @@ type Solid = {
 	velocityY: number
 }
 
+type PushCandidate = {
+	x: number
+	y: number
+	depth: number
+	preferred: boolean
+}
+
 type Axis = 'x' | 'y'
 
 type AxisCollisionResult = {
@@ -205,5 +212,48 @@ export class TerrainCollision {
 			entity.x += correction.x
 			entity.y += correction.y
 		}
+	}
+
+	private getPushCandidates(entity: GameEntity, solid: Solid): PushCandidate[] {
+		const body = entity.worldBounds
+		const obstacle = solid.rect
+
+		const overlapLeft = body.r - obstacle.x
+		const overlapRight = obstacle.r - body.x
+		const overlapUp = body.b - obstacle.y
+		const overlapDown = obstacle.b - body.y
+
+		const relativeVelocityX = entity.velX - solid.velocityX
+		const relativeVelocityY = entity.velY - solid.velocityY
+
+		const candidates: PushCandidate[] = [
+			{
+				x: -overlapLeft,
+				y: 0,
+				depth: overlapLeft,
+				preferred: relativeVelocityX > 0,
+			},
+			{
+				x: overlapRight,
+				y: 0,
+				depth: overlapRight,
+				preferred: relativeVelocityX < 0,
+			},
+			{
+				x: 0,
+				y: -overlapUp,
+				depth: overlapUp,
+				preferred: relativeVelocityY > 0,
+			},
+			{
+				x: 0,
+				y: overlapDown,
+				depth: overlapDown,
+				preferred: relativeVelocityY < 0,
+			},
+		]
+
+		const preferred = candidates.filter((candidate) => candidate.preferred)
+		return preferred.length > 0 ? preferred : candidates
 	}
 }
