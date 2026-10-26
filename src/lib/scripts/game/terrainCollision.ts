@@ -3,6 +3,7 @@ import type { TileContents } from '#lib/scripts/game/levelDef.ts'
 import type Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import { TileDef } from '#lib/scripts/game/tileDef.ts'
 
 const EPSILON = 0.001
 
@@ -42,7 +43,7 @@ export class TerrainCollision {
 			...this.tiles.values
 				.filter((t) => t.contents.kind === 'wall')
 				.map((t) => ({
-					rect: CoolRect.fromTileXY(t.tileXY),
+					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
 					velocityX: 0,
 					velocityY: 0,
 				})),
@@ -218,10 +219,10 @@ export class TerrainCollision {
 		const body = entity.worldBounds
 		const obstacle = solid.rect
 
-		const overlapLeft = body.r - obstacle.x
-		const overlapRight = obstacle.r - body.x
-		const overlapUp = body.b - obstacle.y
-		const overlapDown = obstacle.b - body.y
+		const overlapLeft = body.right - obstacle.x
+		const overlapRight = obstacle.right - body.x
+		const overlapUp = body.bottom - obstacle.y
+		const overlapDown = obstacle.bottom - body.y
 
 		const relativeVelocityX = entity.velX - solid.velocityX
 		const relativeVelocityY = entity.velY - solid.velocityY

@@ -14,16 +14,25 @@ class CoolRect {
 	readonly y: number
 	readonly width: number
 	readonly height: number
+	get area() {
+		return this.width * this.height
+	}
 	constructor(args: Coords = {}) {
 		this.x = args.x ?? 0
 		this.y = args.y ?? 0
 		this.width = args.width ?? 0
 		this.height = args.height ?? 0
 	}
-	get r() {
+	get left() {
+		return this.x
+	}
+	get top() {
+		return this.y
+	}
+	get right() {
 		return this.x + this.width
 	}
-	get b() {
+	get bottom() {
 		return this.y + this.height
 	}
 	asPixiRectangle() {
@@ -32,15 +41,31 @@ class CoolRect {
 	asXywh() {
 		return [this.x, this.y, this.width, this.height] as const
 	}
-	intersects(rect: CoolRect) {
-		// Lazy LOL
-		return this.asPixiRectangle().intersects(rect.asPixiRectangle())
+	intersects(rect: CoolRect, requireNonZeroArea = false) {
+		const overlap = this.overlap(rect)
+		if (!overlap) {
+			return false
+		}
+		if (requireNonZeroArea) {
+			return overlap.area > 0
+		}
+		return true
 	}
-
-	static fromTileXY(tileXY: XY) {
-		return new CoolRect(TileDef.toWorldRect(tileXY))
+	overlap(other: CoolRect): CoolRect | false {
+		const left = Math.max(this.left, other.left)
+		const right = Math.min(this.right, other.right)
+		const top = Math.max(this.top, other.top)
+		const bottom = Math.min(this.bottom, other.bottom)
+		if (right >= left && bottom >= top) {
+			return new CoolRect({
+				x: left,
+				y: top,
+				width: right - left,
+				height: bottom - top,
+			})
+		}
+		return false
 	}
-
 	shift(param: { x: number; y: number }) {
 		return new CoolRect({
 			x: this.x + param.x,

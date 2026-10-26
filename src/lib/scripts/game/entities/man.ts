@@ -90,7 +90,7 @@ export class Man extends Enemy {
 	hasGroundAhead(): boolean {
 		const body = this.worldBounds
 		const LEDGE_LOOKAHEAD = -1.5
-		const x = this.facing > 0 ? body.r + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
+		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
 		return this.game.terrainCollision.isGrounded(
 			new CoolRect({
 				x,
