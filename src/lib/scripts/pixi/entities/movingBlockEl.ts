@@ -11,10 +11,8 @@ export class MovingBlockEl extends GameEntityEl {
 		super(gc, block)
 		const gfx = new Graphics()
 		this.addChild(gfx)
-		gfx.rect(0, 0, block.width, block.height).fill('white')
-	}
-	override update2(_delta: number): void {
-		this.x = this.block.x
-		this.y = this.block.y
+		gfx
+			.rect(-this.block.width / 2, -this.block.height / 2, this.block.width, this.block.height)
+			.fill('white')
 	}
 }
