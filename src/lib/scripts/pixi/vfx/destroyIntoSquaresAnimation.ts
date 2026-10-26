@@ -1,6 +1,7 @@
 import { type ColorSource, Graphics, type Rectangle } from 'pixi.js'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
+import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 type FlyingSquare = {
 	initialPosition: XY
@@ -8,7 +9,7 @@ type FlyingSquare = {
 }
 
 export function destroyIntoSquaresAnimation(
-	worldBounds: Rectangle,
+	worldBounds: CoolRect,
 	color: ColorSource,
 	x = 2,
 	y = 2,

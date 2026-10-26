@@ -58,10 +58,10 @@ export class Projectile extends GameEntity {
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new ProjectileEl(gc, this)
 	}
-	public get width(): number {
+	public get w(): number {
 		return this.options.w
 	}
-	public get height(): number {
+	public get h(): number {
 		return this.options.h
 	}
 }

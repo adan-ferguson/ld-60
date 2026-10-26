@@ -4,6 +4,7 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Rectangle } from 'pixi.js'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 export abstract class GameEntity {
 	public isActive = true
@@ -17,8 +18,8 @@ export abstract class GameEntity {
 	protected constructor(public game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
-	public abstract get width(): number
-	public abstract get height(): number
+	public abstract get w(): number
+	public abstract get h(): number
 	public get isSolid() {
 		return false
 	}
@@ -27,21 +28,16 @@ export abstract class GameEntity {
 		return 1
 	}
 
-	public get localBounds(): Rectangle {
-		return new Rectangle(-this.width / 2, -this.height / 2, this.width, this.height)
+	public get localBounds(): CoolRect {
+		return new CoolRect().pad({ w: this.w, h: this.h })
 	}
 
-	public get worldBounds(): Rectangle {
+	public get worldBounds(): CoolRect {
 		return this.toWorldBounds(this.localBounds)
 	}
 
-	public toWorldBounds(localBounds: Rectangle): Rectangle {
-		return new Rectangle(
-			localBounds.x + this.x,
-			localBounds.y + this.y,
-			localBounds.width,
-			localBounds.height,
-		)
+	public toWorldBounds(localBounds: CoolRect): CoolRect {
+		return localBounds.shift({ x: this.x, y: this.y })
 	}
 
 	public set position(val: XY) {
@@ -63,7 +59,7 @@ export abstract class GameEntity {
 		if (!this.isActive) {
 			return
 		}
-		if (this.game.terrainCollision.overlapsLava({ x: this.x, y: this.y, width: 0, height: 0 })) {
+		if (this.game.terrainCollision.overlapsLava(new CoolRect({ x: this.x, y: this.y }))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

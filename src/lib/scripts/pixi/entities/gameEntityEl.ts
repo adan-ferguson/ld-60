@@ -3,12 +3,13 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { flatRect } from '#lib/scripts/utils/flatRect.ts'
+import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 const DEBUG = false
 
 export abstract class GameEntityEl extends Container {
 	private debugGfx: Graphics
-	protected get debugRects(): Rectangle[] {
+	protected get debugRects(): CoolRect[] {
 		return []
 	}
 	constructor(
@@ -25,10 +26,10 @@ export abstract class GameEntityEl extends Container {
 		if (DEBUG) {
 			this.debugGfx
 				.clear()
-				.rect(...flatRect(this.entity.localBounds))
+				.rect(...this.entity.localBounds.asXywh())
 				.stroke({ color: 0x00ff00, width: 0.25 })
 			this.debugRects.forEach((r) => {
-				this.debugGfx.rect(...flatRect(r)).stroke({ color: 0x0000ff, width: 0.25 })
+				this.debugGfx.rect(...r.asXywh()).stroke({ color: 0x0000ff, width: 0.25 })
 			})
 		}
 		this.update2(delta)

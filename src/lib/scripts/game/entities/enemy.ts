@@ -8,7 +8,7 @@ export type EnemyKind = 'turret' | 'man'
 export abstract class Enemy extends GameEntity {
 	constructor(game: Game, tileXY: XY) {
 		super(game)
-		const worldXY = TileDef.toWorldXY(tileXY)
+		const worldXY = TileDef.toWorldMidpoint(tileXY)
 		this.x = worldXY.x
 		this.y = worldXY.y
 		this.destroyed.listen(() => {

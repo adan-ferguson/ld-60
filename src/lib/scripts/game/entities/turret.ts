@@ -21,10 +21,10 @@ export class Turret extends Enemy {
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new TurretEl(gc, this)
 	}
-	public get width(): number {
+	public get w(): number {
 		return 8
 	}
-	public get height(): number {
+	public get h(): number {
 		return 8
 	}
 	get score(): number {

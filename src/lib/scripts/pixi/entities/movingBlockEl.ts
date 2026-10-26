@@ -11,8 +11,6 @@ export class MovingBlockEl extends GameEntityEl {
 		super(gc, block)
 		const gfx = new Graphics()
 		this.addChild(gfx)
-		gfx
-			.rect(-this.block.width / 2, -this.block.height / 2, this.block.width, this.block.height)
-			.fill('white')
+		gfx.rect(-this.block.w / 2, -this.block.h / 2, this.block.w, this.block.h).fill('white')
 	}
 }

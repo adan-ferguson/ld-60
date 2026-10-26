@@ -1,16 +1,15 @@
 import { Consts } from '#lib/scripts/consts.ts'
 import type { TileContents } from '#lib/scripts/game/levelDef.ts'
 import type Game from '#lib/scripts/game/game.ts'
-import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 const EPSILON = 0.001
 
-type Body = {
-	x: number
-	y: number
-	width: number
-	height: number
+type Solid = {
+	rect: CoolRect
+	velocityX: number
+	velocityY: number
 }
 
 type Axis = 'x' | 'y'
@@ -31,41 +30,51 @@ const FEET_CHECK_HEIGHT = 0.5
 
 export class TerrainCollision {
 	constructor(private game: Game) {}
-	private get solids(): Body[] {
+	private get solids(): Solid[] {
 		return [
 			...this.tiles.values
 				.filter((t) => t.contents.kind === 'wall')
-				.map((t) => TileDef.toWorldRect(t.tileXY)),
+				.map((t) => ({
+					rect: CoolRect.fromTileXY(t.tileXY),
+					velocityX: 0,
+					velocityY: 0,
+				})),
 			...this.game.entitiesManager.entities
 				.values()
 				.filter((t) => t.isSolid)
-				.map((t) => t.worldBounds),
+				.map((t) => ({
+					rect: new CoolRect(t.worldBounds),
+					velocityX: t.velX,
+					velocityY: t.velY,
+				})),
 		]
 	}
 	get tiles() {
 		return this.game.level.tiles
 	}
-	isGrounded(body: Body) {
-		return this.overlapsSolid({
-			...body,
-			y: body.y + body.height,
-			height: FEET_CHECK_HEIGHT,
-		})
+	isGrounded(rect: CoolRect) {
+		return this.overlapsSolid(
+			new CoolRect({
+				...rect,
+				y: rect.y + rect.height,
+				height: FEET_CHECK_HEIGHT,
+			}),
+		)
 	}
 
-	overlapsLava(body: Body): boolean {
-		return this.overlapsTileKind(body, 'lava')
+	overlapsLava(rect: CoolRect): boolean {
+		return this.overlapsTileKind(rect, 'lava')
 	}
 
-	resolveMovement(body: Body, deltaX: number, deltaY: number): MovementResult {
-		const horizontal = this.resolveAxis(body, 'x', deltaX)
+	resolveMovement(rect: CoolRect, deltaX: number, deltaY: number): MovementResult {
+		const horizontal = this.resolveAxis(rect, 'x', deltaX)
 
-		const movedBody: Body = {
-			...body,
+		const movedRect = new CoolRect({
+			...rect,
 			x: horizontal.position,
-		}
+		})
 
-		const vertical = this.resolveAxis(movedBody, 'y', deltaY)
+		const vertical = this.resolveAxis(movedRect, 'y', deltaY)
 
 		return {
 			x: horizontal.position,
@@ -75,20 +84,20 @@ export class TerrainCollision {
 		}
 	}
 
-	private resolveAxis(body: Body, axis: Axis, delta: number): AxisCollisionResult {
+	private resolveAxis(rect: CoolRect, axis: Axis, delta: number): AxisCollisionResult {
 		if (delta === 0) {
 			return {
-				position: body[axis],
+				position: rect[axis],
 				collided: false,
 			}
 		}
 
 		const tileSize = Consts.TILE_SIZE_PX
-		const currentPosition = body[axis]
+		const currentPosition = rect[axis]
 		const nextPosition = currentPosition + delta
-		const size = axis === 'x' ? body.width : body.height
-		const perpendicularStart = axis === 'x' ? body.y : body.x
-		const perpendicularSize = axis === 'x' ? body.height : body.width
+		const size = axis === 'x' ? rect.width : rect.height
+		const perpendicularStart = axis === 'x' ? rect.y : rect.x
+		const perpendicularSize = axis === 'x' ? rect.height : rect.width
 		const minPerpendicularTile = Math.floor((perpendicularStart + EPSILON) / tileSize)
 
 		const maxPerpendicularTile = Math.floor(
@@ -146,15 +155,15 @@ export class TerrainCollision {
 		}
 	}
 
-	public overlapsSolid(body: Body): boolean {
-		return this.overlapsTileKind(body, 'wall')
+	public overlapsSolid(rect: CoolRect): boolean {
+		return this.overlapsTileKind(rect, 'wall')
 	}
 
-	private overlapsTileKind(body: Body, tileType: TileContents['kind']): boolean {
-		const left = body.x
-		const right = body.x + body.width
-		const top = body.y
-		const bottom = body.y + body.height
+	private overlapsTileKind(rect: CoolRect, tileType: TileContents['kind']): boolean {
+		const left = rect.x
+		const right = rect.x + rect.width
+		const top = rect.y
+		const bottom = rect.y + rect.height
 		const { TILE_SIZE_PX } = Consts
 
 		const minTileX = Math.floor((left + EPSILON) / TILE_SIZE_PX)
@@ -179,5 +188,22 @@ export class TerrainCollision {
 		return this.tiles.get({ x, y })?.contents.kind === 'wall'
 	}
 
-	pushOutOfSolids(entity: GameEntity) {}
+	pushOutOfSolids(entity: GameEntity) {
+		const MAX_PUSHES = 4
+		for (let i = 0; i < MAX_PUSHES; i++) {
+			const rect = entity.worldBounds
+			const overlaps = this.solids
+				.filter((solid) => rect.intersects(solid.rect))
+				.map((solid) => this.getPushCandidates(entity, solid))
+			if (overlaps.length === 0) {
+				return
+			}
+			const correction = overlaps.flat().sort((a, b) => a.depth - b.depth)[0]
+			if (!correction) {
+				return
+			}
+			entity.x += correction.x
+			entity.y += correction.y
+		}
+	}
 }

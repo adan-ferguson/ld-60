@@ -6,6 +6,7 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 export type AerialState =
 	| {
@@ -44,10 +45,10 @@ export class Player extends GameEntity {
 	get canShoot() {
 		return this.time - this.lastShotTime >= SHOT_COOLDOWN
 	}
-	public get width(): number {
+	public get w(): number {
 		return WIDTH
 	}
-	public get height(): number {
+	public get h(): number {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
 	crouch() {
@@ -184,15 +185,17 @@ export class Player extends GameEntity {
 
 	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
-		return !this.game.terrainCollision.overlapsSolid({
-			x: worldBounds.x,
-			width: worldBounds.width,
-			y: worldBounds.y - CROUCH_DIFF,
-			height: HEIGHT,
-		})
+		return !this.game.terrainCollision.overlapsSolid(
+			new CoolRect({
+				x: worldBounds.x,
+				width: worldBounds.width,
+				y: worldBounds.y - CROUCH_DIFF,
+				height: HEIGHT,
+			}),
+		)
 	}
 
-	private pushOutOfSolids(){
+	private pushOutOfSolids() {
 		this.game.terrainCollision.pushOutOfSolids(this)
 	}
 }

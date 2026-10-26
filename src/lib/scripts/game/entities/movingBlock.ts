@@ -17,10 +17,10 @@ export class MovingBlock extends GameEntity {
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new MovingBlockEl(gc, this)
 	}
-	public get width(): number {
+	public get w(): number {
 		return Consts.TILE_SIZE_PX
 	}
-	public get height(): number {
+	public get h(): number {
 		return Consts.TILE_SIZE_PX
 	}
 	public override get isSolid() {
@@ -32,7 +32,7 @@ export class MovingBlock extends GameEntity {
 		private def: MovingBlockDef,
 	) {
 		super(game)
-		const worldXY = TileDef.toWorldXY(tileXY)
+		const worldXY = TileDef.toWorldMidpoint(tileXY)
 		this.x = worldXY.x
 		this.y = worldXY.y
 		this.min = TileDef.toWorld(tileXY[def.axis] + def.range[0])

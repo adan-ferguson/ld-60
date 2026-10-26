@@ -7,6 +7,7 @@ import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Rectangle } from 'pixi.js'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 const MOVE_SPEED = 14
 const ATTACK_COOLDOWN = 1.4
@@ -32,10 +33,10 @@ export class Man extends Enemy {
 		this.#state = newState
 		this.stateChanged.emit(newState)
 	}
-	public get height(): number {
+	public get h(): number {
 		return 12
 	}
-	public get width(): number {
+	public get w(): number {
 		return 8
 	}
 	get score(): number {
@@ -44,10 +45,15 @@ export class Man extends Enemy {
 	public get maxHealth(): number {
 		return this.props.maxHealth
 	}
-	get visionRect(): Rectangle {
+	get visionRect(): CoolRect {
 		const HEIGHT = 12
 		const WIDTH = 72
-		return new Rectangle(this.facing === 1 ? 0 : -WIDTH, -HEIGHT / 2, WIDTH, HEIGHT)
+		return new CoolRect({
+			x: this.facing === 1 ? 0 : -WIDTH,
+			y: -HEIGHT / 2,
+			width: WIDTH,
+			height: HEIGHT,
+		})
 	}
 	constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
 		super(game, tileXY)
@@ -84,13 +90,15 @@ export class Man extends Enemy {
 	hasGroundAhead(): boolean {
 		const body = this.worldBounds
 		const LEDGE_LOOKAHEAD = -1.5
-		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
-		return this.game.terrainCollision.isGrounded({
-			x,
-			y: body.y,
-			width: 0.1,
-			height: body.height,
-		})
+		const x = this.facing > 0 ? body.r + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
+		return this.game.terrainCollision.isGrounded(
+			new CoolRect({
+				x,
+				y: body.y,
+				width: 0.1,
+				height: body.height,
+			}),
+		)
 	}
 
 	public fire() {
