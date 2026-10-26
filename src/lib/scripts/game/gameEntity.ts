@@ -17,8 +17,8 @@ export abstract class GameEntity {
 	protected constructor(public game: Game) {}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
-	protected abstract get width(): number
-	protected abstract get height(): number
+	public abstract get width(): number
+	public abstract get height(): number
 	public destroyed = CoolEvents.createHandler()
 	public get maxHealth(): number {
 		return 1

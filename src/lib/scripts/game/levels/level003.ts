@@ -35,7 +35,7 @@ xxxxxxxxxxxxxxxxxxxxxllllllllllx
 		a: { kind: 'man' },
 		b: { kind: 'man', loop: [2, 3] },
 		c: { kind: 'man', loop: [3] },
-		m: { kind: 'movingBlock', axis: 'v', dist: [-5, 0] },
-		n: { kind: 'movingBlock', axis: 'h', dist: [0, 5], loop: [2, 3] },
+		m: { kind: 'movingBlock', axis: 'y', range: [-5, 0] },
+		n: { kind: 'movingBlock', axis: 'x', range: [0, 5], loop: [2, 3] },
 	},
 }

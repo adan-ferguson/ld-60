@@ -44,10 +44,10 @@ export class Player extends GameEntity {
 	get canShoot() {
 		return this.time - this.lastShotTime >= SHOT_COOLDOWN
 	}
-	protected get width(): number {
+	public get width(): number {
 		return WIDTH
 	}
-	protected get height(): number {
+	public get height(): number {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
 	crouch() {

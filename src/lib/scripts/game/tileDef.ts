@@ -79,8 +79,11 @@ export const TileDef = {
 	parseLevelTiles,
 	toWorldXY(tileXY: XY): XY {
 		return {
-			x: tileXY.x * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
-			y: tileXY.y * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2,
+			x: TileDef.toWorld(tileXY.x),
+			y: TileDef.toWorld(tileXY.y),
 		}
+	},
+	toWorld(number: number) {
+		return number * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2
 	},
 }

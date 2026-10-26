@@ -32,10 +32,10 @@ export class Man extends Enemy {
 		this.#state = newState
 		this.stateChanged.emit(newState)
 	}
-	protected get height(): number {
+	public get height(): number {
 		return 12
 	}
-	protected get width(): number {
+	public get width(): number {
 		return 8
 	}
 	get score(): number {
