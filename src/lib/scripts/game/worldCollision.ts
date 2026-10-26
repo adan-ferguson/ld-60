@@ -5,8 +5,6 @@ import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 
-const EPSILON = 0.001
-
 type Solid = {
 	rect: CoolRect
 	velocityX: number
@@ -36,7 +34,7 @@ type MovementResult = {
 
 const FEET_CHECK_HEIGHT = 0.5
 
-export class TerrainCollision {
+export class WorldCollision {
 	constructor(private game: Game) {}
 	private get solids(): Solid[] {
 		return [
@@ -61,13 +59,13 @@ export class TerrainCollision {
 		return this.game.level.tiles
 	}
 	isGrounded(rect: CoolRect) {
-		return this.overlapsSolid(
-			new CoolRect({
-				...rect,
-				y: rect.y + rect.height,
-				height: FEET_CHECK_HEIGHT,
-			}),
-		)
+		const feet = new CoolRect({
+			x: rect.x,
+			y: rect.bottom,
+			width: rect.width,
+			height: FEET_CHECK_HEIGHT,
+		})
+		return this.solids.some((solid) => feet.intersects(solid.rect))
 	}
 
 	overlapsLava(rect: CoolRect): boolean {
@@ -77,9 +75,9 @@ export class TerrainCollision {
 	resolveMovement(rect: CoolRect, deltaX: number, deltaY: number): MovementResult {
 		const horizontal = this.resolveAxis(rect, 'x', deltaX)
 
-		const movedRect = new CoolRect({
-			...rect,
-			x: horizontal.position,
+		const movedRect = rect.shift({
+			x: horizontal.position - rect.x,
+			y: 0,
 		})
 
 		const vertical = this.resolveAxis(movedRect, 'y', deltaY)
@@ -99,101 +97,76 @@ export class TerrainCollision {
 				collided: false,
 			}
 		}
-
-		const tileSize = Consts.TILE_SIZE_PX
 		const currentPosition = rect[axis]
 		const nextPosition = currentPosition + delta
+
 		const size = axis === 'x' ? rect.width : rect.height
 		const perpendicularStart = axis === 'x' ? rect.y : rect.x
-		const perpendicularSize = axis === 'x' ? rect.height : rect.width
-		const minPerpendicularTile = Math.floor((perpendicularStart + EPSILON) / tileSize)
-
-		const maxPerpendicularTile = Math.floor(
-			(perpendicularStart + perpendicularSize - EPSILON) / tileSize,
-		)
+		const perpendicularEnd = axis === 'x' ? rect.bottom : rect.right
 
 		const currentLeadingEdge = delta > 0 ? currentPosition + size : currentPosition
 		const nextLeadingEdge = delta > 0 ? nextPosition + size : nextPosition
 
-		const minLeadingTile = Math.floor(
-			(Math.min(currentLeadingEdge, nextLeadingEdge) + EPSILON) / tileSize,
-		)
+		let bestPosition = nextPosition
+		let bestTravel = Math.abs(delta)
+		let collided = false
 
-		const maxLeadingTile = Math.floor(
-			(Math.max(currentLeadingEdge, nextLeadingEdge) - EPSILON) / tileSize,
-		)
+		for (const solid of this.solids) {
+			const obstacle = solid.rect
 
-		const firstTile = delta > 0 ? minLeadingTile : maxLeadingTile
-		const lastTile = delta > 0 ? maxLeadingTile : minLeadingTile
-		const step = delta > 0 ? 1 : -1
+			const obstaclePerpendicularStart = axis === 'x' ? obstacle.y : obstacle.x
 
-		for (
-			let leadingTile = firstTile;
-			delta > 0 ? leadingTile <= lastTile : leadingTile >= lastTile;
-			leadingTile += step
-		) {
-			for (
-				let perpendicularTile = minPerpendicularTile;
-				perpendicularTile <= maxPerpendicularTile;
-				perpendicularTile++
-			) {
-				const tileX = axis === 'x' ? leadingTile : perpendicularTile
+			const obstaclePerpendicularEnd = axis === 'x' ? obstacle.bottom : obstacle.right
 
-				const tileY = axis === 'x' ? perpendicularTile : leadingTile
+			// The body and obstacle need positive overlap on the
+			// perpendicular axis for this to be a collision.
+			const overlapsPerpendicular =
+				perpendicularStart < obstaclePerpendicularEnd &&
+				perpendicularEnd > obstaclePerpendicularStart
 
-				if (!this.isSolidTile(tileX, tileY)) {
-					continue
-				}
-
-				const tileStart = leadingTile * tileSize
-				const tileEnd = tileStart + tileSize
-
-				const resolvedPosition = delta > 0 ? tileStart - size : tileEnd
-
-				return {
-					position: resolvedPosition,
-					collided: true,
-				}
+			if (!overlapsPerpendicular) {
+				continue
 			}
+
+			const obstacleLeadingEdge =
+				delta > 0
+					? axis === 'x'
+						? obstacle.x
+						: obstacle.y
+					: axis === 'x'
+						? obstacle.right
+						: obstacle.bottom
+
+			const crossedObstacle =
+				delta > 0
+					? currentLeadingEdge <= obstacleLeadingEdge && nextLeadingEdge >= obstacleLeadingEdge
+					: currentLeadingEdge >= obstacleLeadingEdge && nextLeadingEdge <= obstacleLeadingEdge
+
+			if (!crossedObstacle) {
+				continue
+			}
+
+			const collisionDistance = obstacleLeadingEdge - currentLeadingEdge
+			const collisionPosition = currentPosition + collisionDistance
+			const travel = Math.abs(collisionDistance)
+
+			if (travel > bestTravel) {
+				continue
+			}
+
+			bestTravel = travel
+			bestPosition = collisionPosition
+			collided = true
 		}
 
 		return {
-			position: nextPosition,
-			collided: false,
+			position: bestPosition,
+			collided,
 		}
 	}
 
-	public overlapsSolid(rect: CoolRect): boolean {
-		return this.overlapsTileKind(rect, 'wall')
-	}
-
-	private overlapsTileKind(rect: CoolRect, tileType: TileContents['kind']): boolean {
-		const left = rect.x
-		const right = rect.x + rect.width
-		const top = rect.y
-		const bottom = rect.y + rect.height
-		const { TILE_SIZE_PX } = Consts
-
-		const minTileX = Math.floor((left + EPSILON) / TILE_SIZE_PX)
-		const maxTileX = Math.floor((right - EPSILON) / TILE_SIZE_PX)
-		const minTileY = Math.floor((top + EPSILON) / TILE_SIZE_PX)
-		const maxTileY = Math.floor((bottom - EPSILON) / TILE_SIZE_PX)
-
-		for (let tileY = minTileY; tileY <= maxTileY; tileY++) {
-			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {
-				const tile = this.tiles.get({ x: tileX, y: tileY })
-
-				if (tile?.contents.kind === tileType) {
-					return true
-				}
-			}
-		}
-
-		return false
-	}
-
-	private isSolidTile(x: number, y: number): boolean {
-		return this.tiles.get({ x, y })?.contents.kind === 'wall'
+	overlapsSolid(rect: CoolRect): boolean {
+		return this.solids.some((solid) => rect.intersects(solid.rect, true))
 	}
 
 	pushOutOfSolids(entity: GameEntity) {
@@ -213,6 +186,27 @@ export class TerrainCollision {
 			entity.x += correction.x
 			entity.y += correction.y
 		}
+	}
+
+	private overlapsTileKind(rect: CoolRect, tileType: TileContents['kind']): boolean {
+		const { TILE_SIZE_PX } = Consts
+
+		const minTileX = Math.floor(rect.left / TILE_SIZE_PX)
+		const maxTileX = Math.floor((rect.right - 0.001) / TILE_SIZE_PX)
+		const minTileY = Math.floor(rect.top / TILE_SIZE_PX)
+		const maxTileY = Math.floor((rect.bottom - 0.001) / TILE_SIZE_PX)
+
+		for (let tileY = minTileY; tileY <= maxTileY; tileY++) {
+			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {
+				const tile = this.tiles.get({ x: tileX, y: tileY })
+
+				if (tile?.contents.kind === tileType) {
+					return true
+				}
+			}
+		}
+
+		return false
 	}
 
 	private getPushCandidates(entity: GameEntity, solid: Solid): PushCandidate[] {
