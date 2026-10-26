@@ -23,6 +23,9 @@ export class MovingBlock extends GameEntity {
 	public get height(): number {
 		return Consts.TILE_SIZE_PX
 	}
+	public override get isSolid() {
+		return true
+	}
 	constructor(
 		game: Game,
 		tileXY: XY,

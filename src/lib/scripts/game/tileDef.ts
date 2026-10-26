@@ -2,6 +2,7 @@ import { Consts } from '#lib/scripts/consts.ts'
 import { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelDef, TileContents, VariableContents } from '#lib/scripts/game/levelDef.ts'
+import { Rectangle } from 'pixi.js'
 
 export type TileDef = {
 	tileXY: XY
@@ -85,5 +86,13 @@ export const TileDef = {
 	},
 	toWorld(number: number) {
 		return number * Consts.TILE_SIZE_PX + Consts.TILE_SIZE_PX / 2
+	},
+	toWorldRect(tileXY: XY) {
+		return new Rectangle(
+			TileDef.toWorld(tileXY.x),
+			TileDef.toWorld(tileXY.y),
+			Consts.TILE_SIZE_PX,
+			Consts.TILE_SIZE_PX,
+		)
 	},
 }

@@ -19,6 +19,9 @@ export abstract class GameEntity {
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get width(): number
 	public abstract get height(): number
+	public get isSolid() {
+		return false
+	}
 	public destroyed = CoolEvents.createHandler()
 	public get maxHealth(): number {
 		return 1

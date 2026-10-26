@@ -72,6 +72,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
+		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
 			this.tryUncrouch()
@@ -189,5 +190,9 @@ export class Player extends GameEntity {
 			y: worldBounds.y - CROUCH_DIFF,
 			height: HEIGHT,
 		})
+	}
+
+	private pushOutOfSolids(){
+		this.game.terrainCollision.pushOutOfSolids(this)
 	}
 }

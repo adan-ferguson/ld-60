@@ -1,6 +1,8 @@
 import { Consts } from '#lib/scripts/consts.ts'
 import type { TileContents } from '#lib/scripts/game/levelDef.ts'
 import type Game from '#lib/scripts/game/game.ts'
+import { TileDef } from '#lib/scripts/game/tileDef.ts'
+import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 
 const EPSILON = 0.001
 
@@ -29,6 +31,17 @@ const FEET_CHECK_HEIGHT = 0.5
 
 export class TerrainCollision {
 	constructor(private game: Game) {}
+	private get solids(): Body[] {
+		return [
+			...this.tiles.values
+				.filter((t) => t.contents.kind === 'wall')
+				.map((t) => TileDef.toWorldRect(t.tileXY)),
+			...this.game.entitiesManager.entities
+				.values()
+				.filter((t) => t.isSolid)
+				.map((t) => t.worldBounds),
+		]
+	}
 	get tiles() {
 		return this.game.level.tiles
 	}
@@ -165,4 +178,6 @@ export class TerrainCollision {
 	private isSolidTile(x: number, y: number): boolean {
 		return this.tiles.get({ x, y })?.contents.kind === 'wall'
 	}
+
+	pushOutOfSolids(entity: GameEntity) {}
 }
