@@ -84,6 +84,7 @@ export class Player extends GameEntity {
 				this.velX = 0
 			}
 		} else {
+			console.log('on ground')
 			if (this.controlsManager.y > delta) {
 				this.crouch()
 			} else {
@@ -164,9 +165,6 @@ export class Player extends GameEntity {
 		)
 		this.x += result.x - this.worldBounds.x
 		this.y += result.y - this.worldBounds.y
-		if (result.hitHorizontal) {
-			// this.velX = 0
-		}
 		if (result.hitVertical) {
 			if (this.velY > 0) {
 				this.aerialState = { kind: 'grounded', time: 0 }

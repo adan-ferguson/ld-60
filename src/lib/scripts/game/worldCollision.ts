@@ -67,7 +67,7 @@ export class WorldCollision {
 			width: rect.width,
 			height: FEET_CHECK_HEIGHT,
 		})
-		return this.solids.some((solid) => feet.intersects(solid.rect))
+		return this.solids.some((solid) => feet.intersects(solid.rect, true))
 	}
 
 	overlapsLava(rect: CoolRect): boolean {
