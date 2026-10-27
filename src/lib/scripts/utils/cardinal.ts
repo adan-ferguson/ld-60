@@ -40,6 +40,9 @@ export class Cardinal {
 	get edge() {
 		return edgeMap[this.cardinalDirection]
 	}
+	get opposite() {
+		return new Cardinal(this.oppositeDirection)
+	}
 	get oppositeDirection() {
 		return oppositeMap[this.cardinalDirection]
 	}

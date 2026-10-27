@@ -2,10 +2,36 @@ import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 
 export function isSquished(entityBounds: CoolRect, solids: CoolRect[]): boolean {
-	const overlappingSolids = solids.filter((s) => s.overlap(entityBounds))
 	return check(true) || check(false)
 	function check(isX: boolean): boolean {
-		const cardinal = Cardinal.fromAxis(isX)
-		// TODO: here
+		const positive = Cardinal.fromAxis(isX)
+		const negative = Cardinal.fromAxisDelta(isX, false)
+		const positiveSolids = solids
+			.filter((solid) => overlapsOnAdjacentAxis(entityBounds, solid, positive))
+			.filter((solid) => isOnSide(entityBounds, solid, positive))
+			.sort((a, b) => a[positive.oppositeEdge] - b[positive.oppositeEdge])
+		const negativeSolids = solids
+			.filter((solid) => overlapsOnAdjacentAxis(entityBounds, solid, negative))
+			.filter((solid) => isOnSide(entityBounds, solid, negative))
+			.sort((a, b) => b[negative.oppositeEdge] - a[negative.oppositeEdge])
+		const positiveSolid = positiveSolids[0]
+		const negativeSolid = negativeSolids[0]
+		if (!positiveSolid || !negativeSolid) {
+			return false
+		}
+		const gap = positiveSolid[positive.oppositeEdge] - negativeSolid[negative.oppositeEdge]
+		return gap < entityBounds[positive.axis] - 0.05
+	}
+	function isOnSide(entity: CoolRect, solid: CoolRect, direction: Cardinal): boolean {
+		const entityMidpoint = entity.midpoint[direction.axis]
+		const solidMidpoint = solid.midpoint[direction.axis]
+
+		return direction.sign > 0 ? solidMidpoint >= entityMidpoint : solidMidpoint <= entityMidpoint
+	}
+	function overlapsOnAdjacentAxis(entity: CoolRect, solid: CoolRect, direction: Cardinal): boolean {
+		return (
+			entity[direction.adjacentEdgeLower] < solid[direction.adjacentEdgeUpper] &&
+			entity[direction.adjacentEdgeUpper] > solid[direction.adjacentEdgeLower]
+		)
 	}
 }
