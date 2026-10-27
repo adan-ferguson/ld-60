@@ -104,7 +104,7 @@ export class WorldCollision {
 		const edge = cardinal.edge
 
 		const leadingEdge = rect[edge]
-		const nextRect = rect.shift(XY.scale(cardinal.xy, delta))
+		const nextRect = rect.shift(XY.scale(cardinal.xy, Math.abs(delta)))
 		const nextLeadingEdge = nextRect[edge]
 
 		let bestDistance = Math.abs(delta)
