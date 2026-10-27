@@ -20,6 +20,9 @@ export abstract class GameEntity {
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get w(): number
 	public abstract get h(): number
+	public get canStand() {
+		return false
+	}
 	public setTileXY(tileXY: XY) {
 		const worldXY = TileDef.toWorldMidpoint(tileXY)
 		this.x = worldXY.x

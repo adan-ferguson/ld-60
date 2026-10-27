@@ -52,6 +52,9 @@ export class Player extends GameEntity {
 	public get h(): number {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
+	public override get canStand() {
+		return true
+	}
 	crouch() {
 		if (this.crouching) {
 			return
@@ -74,7 +77,6 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
-		this.carryWithMovingPlatform(delta)
 		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
@@ -197,19 +199,5 @@ export class Player extends GameEntity {
 
 	private pushOutOfSolids() {
 		this.game.worldCollision.pushOutOfSolids(this)
-	}
-
-	private carryWithMovingPlatform(delta: number) {
-		const support = this.game.worldCollision.getPlatformSupporting(this.worldBounds)
-		if (!(support instanceof MovingBlock)) {
-			return
-		}
-		const result = this.game.worldCollision.resolveMovement(
-			this.worldBounds,
-			support.velX * delta,
-			support.velY * delta,
-		)
-		this.x = result.x
-		this.y = result.y
 	}
 }

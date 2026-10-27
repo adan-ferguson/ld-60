@@ -7,7 +7,6 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
-import { Player } from '#lib/scripts/game/player/player.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 const DEFAULT_SPEED = 20
@@ -74,27 +73,29 @@ export class MovingBlock extends GameEntity {
 		const deltaX = this.x - previousBounds.x
 		const deltaY = this.y - previousBounds.y
 		for (const rider of riders) {
-			debugger
 			rider.x += deltaX
 			rider.y += deltaY
 		}
 	}
 
 	private getEntitiesStandingOn() {
-		// TODO: All entities, but this is just the Player for now
-		const player = this.game.player
-		const myTop = new CoolRect({
-			x: this.worldBounds.x,
-			y: this.worldBounds.y,
-			width: this.worldBounds.width,
-			height: 0,
+		return [this.game.player, ...this.game.entitiesManager.entities.values()].filter((e) => {
+			if (!e.canStand) {
+				return
+			}
+			const myTop = new CoolRect({
+				x: this.worldBounds.x,
+				y: this.worldBounds.y,
+				width: this.worldBounds.width,
+				height: 0,
+			})
+			const playerBottom = new CoolRect({
+				x: e.worldBounds.x,
+				y: e.worldBounds.bottom,
+				width: e.worldBounds.width,
+				height: 0.001,
+			})
+			return myTop.intersects(playerBottom)
 		})
-		const playerBottom = new CoolRect({
-			x: player.worldBounds.x,
-			y: player.worldBounds.bottom,
-			width: player.worldBounds.width,
-			height: 0,
-		})
-		return myTop.intersects(playerBottom) ? [player] : []
 	}
 }
