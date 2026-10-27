@@ -55,12 +55,13 @@ export class Player extends GameEntity {
 	public override get canStand() {
 		return true
 	}
-	crouch() {
+	tryCrouch() {
 		if (this.crouching) {
-			return
+			return false
 		}
 		this.y += CROUCH_DIFF / 2
 		this.crouching = true
+		return true
 	}
 	/**
 	 * Returns false if we are crouching and there's not enough room to uncrouch.
@@ -89,7 +90,7 @@ export class Player extends GameEntity {
 			}
 		} else {
 			if (this.controlsManager.y > delta) {
-				this.crouch()
+				this.tryCrouch()
 			} else {
 				this.tryUncrouch()
 			}

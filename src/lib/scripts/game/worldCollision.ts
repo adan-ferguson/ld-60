@@ -8,6 +8,7 @@ import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 
 type Solid = {
+	entity?: GameEntity
 	rect: CoolRect
 	velocityX: number
 	velocityY: number
@@ -49,6 +50,7 @@ export class WorldCollision {
 				.values()
 				.filter((t) => t.isSolid)
 				.map((t) => ({
+					entity: t,
 					rect: new CoolRect(t.worldBounds),
 					velocityX: t.velX,
 					velocityY: t.velY,
@@ -92,60 +94,16 @@ export class WorldCollision {
 		}
 	}
 
-	private resolveAxis(rect: CoolRect, axis: Axis, delta: number): AxisCollisionResult {
-		if (delta === 0) {
-			return {
-				position: rect[axis],
-				collided: false,
-			}
-		}
-
-		const cardinal = Cardinal.fromAxisDelta(axis === 'x', delta > 0)
-		const edge = cardinal.edge
-
-		const leadingEdge = rect[edge]
-		const nextRect = rect.shift(XY.scale(cardinal.xy, Math.abs(delta)))
-		const nextLeadingEdge = nextRect[edge]
-
-		let bestDistance = Math.abs(delta)
-		let bestPosition = nextRect[axis]
-		let collided = false
-
-		for (const solid of this.solids) {
-			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
-				continue
-			}
-
-			const obstacleEdge = solid.rect[cardinal.oppositeEdge]
-
-			const crossed =
-				cardinal.sign < 0
-					? leadingEdge >= obstacleEdge && nextLeadingEdge <= obstacleEdge
-					: leadingEdge <= obstacleEdge && nextLeadingEdge >= obstacleEdge
-
-			if (!crossed) {
-				continue
-			}
-
-			const distance = Math.abs(obstacleEdge - leadingEdge)
-
-			if (distance > bestDistance) {
-				continue
-			}
-
-			bestDistance = distance
-			bestPosition = obstacleEdge - this.leadingEdgeOffset(rect, cardinal.edge)
-			collided = true
-		}
-
-		return {
-			position: bestPosition,
-			collided,
-		}
+	getOverlappingSolids(rect: CoolRect, exclude?: GameEntity): Solid[] {
+		return this.solids.filter(
+			(solid) => solid.entity !== exclude && rect.intersects(solid.rect, true),
+		)
 	}
 
-	overlapsSolid(rect: CoolRect): boolean {
-		return this.solids.some((solid) => rect.intersects(solid.rect, true))
+	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
+		return this.solids.some(
+			(solid) => solid.entity !== exclude && rect.intersects(solid.rect, true),
+		)
 	}
 
 	pushOutOfSolids(entity: GameEntity) {
@@ -251,6 +209,58 @@ export class WorldCollision {
 				return rect.height
 			case 'right':
 				return rect.width
+		}
+	}
+
+	private resolveAxis(rect: CoolRect, axis: Axis, delta: number): AxisCollisionResult {
+		if (delta === 0) {
+			return {
+				position: rect[axis],
+				collided: false,
+			}
+		}
+
+		const cardinal = Cardinal.fromAxisDelta(axis === 'x', delta > 0)
+		const edge = cardinal.edge
+
+		const leadingEdge = rect[edge]
+		const nextRect = rect.shift(XY.scale(cardinal.xy, Math.abs(delta)))
+		const nextLeadingEdge = nextRect[edge]
+
+		let bestDistance = Math.abs(delta)
+		let bestPosition = nextRect[axis]
+		let collided = false
+
+		for (const solid of this.solids) {
+			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
+				continue
+			}
+
+			const obstacleEdge = solid.rect[cardinal.oppositeEdge]
+
+			const crossed =
+				cardinal.sign < 0
+					? leadingEdge >= obstacleEdge && nextLeadingEdge <= obstacleEdge
+					: leadingEdge <= obstacleEdge && nextLeadingEdge >= obstacleEdge
+
+			if (!crossed) {
+				continue
+			}
+
+			const distance = Math.abs(obstacleEdge - leadingEdge)
+
+			if (distance > bestDistance) {
+				continue
+			}
+
+			bestDistance = distance
+			bestPosition = obstacleEdge - this.leadingEdgeOffset(rect, cardinal.edge)
+			collided = true
+		}
+
+		return {
+			position: bestPosition,
+			collided,
 		}
 	}
 }

@@ -8,6 +8,7 @@ import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import { Player } from '#lib/scripts/game/player/player.ts'
 
 const DEFAULT_SPEED = 20
 
@@ -41,9 +42,6 @@ export class MovingBlock extends GameEntity {
 	private get current() {
 		return this[this.def.axis]
 	}
-	private set current(value: number) {
-		this[this.def.axis] = value
-	}
 	public update2(delta: number): void {
 		this.velX = 0
 		this.velY = 0
@@ -67,15 +65,32 @@ export class MovingBlock extends GameEntity {
 		}
 	}
 	override move(delta: number) {
-		const previousBounds = this.worldBounds
+		const previousBounds = this.worldBounds.midpoint
 		const riders = this.getEntitiesStandingOn()
 		super.move(delta)
 		const deltaX = this.x - previousBounds.x
 		const deltaY = this.y - previousBounds.y
 		for (const rider of riders) {
+			this.moveRider(rider, deltaX, deltaY)
+		}
+	}
+
+	private moveRider(rider: GameEntity, deltaX: number, deltaY: number) {
+		const nextBounds = rider.worldBounds.shift({
+			x: deltaX,
+			y: deltaY,
+		})
+		const solids = this.game.worldCollision.getOverlappingSolids(nextBounds, this)
+		if (!solids.length) {
 			rider.x += deltaX
 			rider.y += deltaY
+			return
 		}
+		if (rider instanceof Player && rider.tryCrouch()) {
+			this.moveRider(rider, deltaX, deltaY) // Try again
+			return
+		}
+		rider.takeDamage(rider.maxHealth)
 	}
 
 	private getEntitiesStandingOn() {

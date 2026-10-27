@@ -33,6 +33,12 @@ class CoolRect {
 	get bottom() {
 		return this.y + this.height
 	}
+	get midpoint() {
+		return new CoolRect({
+			x: this.x + this.width / 2,
+			y: this.y + this.height / 2,
+		})
+	}
 	asPixiRectangle() {
 		return new Rectangle(...this.asXywh())
 	}
