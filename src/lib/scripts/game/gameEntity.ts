@@ -37,7 +37,7 @@ export abstract class GameEntity {
 	}
 
 	public get localBounds(): CoolRect {
-		return new CoolRect().pad({ w: this.w / 2, h: this.h / 2 })
+		return new CoolRect().pad({ x: this.w / 2, y: this.h / 2 })
 	}
 
 	public get worldBounds(): CoolRect {

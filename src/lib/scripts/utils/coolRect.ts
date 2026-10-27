@@ -74,16 +74,16 @@ class CoolRect {
 	}
 
 	pad(num: number): CoolRect
-	pad(obj: { w: number; h: number }): CoolRect
-	pad(param: number | { w: number; h: number }): CoolRect {
+	pad(obj: { x?: number; y?: number }): CoolRect
+	pad(param: number | { x?: number; y?: number }): CoolRect {
 		if (typeof param === 'number') {
-			return this.pad({ w: param, h: param })
+			return this.pad({ x: param, y: param })
 		}
 		return new CoolRect({
-			x: this.x - param.w,
-			y: this.y - param.h,
-			width: this.width + param.w * 2,
-			height: this.height + param.h * 2,
+			x: this.x - (param.x ?? 0),
+			y: this.y - (param.y ?? 0),
+			width: this.width + (param.x ?? 0) * 2,
+			height: this.height + (param.y ?? 0) * 2,
 		})
 	}
 }

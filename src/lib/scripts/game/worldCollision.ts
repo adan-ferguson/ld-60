@@ -65,8 +65,8 @@ export class WorldCollision {
 			x: rect.x,
 			y: rect.bottom,
 			width: rect.width,
-			height: 0.001,
-		})
+			height: 0,
+		}).pad({ y: 0.001 })
 		return this.solids.some((solid) => feet.intersects(solid.rect, true))
 	}
 

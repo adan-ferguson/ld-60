@@ -88,13 +88,13 @@ export class MovingBlock extends GameEntity {
 				y: this.worldBounds.y,
 				width: this.worldBounds.width,
 				height: 0,
-			})
+			}).pad({ y: 0.001 })
 			const playerBottom = new CoolRect({
 				x: e.worldBounds.x,
 				y: e.worldBounds.bottom,
 				width: e.worldBounds.width,
-				height: 0.001,
-			})
+				height: 0,
+			}).pad({ y: 0.001 })
 			return myTop.intersects(playerBottom)
 		})
 	}

@@ -88,7 +88,6 @@ export class Player extends GameEntity {
 				this.velX = 0
 			}
 		} else {
-			console.log('on ground')
 			if (this.controlsManager.y > delta) {
 				this.crouch()
 			} else {
