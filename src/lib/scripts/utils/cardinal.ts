@@ -40,6 +40,9 @@ export class Cardinal {
 	get edge() {
 		return edgeMap[this.cardinalDirection]
 	}
+	get size() {
+		return this.isX ? 'width' : 'height'
+	}
 	get opposite() {
 		return new Cardinal(this.oppositeDirection)
 	}

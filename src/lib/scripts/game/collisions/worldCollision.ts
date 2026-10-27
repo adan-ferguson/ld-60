@@ -95,9 +95,12 @@ export class WorldCollision {
 	}
 
 	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
-		return this.solids.some(
-			(solid) => solid.entity !== exclude && rect.intersects(solid.rect, true),
-		)
+		return this.solids.some((solid) => {
+			if (exclude !== undefined && solid.entity === exclude) {
+				return false
+			}
+			return rect.intersects(solid.rect, true)
+		})
 	}
 
 	pushOutOfSolids(entity: GameEntity) {

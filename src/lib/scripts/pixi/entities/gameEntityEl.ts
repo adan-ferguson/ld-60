@@ -1,11 +1,10 @@
-import { Container, Graphics, type Rectangle } from 'pixi.js'
+import { Container, Graphics } from 'pixi.js'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
-import { flatRect } from '#lib/scripts/utils/flatRect.ts'
 import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 
-const DEBUG = false
+const DEBUG = true
 
 export abstract class GameEntityEl extends Container {
 	private debugGfx: Graphics

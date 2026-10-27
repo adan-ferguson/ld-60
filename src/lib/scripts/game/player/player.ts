@@ -153,8 +153,8 @@ export class Player extends GameEntity {
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),
-				w: 6,
-				h: 2,
+				w: y ? 2 : 6,
+				h: y ? 6 : 2,
 				x: this.x + x * 3 + (y ? 0 : 3 * this.facing),
 				y: this.y + (crouching ? -0.5 : -2) + y * 3,
 				tint: 'cyan',
@@ -201,18 +201,16 @@ export class Player extends GameEntity {
 		)
 	}
 
-	private checkSquish() {
+	private checkSquish(): boolean {
 		const solids = this.game.worldCollision.solids.map((s) => s.rect)
 		if (!isSquished(this.worldBounds, solids)) {
-			return true
+			return false
 		}
 		if (this.tryCrouch()) {
-			if (!isSquished(this.worldBounds, solids)) {
-				return true
-			}
+			return this.checkSquish()
 		}
 		this.takeDamage(this.maxHealth)
-		return false
+		return true
 	}
 
 	private pushOutOfSolids() {
