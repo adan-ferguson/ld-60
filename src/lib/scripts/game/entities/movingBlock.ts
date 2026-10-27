@@ -81,18 +81,20 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private getEntitiesStandingOn() {
-		return this.game.entitiesManager.entities.values().filter((e) => {
-			if (!(e instanceof Player)) {
-				return false
-			}
-			const worldBounds = e.worldBounds
-			const feetBounds = new CoolRect({
-				x: worldBounds.x,
-				y: worldBounds.bottom,
-				width: worldBounds.width,
-				height: 0,
-			})
-			return this.worldBounds.intersects(feetBounds)
+		// TODO: All entities, but this is just the Player for now
+		const player = this.game.player
+		const myTop = new CoolRect({
+			x: this.worldBounds.x,
+			y: this.worldBounds.y,
+			width: this.worldBounds.width,
+			height: 0,
 		})
+		const playerBottom = new CoolRect({
+			x: player.worldBounds.x,
+			y: player.worldBounds.bottom,
+			width: player.worldBounds.width,
+			height: 0,
+		})
+		return myTop.intersects(playerBottom)
 	}
 }

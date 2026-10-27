@@ -34,8 +34,6 @@ type MovementResult = {
 	hitVertical: boolean
 }
 
-const FEET_CHECK_HEIGHT = 0.5
-
 export class WorldCollision {
 	constructor(private game: Game) {}
 	private get solids(): Solid[] {
@@ -65,7 +63,7 @@ export class WorldCollision {
 			x: rect.x,
 			y: rect.bottom,
 			width: rect.width,
-			height: FEET_CHECK_HEIGHT,
+			height: 0,
 		})
 
 		const candidates = [...this.game.entitiesManager.entities]
@@ -83,7 +81,7 @@ export class WorldCollision {
 				}
 			})
 			.filter(({ platform, horizontalOverlap }) => {
-				return horizontalOverlap > 0 && rect.bottom <= platform.top + FEET_CHECK_HEIGHT
+				return horizontalOverlap > 0 && rect.bottom <= platform.top
 			})
 
 		candidates.sort((a, b) => {
@@ -101,7 +99,13 @@ export class WorldCollision {
 	}
 
 	isGrounded(rect: CoolRect): boolean {
-		return this.getPlatformSupporting(rect) !== undefined
+		const feet = new CoolRect({
+			x: rect.x,
+			y: rect.bottom,
+			width: rect.width,
+			height: 0,
+		})
+		return this.solids.some((solid) => feet.intersects(solid.rect, true))
 	}
 
 	overlapsLava(rect: CoolRect): boolean {
