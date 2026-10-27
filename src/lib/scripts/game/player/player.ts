@@ -8,6 +8,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
+import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 export type AerialState =
 	| {
@@ -78,6 +79,9 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
+		if (this.checkSquish()) {
+			return
+		}
 		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
@@ -195,6 +199,20 @@ export class Player extends GameEntity {
 				height: HEIGHT,
 			}),
 		)
+	}
+
+	private checkSquish() {
+		const solids = this.game.worldCollision.solids.map((s) => s.rect)
+		if (!isSquished(this.worldBounds, solids)) {
+			return true
+		}
+		if (this.tryCrouch()) {
+			if (!isSquished(this.worldBounds, solids)) {
+				return true
+			}
+		}
+		this.takeDamage(this.maxHealth)
+		return false
 	}
 
 	private pushOutOfSolids() {

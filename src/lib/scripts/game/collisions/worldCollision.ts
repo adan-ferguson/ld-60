@@ -37,7 +37,7 @@ type MovementResult = {
 
 export class WorldCollision {
 	constructor(private game: Game) {}
-	private get solids(): Solid[] {
+	get solids(): Solid[] {
 		return [
 			...this.tiles.values
 				.filter((t) => t.contents.kind === 'wall')
@@ -68,7 +68,7 @@ export class WorldCollision {
 			y: rect.bottom,
 			width: rect.width,
 			height: 0,
-		}).pad({ y: 0.001 })
+		}).pad({ y: 0.01 })
 		return this.solids.some((solid) => feet.intersects(solid.rect, true))
 	}
 
@@ -92,12 +92,6 @@ export class WorldCollision {
 			hitHorizontal: horizontal.collided,
 			hitVertical: vertical.collided,
 		}
-	}
-
-	getOverlappingSolids(rect: CoolRect, exclude?: GameEntity): Solid[] {
-		return this.solids.filter(
-			(solid) => solid.entity !== exclude && rect.intersects(solid.rect, true),
-		)
 	}
 
 	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
@@ -137,9 +131,9 @@ export class WorldCollision {
 		const { TILE_SIZE_PX } = Consts
 
 		const minTileX = Math.floor(rect.left / TILE_SIZE_PX)
-		const maxTileX = Math.floor((rect.right - 0.001) / TILE_SIZE_PX)
+		const maxTileX = Math.floor((rect.right - 0.01) / TILE_SIZE_PX)
 		const minTileY = Math.floor(rect.top / TILE_SIZE_PX)
-		const maxTileY = Math.floor((rect.bottom - 0.001) / TILE_SIZE_PX)
+		const maxTileY = Math.floor((rect.bottom - 0.01) / TILE_SIZE_PX)
 
 		for (let tileY = minTileY; tileY <= maxTileY; tileY++) {
 			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {

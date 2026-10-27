@@ -18,6 +18,9 @@ const oppositeMap = {
 } as const
 
 export class Cardinal {
+	static fromAxis(isX: boolean) {
+		return Cardinal.fromAxisDelta(isX, true)
+	}
 	static fromAxisDelta(isX: boolean, positive: boolean): Cardinal {
 		if (isX) {
 			return new Cardinal(positive ? 'right' : 'left')

@@ -6,7 +6,7 @@ import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Treasure } from '#lib/scripts/game/treasure.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { WorldCollision } from '#lib/scripts/game/worldCollision.ts'
+import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
 
 const EXTRA_LIFE = 25000
 const TREASURE_SPAWN_TIME = 10

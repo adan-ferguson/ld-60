@@ -71,26 +71,9 @@ export class MovingBlock extends GameEntity {
 		const deltaX = this.x - previousBounds.x
 		const deltaY = this.y - previousBounds.y
 		for (const rider of riders) {
-			this.moveRider(rider, deltaX, deltaY)
-		}
-	}
-
-	private moveRider(rider: GameEntity, deltaX: number, deltaY: number) {
-		const nextBounds = rider.worldBounds.shift({
-			x: deltaX,
-			y: deltaY,
-		})
-		const solids = this.game.worldCollision.getOverlappingSolids(nextBounds, this)
-		if (!solids.length) {
 			rider.x += deltaX
 			rider.y += deltaY
-			return
 		}
-		if (rider instanceof Player && rider.tryCrouch()) {
-			this.moveRider(rider, deltaX, deltaY) // Try again
-			return
-		}
-		rider.takeDamage(rider.maxHealth)
 	}
 
 	private getEntitiesStandingOn() {
@@ -103,13 +86,13 @@ export class MovingBlock extends GameEntity {
 				y: this.worldBounds.y,
 				width: this.worldBounds.width,
 				height: 0,
-			}).pad({ y: 0.001 })
+			}).pad({ y: 0.01 })
 			const playerBottom = new CoolRect({
 				x: e.worldBounds.x,
 				y: e.worldBounds.bottom,
 				width: e.worldBounds.width,
 				height: 0,
-			}).pad({ y: 0.001 })
+			}).pad({ y: 0.01 })
 			return myTop.intersects(playerBottom)
 		})
 	}
