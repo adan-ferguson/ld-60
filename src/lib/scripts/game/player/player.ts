@@ -7,6 +7,7 @@ import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 
 export type AerialState =
 	| {
@@ -73,6 +74,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
+		this.carryWithMovingPlatform(delta)
 		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
@@ -195,5 +197,19 @@ export class Player extends GameEntity {
 
 	private pushOutOfSolids() {
 		this.game.terrainCollision.pushOutOfSolids(this)
+	}
+
+	private carryWithMovingPlatform(delta: number) {
+		const support = this.game.terrainCollision.getPlatformSupporting(this.worldBounds)
+		if (!(support instanceof MovingBlock)) {
+			return
+		}
+		const result = this.game.terrainCollision.resolveMovement(
+			this.worldBounds,
+			support.velX * delta,
+			support.velY * delta,
+		)
+		this.x = result.x
+		this.y = result.y
 	}
 }

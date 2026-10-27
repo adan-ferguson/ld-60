@@ -60,14 +60,47 @@ export class WorldCollision {
 	get tiles() {
 		return this.game.level.tiles
 	}
-	isGrounded(rect: CoolRect) {
+	getPlatformSupporting(rect: CoolRect): GameEntity | undefined {
 		const feet = new CoolRect({
 			x: rect.x,
 			y: rect.bottom,
 			width: rect.width,
 			height: FEET_CHECK_HEIGHT,
 		})
-		return this.solids.some((solid) => feet.intersects(solid.rect, true))
+
+		const candidates = [...this.game.entitiesManager.entities]
+			.filter((entity) => entity.isSolid)
+			.map((entity) => {
+				const platform = entity.worldBounds
+				const overlapLeft = Math.max(feet.left, platform.left)
+				const overlapRight = Math.min(feet.right, platform.right)
+				const horizontalOverlap = Math.max(0, overlapRight - overlapLeft)
+
+				return {
+					entity,
+					platform,
+					horizontalOverlap,
+				}
+			})
+			.filter(({ platform, horizontalOverlap }) => {
+				return horizontalOverlap > 0 && rect.bottom <= platform.top + FEET_CHECK_HEIGHT
+			})
+
+		candidates.sort((a, b) => {
+			// Prefer the platform supporting the greatest width of the feet.
+			if (a.horizontalOverlap !== b.horizontalOverlap) {
+				return b.horizontalOverlap - a.horizontalOverlap
+			}
+			// If the overlap is equal, prefer the platform closest to the feet.
+			const aVerticalDistance = Math.abs(rect.bottom - a.platform.top)
+			const bVerticalDistance = Math.abs(rect.bottom - b.platform.top)
+			return aVerticalDistance - bVerticalDistance
+		})
+
+		return candidates[0]?.entity
+	}
+	isGrounded(rect: CoolRect): boolean {
+		return this.getPlatformSupporting(rect) !== undefined
 	}
 
 	overlapsLava(rect: CoolRect): boolean {
@@ -154,11 +187,19 @@ export class WorldCollision {
 			const rect = entity.worldBounds
 			const overlaps = this.solids
 				.filter((solid) => rect.intersects(solid.rect, true))
-				.map((solid) => this.getPushCandidates(entity, solid))
+				.flatMap((solid) => this.getPushCandidates(entity, solid))
 			if (overlaps.length === 0) {
 				return
 			}
-			const correction = overlaps.flat().sort((a, b) => a.depth - b.depth)[0]
+			const correction = overlaps.sort((a, b) => {
+				if (a.depth !== b.depth) {
+					return a.depth - b.depth
+				}
+				if (a.preferred !== b.preferred) {
+					return a.preferred ? -1 : 1
+				}
+				return 0
+			})[0]
 			if (!correction) {
 				return
 			}
@@ -192,43 +233,39 @@ export class WorldCollision {
 		const body = entity.worldBounds
 		const obstacle = solid.rect
 
-		const overlapLeft = body.right - obstacle.x
-		const overlapRight = obstacle.right - body.x
-		const overlapUp = body.bottom - obstacle.y
-		const overlapDown = obstacle.bottom - body.y
+		const penetrationX = Math.min(body.right - obstacle.left, obstacle.right - body.left)
+
+		const penetrationY = Math.min(body.bottom - obstacle.top, obstacle.bottom - body.top)
+
+		if (penetrationX <= 0 || penetrationY <= 0) {
+			return []
+		}
 
 		const relativeVelocityX = entity.velX - solid.velocityX
 		const relativeVelocityY = entity.velY - solid.velocityY
 
-		const candidates: PushCandidate[] = [
+		const bodyCenterX = body.left + body.width / 2
+		const obstacleCenterX = obstacle.left + obstacle.width / 2
+		const bodyCenterY = body.top + body.height / 2
+		const obstacleCenterY = obstacle.top + obstacle.height / 2
+
+		const pushLeft = bodyCenterX < obstacleCenterX
+		const pushUp = bodyCenterY < obstacleCenterY
+
+		return [
 			{
-				x: -overlapLeft,
+				x: pushLeft ? -penetrationX : penetrationX,
 				y: 0,
-				depth: overlapLeft,
-				preferred: relativeVelocityX > 0,
-			},
-			{
-				x: overlapRight,
-				y: 0,
-				depth: overlapRight,
-				preferred: relativeVelocityX < 0,
+				depth: penetrationX,
+				preferred: pushLeft ? relativeVelocityX > 0 : relativeVelocityX < 0,
 			},
 			{
 				x: 0,
-				y: -overlapUp,
-				depth: overlapUp,
-				preferred: relativeVelocityY > 0,
-			},
-			{
-				x: 0,
-				y: overlapDown,
-				depth: overlapDown,
-				preferred: relativeVelocityY < 0,
+				y: pushUp ? -penetrationY : penetrationY,
+				depth: penetrationY,
+				preferred: pushUp ? relativeVelocityY > 0 : relativeVelocityY < 0,
 			},
 		]
-
-		const preferred = candidates.filter((candidate) => candidate.preferred)
-		return preferred.length > 0 ? preferred : candidates
 	}
 
 	private overlapsOnAdjacentAxis(rect: CoolRect, solid: CoolRect, cardinal: Cardinal): boolean {

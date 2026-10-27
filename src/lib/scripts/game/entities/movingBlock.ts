@@ -44,17 +44,25 @@ export class MovingBlock extends GameEntity {
 		this[this.def.axis] = value
 	}
 	public update2(delta: number): void {
-		const vel = (this.def.speed ?? DEFAULT_SPEED) * delta
-		if (this.dir === 1) {
-			this.current = Math.min(this.max, this.current + vel)
-			if (this.current >= this.max) {
-				this.dir = -1
-			}
+		this.velX = 0
+		this.velY = 0
+		const speed = this.def.speed ?? DEFAULT_SPEED
+		const distance = this.dir === 1 ? this.max - this.current : this.current - this.min
+		if (distance <= 0) {
+			this.dir = this.dir === 1 ? -1 : 1
+			return
+		}
+
+		const velocity = this.dir * Math.min(speed, distance / delta)
+
+		if (this.def.axis === 'x') {
+			this.velX = velocity
 		} else {
-			this.current = Math.max(this.min, this.current - vel)
-			if (this.current <= this.min) {
-				this.dir = 1
-			}
+			this.velY = velocity
+		}
+
+		if (Math.abs(velocity * delta) >= distance) {
+			this.dir = this.dir === 1 ? -1 : 1
 		}
 	}
 }

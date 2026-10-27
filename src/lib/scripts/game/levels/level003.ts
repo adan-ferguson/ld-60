@@ -17,7 +17,7 @@ x..................xx..........x
 x..................xx..........x
 x..................xx..........x
 x.........m........xx..........x
-x...x..............xx....c....2x
+x...xn.............xx....c....2x
 x..................xx....xx....x
 xs................mxx.........3x
 xxxxxxxxxxxxxxxxxxxxxllllllllllx
@@ -36,6 +36,6 @@ xxxxxxxxxxxxxxxxxxxxxllllllllllx
 		b: { kind: 'man', loop: [2, 3] },
 		c: { kind: 'man', loop: [3] },
 		m: { kind: 'movingBlock', axis: 'y', range: [-5, 0] },
-		n: { kind: 'movingBlock', axis: 'x', range: [0, 5], loop: [2, 3] },
+		n: { kind: 'movingBlock', axis: 'x', range: [0, 5] },
 	},
 }
