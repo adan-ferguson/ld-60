@@ -51,7 +51,7 @@ export class Projectile extends GameEntity {
 				this.isActive = false
 			}
 		}
-		if (this.game.terrainCollision.overlapsSolid(this.worldBounds)) {
+		if (this.game.worldCollision.overlapsSolid(this.worldBounds)) {
 			this.isActive = false
 		}
 	}

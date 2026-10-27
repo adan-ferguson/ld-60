@@ -7,6 +7,8 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
+import { Player } from '#lib/scripts/game/player/player.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 const DEFAULT_SPEED = 20
 
@@ -64,5 +66,33 @@ export class MovingBlock extends GameEntity {
 		if (Math.abs(velocity * delta) >= distance) {
 			this.dir = this.dir === 1 ? -1 : 1
 		}
+	}
+	override move(delta: number) {
+		const previousBounds = this.worldBounds
+		const riders = this.getEntitiesStandingOn()
+		super.move(delta)
+		const deltaX = this.x - previousBounds.x
+		const deltaY = this.y - previousBounds.y
+		for (const rider of riders) {
+			debugger
+			rider.x += deltaX
+			rider.y += deltaY
+		}
+	}
+
+	private getEntitiesStandingOn() {
+		return this.game.entitiesManager.entities.values().filter((e) => {
+			if (!(e instanceof Player)) {
+				return false
+			}
+			const worldBounds = e.worldBounds
+			const feetBounds = new CoolRect({
+				x: worldBounds.x,
+				y: worldBounds.bottom,
+				width: worldBounds.width,
+				height: 0,
+			})
+			return this.worldBounds.intersects(feetBounds)
+		})
 	}
 }

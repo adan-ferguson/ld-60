@@ -122,7 +122,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	onGround() {
-		return this.game.terrainCollision.isGrounded(this.worldBounds) ?? false
+		return this.game.worldCollision.isGrounded(this.worldBounds) ?? false
 	}
 	private calcShotInfo() {
 		if (this.crouching) {
@@ -160,7 +160,7 @@ export class Player extends GameEntity {
 		return new PlayerEl(gc, this)
 	}
 	protected override move(delta: number) {
-		const result = this.game.terrainCollision.resolveMovement(
+		const result = this.game.worldCollision.resolveMovement(
 			this.worldBounds,
 			this.velX * delta,
 			this.velY * delta,
@@ -185,7 +185,7 @@ export class Player extends GameEntity {
 
 	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
-		return !this.game.terrainCollision.overlapsSolid(
+		return !this.game.worldCollision.overlapsSolid(
 			new CoolRect({
 				x: worldBounds.x,
 				width: worldBounds.width,
@@ -196,15 +196,15 @@ export class Player extends GameEntity {
 	}
 
 	private pushOutOfSolids() {
-		this.game.terrainCollision.pushOutOfSolids(this)
+		this.game.worldCollision.pushOutOfSolids(this)
 	}
 
 	private carryWithMovingPlatform(delta: number) {
-		const support = this.game.terrainCollision.getPlatformSupporting(this.worldBounds)
+		const support = this.game.worldCollision.getPlatformSupporting(this.worldBounds)
 		if (!(support instanceof MovingBlock)) {
 			return
 		}
-		const result = this.game.terrainCollision.resolveMovement(
+		const result = this.game.worldCollision.resolveMovement(
 			this.worldBounds,
 			support.velX * delta,
 			support.velY * delta,

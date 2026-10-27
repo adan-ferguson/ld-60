@@ -1,7 +1,6 @@
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { Rectangle } from 'pixi.js'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
@@ -65,7 +64,7 @@ export abstract class GameEntity {
 		if (!this.isActive) {
 			return
 		}
-		if (this.game.terrainCollision.overlapsLava(new CoolRect({ x: this.x, y: this.y }))) {
+		if (this.game.worldCollision.overlapsLava(new CoolRect({ x: this.x, y: this.y }))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

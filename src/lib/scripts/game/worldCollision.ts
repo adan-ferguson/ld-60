@@ -99,6 +99,7 @@ export class WorldCollision {
 
 		return candidates[0]?.entity
 	}
+
 	isGrounded(rect: CoolRect): boolean {
 		return this.getPlatformSupporting(rect) !== undefined
 	}

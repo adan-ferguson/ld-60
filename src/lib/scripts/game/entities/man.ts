@@ -77,11 +77,7 @@ export class Man extends Enemy {
 		this.state.update(this, delta)
 	}
 	protected override move(delta: number) {
-		const result = this.game.terrainCollision.resolveMovement(
-			this.worldBounds,
-			this.velX * delta,
-			0,
-		)
+		const result = this.game.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
 		this.x += result.x - this.worldBounds.x
 		if (result.hitHorizontal) {
 			this.facing *= -1
@@ -91,7 +87,7 @@ export class Man extends Enemy {
 		const body = this.worldBounds
 		const LEDGE_LOOKAHEAD = -1.5
 		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
-		return this.game.terrainCollision.isGrounded(
+		return this.game.worldCollision.isGrounded(
 			new CoolRect({
 				x,
 				y: body.y,

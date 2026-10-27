@@ -33,7 +33,7 @@ class Game {
 	public playerDied = CoolEvents.createHandler()
 	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
-	public terrainCollision: WorldCollision
+	public worldCollision: WorldCollision
 	private waveClearedEmitted = false
 	get score() {
 		return this.rollingScore
@@ -51,7 +51,7 @@ class Game {
 		})
 		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
-		this.terrainCollision = new WorldCollision(this)
+		this.worldCollision = new WorldCollision(this)
 		this.setWave(wave)
 	}
 	get activeEntites(): GameEntity[] {
