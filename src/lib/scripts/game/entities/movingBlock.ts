@@ -95,6 +95,6 @@ export class MovingBlock extends GameEntity {
 			width: player.worldBounds.width,
 			height: 0,
 		})
-		return myTop.intersects(playerBottom)
+		return myTop.intersects(playerBottom) ? [player] : []
 	}
 }
