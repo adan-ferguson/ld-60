@@ -3,19 +3,6 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 export type CardinalDirection = 'up' | 'down' | 'left' | 'right'
 export type Edge = 'top' | 'bottom' | 'left' | 'right'
 
-export type CardinalProps = {
-	angle: number
-	opp: Cardinal
-	isX: boolean
-	isLow: boolean
-	edge: Edge
-	axis: 'x' | 'y'
-	adjAxis: 'x' | 'y'
-	size: 'w' | 'h'
-	adjSize: 'w' | 'h'
-	sign: -1 | 1
-}
-
 const edgeMap = {
 	up: 'top',
 	down: 'bottom',
@@ -31,7 +18,7 @@ const oppositeMap = {
 } as const
 
 export class Cardinal {
-	static fromAxis(isX: boolean, positive: boolean): Cardinal {
+	static fromAxisDelta(isX: boolean, positive: boolean): Cardinal {
 		if (isX) {
 			return new Cardinal(positive ? 'right' : 'left')
 		}

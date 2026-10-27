@@ -100,14 +100,14 @@ export class WorldCollision {
 			}
 		}
 
-		const cardinal = Cardinal.fromAxis(axis === 'x', delta > 0)
+		const cardinal = Cardinal.fromAxisDelta(axis === 'x', delta > 0)
 		const edge = cardinal.edge
 
 		const leadingEdge = rect[edge]
 		const nextRect = rect.shift(XY.scale(cardinal.xy, delta))
 		const nextLeadingEdge = nextRect[edge]
 
-		const bestDistance = Math.abs(delta)
+		let bestDistance = Math.abs(delta)
 		let bestPosition = nextRect[axis]
 		let collided = false
 
@@ -133,7 +133,7 @@ export class WorldCollision {
 				continue
 			}
 
-			// bestDistance = distance
+			bestDistance = distance
 			bestPosition = obstacleEdge - this.leadingEdgeOffset(rect, cardinal.edge)
 			collided = true
 		}
