@@ -40,14 +40,13 @@ export class WorldCollision {
 	get solids(): Solid[] {
 		return [
 			...this.tiles.values
-				.filter((t) => t.contents.kind === 'wall')
+				.filter((t) => t.contents.kind === 'wall' || t.contents.kind === 'spikes')
 				.map((t) => ({
 					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
 					velocityX: 0,
 					velocityY: 0,
 				})),
 			...this.game.entitiesManager.activeEntities
-				.values()
 				.filter((t) => t.isSolid)
 				.map((t) => ({
 					entity: t,

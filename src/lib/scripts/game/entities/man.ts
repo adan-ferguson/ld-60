@@ -40,6 +40,9 @@ export class Man extends Enemy {
 	public get w(): number {
 		return 8
 	}
+	public override get diesToHazards() {
+		return true
+	}
 	get canStand() {
 		return true
 	}
@@ -111,7 +114,7 @@ export class Man extends Enemy {
 				style: 'small',
 				w: 4,
 				h: 1,
-				source: 'enemy',
+				source: this,
 				lifetime: 10,
 				velX: 80 * this.facing,
 				velY: 0,

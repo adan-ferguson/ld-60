@@ -1,6 +1,12 @@
-import { type ColorSource, Graphics } from 'pixi.js'
+import { Assets, type ColorSource, Graphics, Sprite } from 'pixi.js'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { Consts } from '#lib/scripts/consts.ts'
+import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
+
+AssetUtils.requestPreload({
+	src: `/assets/sprites/spike.png`,
+	alias: `spike`,
+})
 
 export class TerrainLayer extends Graphics {
 	setLevel(level: LevelInstance) {
@@ -16,6 +22,14 @@ export class TerrainLayer extends Graphics {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('red')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
+			} else if (kind === 'spikes') {
+				this.addChild(
+					new Sprite({
+						texture: Assets.get('spike'),
+						x,
+						y,
+					}),
+				)
 			}
 		}
 	}

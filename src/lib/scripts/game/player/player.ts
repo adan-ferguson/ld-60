@@ -56,6 +56,9 @@ export class Player extends GameEntity {
 	public override get canStand() {
 		return true
 	}
+	public override get diesToHazards() {
+		return true
+	}
 	tryCrouch() {
 		if (this.crouching) {
 			return false
@@ -148,7 +151,7 @@ export class Player extends GameEntity {
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
-				source: 'player',
+				source: this,
 				lifetime: 1.25,
 				velX: 50 * x,
 				velY: 50 * y,

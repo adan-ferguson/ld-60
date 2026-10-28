@@ -30,6 +30,9 @@ export class Turret extends Enemy {
 	get score(): number {
 		return 1000
 	}
+	get isSolid() {
+		return true
+	}
 	constructor(game: Game, tileXY: XY) {
 		super(game, tileXY)
 	}
@@ -50,7 +53,7 @@ export class Turret extends Enemy {
 				style: 'dot',
 				w: 2,
 				h: 2,
-				source: 'enemy',
+				source: this,
 				lifetime: 10,
 				velX: Math.cos(angle) * SPEED,
 				velY: Math.sin(angle) * SPEED,

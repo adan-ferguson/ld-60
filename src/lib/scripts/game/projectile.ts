@@ -4,6 +4,8 @@ import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { ColorSource } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { Player } from '#lib/scripts/game/player/player.ts'
+import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 
 export type ProjectileStyle = 'small' | 'large' | 'dot'
 
@@ -11,7 +13,7 @@ type Options = {
 	style: ProjectileStyle
 	w: number
 	h: number
-	source: 'player' | 'enemy'
+	source: GameEntity
 	lifetime: number
 	x: number
 	y: number
@@ -37,7 +39,7 @@ export class Projectile extends GameEntity {
 		if (this.time > this.options.lifetime) {
 			this.isActive = false
 		}
-		if (this.options.source === 'player') {
+		if (this.options.source instanceof Player) {
 			const target = this.game.entitiesManager.enemies.find((enemy) =>
 				enemy.worldBounds.intersects(this.worldBounds),
 			)
@@ -45,17 +47,19 @@ export class Projectile extends GameEntity {
 				target.takeDamage(1)
 				this.isActive = false
 			}
-		} else if (this.options.source === 'enemy') {
+		} else if (this.options.source instanceof Enemy) {
 			const { player } = this.game
 			if (player && player.isActive && player.worldBounds.intersects(this.worldBounds)) {
 				player.takeDamage(1)
 				this.isActive = false
 			}
 		}
-		// Player projectiles have a bit more leeway to hit walls
+		// Player projectiles have a bit more leeway to avoid walls
 		const myWallCollisionBounds =
-			this.options.source === 'player' ? this.worldBounds.midpoint.pad(0.001) : this.worldBounds
-		if (this.game.worldCollision.overlapsSolid(myWallCollisionBounds)) {
+			this.options.source instanceof Player
+				? this.worldBounds.midpoint.pad(0.001)
+				: this.worldBounds
+		if (this.game.worldCollision.overlapsSolid(myWallCollisionBounds, this.options.source)) {
 			this.isActive = false
 		}
 	}

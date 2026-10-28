@@ -70,7 +70,7 @@ export abstract class GameEntity {
 		if (!this.isActive || !this.diesToHazards) {
 			return
 		}
-		if (this.game.worldCollision.overlapsHazardTerrain(this.worldBounds.midpoint)) {
+		if (this.game.worldCollision.overlapsHazardTerrain(this.worldBounds.pad(-1))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

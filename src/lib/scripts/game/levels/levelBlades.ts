@@ -4,23 +4,23 @@ export const LevelBlades: LevelDef = {
 	displayName: 'Blades',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x1x1.b.........................x
-x.x............s...............x
-x.x...b.............xd......c..x
-x.x.................xxxxxxxxxx1x
-x.xxxxxxxxxx...v...............x
-x.x...........................xx
-x..............................x
-xxx....w...x...........x.c.....x
-xxx...................xxxw.....x
-xxx..................xxxxx.....x
-xxx.................xx...xx....x
-xxxxxxxxxxxx.......xxx...xxx...x
-x1xt..............xxxx.x.xxxx..x
-x................xxxxx.a.xxxxx.x
-x......................x.xxxxx.x
-x....w.....x..........ex....1x1x
-xllllllllllxxxxxxxxxxxxxxxxxxxxx
+x...x.......a.....a.....a...1..x
+x...x.......................1..x
+xs..a.......................1..x
+x........a.....a.....a......1..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x...............x1.............x
+x...............x1.............x
+x...............x1...........xxx
+x...........aa..x1.........aaxxx
+x....e......xx.xx1.......xxxxxxx
+x.xxxxxxxxx.xx.ax1.....aaxxxxxxx
+x...........xx.......xxxxxxxxxxx
+x...........xx.e...aaxxxxxxxxxxx
+x..e.....e..xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
 		s: { kind: 'playerSpawn' },
@@ -29,12 +29,8 @@ xllllllllllxxxxxxxxxxxxxxxxxxxxx
 		1: { kind: 'turret' },
 		v: { kind: 'movingBlock', isX: false },
 		w: { kind: 'movingBlock', isX: true },
+		a: { kind: 'spikes' },
 		l: { kind: 'lava' },
-		o: { kind: 'movingBlock', isX: true, speed: 30 },
-		a: { kind: 'movingBlock', isX: true, type: 'spike' },
-		b: { kind: 'movingBlock', isX: false, type: 'spike' },
-		c: { kind: 'man', behavior: 'stand', facing: -1 },
-		d: { kind: 'movingBlock', isX: true, type: 'spike', speed: 50 },
 		e: { kind: 'man', facing: -1 },
 	},
 }

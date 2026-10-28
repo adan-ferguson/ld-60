@@ -76,6 +76,7 @@ class Game {
 		}
 		this.updateScore(delta)
 		this.entitiesManager.update(delta)
+		this.player.update(delta)
 		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
 			this.spawnTreasure()
 		}
