@@ -8,6 +8,7 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Rectangle } from 'pixi.js'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 const MOVE_SPEED = 14
 const ATTACK_COOLDOWN = 1.4
@@ -38,6 +39,9 @@ export class Man extends Enemy {
 	}
 	public get w(): number {
 		return 8
+	}
+	get canStand() {
+		return true
 	}
 	get score(): number {
 		return 1000 * this.props.maxHealth
@@ -71,6 +75,9 @@ export class Man extends Enemy {
 		return new ManEl(gc, this)
 	}
 	update2(delta: number): void {
+		if (this.checkSquish()) {
+			return
+		}
 		if (this.worldBounds.intersects(this.game.player.worldBounds)) {
 			this.game.player.takeDamage(1)
 		}
@@ -117,6 +124,15 @@ export class Man extends Enemy {
 
 	public seesPlayer() {
 		return this.game.player.worldBounds.intersects(this.toWorldBounds(this.visionRect))
+	}
+
+	private checkSquish(): boolean {
+		const solids = this.game.worldCollision.solids.map((s) => s.rect)
+		if (!isSquished(this.worldBounds, solids)) {
+			return false
+		}
+		this.takeDamage(this.maxHealth)
+		return true
 	}
 }
 

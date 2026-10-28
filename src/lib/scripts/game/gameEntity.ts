@@ -67,7 +67,7 @@ export abstract class GameEntity {
 		if (!this.isActive) {
 			return
 		}
-		if (this.game.worldCollision.overlapsLava(new CoolRect({ x: this.x, y: this.y }))) {
+		if (this.game.worldCollision.overlapsLava(this.worldBounds.midpoint)) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

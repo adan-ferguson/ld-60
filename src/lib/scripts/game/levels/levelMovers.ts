@@ -4,22 +4,22 @@ export const LevelMovers: LevelDef = {
 	displayName: 'Moving Blocks 2',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x1x1xb..b......................x
+x1x1.b.........................x
 x.x............s...............x
-x.x.................xd........1x
-x.x.................xxxxxxxxxxxx
+x.x...b.............xd......c..x
+x.x.................xxxxxxxxxx1x
 x.xxxxxxxxxx...v...............x
-x.x............................x
-x.......................c......x
-xxx....w...x...........xw......x
-xxx...................xxx......x
+x.x...........................xx
+x..............................x
+xxx....w...x...........x.c.....x
+xxx...................xxxw.....x
 xxx..................xxxxx.....x
 xxx.................xx...xx....x
 xxxxxxxxxxxx.......xxx...xxx...x
 x1xt..............xxxx.x.xxxx..x
 x................xxxxx.a.xxxxx.x
 x......................x.xxxxx.x
-x....w.....x...........x....1x1x
+x....w.....x..........ex....1x1x
 xllllllllllxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
@@ -35,5 +35,6 @@ xllllllllllxxxxxxxxxxxxxxxxxxxxx
 		b: { kind: 'movingBlock', isX: false, type: 'spike' },
 		c: { kind: 'man', behavior: 'stand', facing: -1 },
 		d: { kind: 'movingBlock', isX: true, type: 'spike', speed: 50 },
+		e: { kind: 'man', facing: -1 },
 	},
 }

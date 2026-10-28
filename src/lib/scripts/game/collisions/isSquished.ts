@@ -2,7 +2,7 @@ import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 
 const MIN_ADJACENT_OVERLAP = 0.5
-const SQUEEZE_LEEWAY = 1
+const SQUEEZE_LEEWAY = 2.5
 
 export function isSquished(entityBounds: CoolRect, solids: CoolRect[]): boolean {
 	return check(true) || check(false)
