@@ -1,26 +1,26 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level003: LevelDef = {
-	displayName: 'Moving Blocks 1',
+	displayName: 'Platform Picnic',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x2.............1..............3x
-x..t.........b...a..........t..x
-x..........xxxxxxxxxx.......x..x
-x..............1...............x
-x.......................x......x
-x..............................x
-x..............................x
-x..................xx..........x
-x..................xx..........x
-x..................xx..........x
-x..................xx..........x
-x..................xx..........x
-x.........m........xx..........x
-x...xn.............xx....c....2x
-x.................mxx....xx....x
-xs.................xx.........3x
-xxxxxxxxxxxxxxxxxxxxxllllllllllx
+x1x............................x
+x............b.....a...........x
+x............xxxxxxxxx....x....x
+x.......x....1......tx.........x
+x....................x.........x
+x...x................x..x...x..x
+x....................x.........x
+x.......x............x.........x
+x....................xx...1...xx
+x...........x........x.........x
+x....................x.........x
+x.......x.......x....x..x...x..x
+x.......x.......1....x.........x
+x...x...x...........xx.........x
+x.......x............x....x....x
+xs......x............x.........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
 		s: { kind: 'playerSpawn' },
@@ -35,7 +35,5 @@ xxxxxxxxxxxxxxxxxxxxxllllllllllx
 		a: { kind: 'man' },
 		b: { kind: 'man', loop: [2, 3] },
 		c: { kind: 'man', loop: [3] },
-		m: { kind: 'movingBlock', axis: 'y', range: [-5, 0] },
-		n: { kind: 'movingBlock', axis: 'x', range: [0, 5] },
 	},
 }

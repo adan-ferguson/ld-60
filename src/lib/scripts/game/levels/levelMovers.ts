@@ -1,42 +1,39 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
-export const LevelTight: LevelDef = {
+export const LevelMovers: LevelDef = {
 	displayName: 'Moving Blocks 2',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-x..............................x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x1x1xb..b......................x
+x.x............s...............x
+x.x.................xd........1x
+x.x.................xxxxxxxxxxxx
+x.xxxxxxxxxx...v...............x
+x.x............................x
+x.......................c......x
+xxx....w...x...........xw......x
+xxx...................xxx......x
+xxx..................xxxxx.....x
+xxx.................xx...xx....x
+xxxxxxxxxxxx.......xxx...xxx...x
+x1xt..............xxxx.x.xxxx..x
+x................xxxxx.a.xxxxx.x
+x......................x.xxxxx.x
+x....w.....x...........x....1x1x
+xllllllllllxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn', loop: 1 },
-		u: { kind: 'treasureSpawn', loop: 2 },
-		v: { kind: 'treasureSpawn', loop: 3 },
 		x: { kind: 'wall' },
-		y: { kind: 'wall', loop: [2, 3] },
-		l: { kind: 'lava' },
 		1: { kind: 'turret' },
-		2: { kind: 'turret', loop: [2, 3] },
-		3: { kind: 'turret', loop: [3] },
-		a: { kind: 'man', behavior: 'stand', facing: -1, loop: 1 },
-		b: { kind: 'man', behavior: 'stand', facing: -1, loop: 2 },
-		c: { kind: 'man', behavior: 'stand', facing: -1, loop: 3 },
-		d: { kind: 'man' },
-		e: { kind: 'man', loop: [2, 3] },
+		v: { kind: 'movingBlock', isX: false },
+		w: { kind: 'movingBlock', isX: true },
+		l: { kind: 'lava' },
+		o: { kind: 'movingBlock', isX: true, speed: 30 },
+		a: { kind: 'movingBlock', isX: true, type: 'spike' },
+		b: { kind: 'movingBlock', isX: false, type: 'spike' },
+		c: { kind: 'man', behavior: 'stand', facing: -1 },
+		d: { kind: 'movingBlock', isX: true, type: 'spike', speed: 50 },
 	},
 }

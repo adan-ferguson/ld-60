@@ -25,7 +25,7 @@ const JUMP_VELOCITY = 65
 const X_VELOCITY = 36
 const GRAVITY = 125
 const MAX_FALL_SPEED = 200
-const WIDTH = 7.5
+const WIDTH = 7.2
 const HEIGHT = 12
 const CROUCH_DIFF = 4
 const SHOT_COOLDOWN = 0.21
@@ -149,7 +149,7 @@ export class Player extends GameEntity {
 			new Projectile(this.game, {
 				style: 'small',
 				source: 'player',
-				lifetime: 1.2,
+				lifetime: 1.25,
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),

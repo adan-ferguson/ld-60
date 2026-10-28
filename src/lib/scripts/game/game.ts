@@ -39,7 +39,8 @@ class Game {
 		return this.rollingScore
 	}
 	private get turretShotInterval() {
-		return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.6)
+		return 4 - Math.min(3, this.loops * 0.6)
+		// return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.6)
 	}
 	static async load() {
 		return new Game()

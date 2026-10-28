@@ -26,10 +26,11 @@ type TreasureSpawn = {
 
 export type MovingBlockDef = {
 	kind: 'movingBlock'
-	axis: 'x' | 'y'
+	isX: boolean
+	type?: 'block' | 'spike'
 	initialDir?: -1 | 1
 	speed?: number
-	range: [number, number]
+	range?: [number, number]
 }
 
 export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlockDef

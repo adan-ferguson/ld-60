@@ -28,6 +28,9 @@ export class Cardinal {
 		return new Cardinal(positive ? 'down' : 'up')
 	}
 	constructor(private cardinalDirection: CardinalDirection) {}
+	get adjacentAxis() {
+		return this.isX ? 'y' : 'x'
+	}
 	get adjacentEdgeUpper() {
 		return this.isX ? 'bottom' : 'right'
 	}

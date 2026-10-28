@@ -17,6 +17,9 @@ export class LevelInstance {
 		this.tiles = tiles
 		this.playerSpawnPosition = TileDef.toWorldMidpoint(spawnPosition)
 	}
+	get terrainTiles() {
+		return this.tiles.values.filter((t) => t.contents.kind === 'wall')
+	}
 	getTreasureSpawnPosition() {
 		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')
 		const xy = Random.chooseOne(treasures)?.tileXY ?? { x: 0, y: 0 }

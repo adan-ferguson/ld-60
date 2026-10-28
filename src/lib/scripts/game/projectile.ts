@@ -51,7 +51,10 @@ export class Projectile extends GameEntity {
 				this.isActive = false
 			}
 		}
-		if (this.game.worldCollision.overlapsSolid(this.worldBounds)) {
+		// Player projectiles have a bit more leeway to hit walls
+		const myWallCollisionBounds =
+			this.options.source === 'player' ? this.worldBounds.midpoint.pad(0.001) : this.worldBounds
+		if (this.game.worldCollision.overlapsSolid(myWallCollisionBounds)) {
 			this.isActive = false
 		}
 	}

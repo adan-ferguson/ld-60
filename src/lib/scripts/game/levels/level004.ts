@@ -1,24 +1,24 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level004: LevelDef = {
-	displayName: 'Level 4',
+	displayName: 'Lava Lake',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.............11...............x
 x...........................s..x
 x...2.....................xxxxxx
-x..........................x.3.x
-x.............b................x
+x..........................x.1.x
+x.............b............x...x
 x..t..........xx...............x
-x........xx...xx....xx.....x...x
+x........xx...xx....xx.........x
 xlllll...xx.........xx.....x...x
-xxxxxx...xx....................x
+xxxxxx...xx................x...x
 x.1.xx...xx...a................x
-x...xx........xx...........x.3.x
+x...xx........xx...............x
 x.............xx....xx.....x...x
 x........c..........xx.....x...x
 x........xx.........xx...x.x...x
-x...xx...xx...c.....1x.....x...x
+x...xx...xx...c.....xx.....x...x
 x...xx.2.xx...xx....xx.....x...x
 xllllllllllllllllllllllllllllllx
 `,

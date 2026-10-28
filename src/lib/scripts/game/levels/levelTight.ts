@@ -7,7 +7,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...xxxxxxxx........3xxxxxxxxxxx
 x.s.....................1xxxxxxx
 xxxx.xxxxxxxx...e....xxxxxxxxxxx
-xxxx....xxxxx...xxxxxxxx2xxxxxxx
+xxxx....xxxxx...xxxxxxxxxxxxxxxx
 x1......xxxxx.................3x
 xxxxxxx.xxxxx..................x
 xxxx1xx.xx.........xx...v...xx.x

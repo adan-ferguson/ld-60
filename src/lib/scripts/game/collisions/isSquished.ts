@@ -39,7 +39,6 @@ export function isSquished(entityBounds: CoolRect, solids: CoolRect[]): boolean 
 				gap,
 				entityBounds[positive.size] - SQUEEZE_LEEWAY,
 			)
-			debugger
 			return true
 		}
 		return false

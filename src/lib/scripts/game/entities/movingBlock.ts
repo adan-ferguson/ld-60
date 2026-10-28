@@ -8,7 +8,7 @@ import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
-import { Player } from '#lib/scripts/game/player/player.ts'
+import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 
 const DEFAULT_SPEED = 20
 
@@ -18,6 +18,12 @@ export class MovingBlock extends GameEntity {
 	private dir: -1 | 1
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new MovingBlockEl(gc, this)
+	}
+	public get axis() {
+		return this.cardinal.axis
+	}
+	public get cardinal() {
+		return Cardinal.fromAxis(this.def.isX)
 	}
 	public get w(): number {
 		return Consts.TILE_SIZE_PX
@@ -35,12 +41,19 @@ export class MovingBlock extends GameEntity {
 	) {
 		super(game)
 		this.setTileXY(tileXY)
-		this.min = TileDef.toWorld(tileXY[def.axis] + def.range[0]) + Consts.TILE_SIZE_PX / 2
-		this.max = TileDef.toWorld(tileXY[def.axis] + def.range[1]) + Consts.TILE_SIZE_PX / 2
+		const toWorld = (val: number) => TileDef.toWorld(val) + Consts.TILE_SIZE_PX / 2
+		if (def.range) {
+			this.min = toWorld(tileXY[this.axis] + def.range[0])
+			this.max = toWorld(tileXY[this.axis] + def.range[1])
+		} else {
+			const { min, max } = this.autoCalcRange(tileXY)
+			this.min = toWorld(min)
+			this.max = toWorld(max)
+		}
 		this.dir = def.initialDir ?? 1
 	}
 	private get current() {
-		return this[this.def.axis]
+		return this[this.axis]
 	}
 	public update2(delta: number): void {
 		this.velX = 0
@@ -54,7 +67,7 @@ export class MovingBlock extends GameEntity {
 
 		const velocity = this.dir * Math.min(speed, distance / delta)
 
-		if (this.def.axis === 'x') {
+		if (this.axis === 'x') {
 			this.velX = velocity
 		} else {
 			this.velY = velocity
@@ -95,5 +108,31 @@ export class MovingBlock extends GameEntity {
 			}).pad({ y: 0.01 })
 			return myTop.intersects(playerBottom)
 		})
+	}
+
+	private autoCalcRange(tileXY: XY): { min: number; max: number } {
+		const terrainXYs = this.game.level.terrainTiles.map((t) => t.tileXY)
+		const blockAdjacentPosition = tileXY[this.cardinal.adjacentAxis]
+
+		const relevantTerrain = terrainXYs.filter((tile) => {
+			return tile[this.cardinal.adjacentAxis] === blockAdjacentPosition
+		})
+
+		const terrainPositions = relevantTerrain.map((tile) => tile[this.axis])
+
+		const negativePositions = terrainPositions.filter((position) => position < tileXY[this.axis])
+		const positivePositions = terrainPositions.filter((position) => position > tileXY[this.axis])
+
+		const negativeWall = Math.max(...negativePositions)
+		const positiveWall = Math.min(...positivePositions)
+
+		if (!Number.isFinite(negativeWall) || !Number.isFinite(positiveWall)) {
+			throw new Error(`Could not calculate moving block range at (${tileXY.x}, ${tileXY.y})`)
+		}
+
+		return {
+			min: negativeWall + 1,
+			max: positiveWall - 1,
+		}
 	}
 }
