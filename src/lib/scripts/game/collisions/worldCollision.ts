@@ -46,7 +46,7 @@ export class WorldCollision {
 					velocityX: 0,
 					velocityY: 0,
 				})),
-			...this.game.entitiesManager.activeEntites
+			...this.game.entitiesManager.activeEntities
 				.values()
 				.filter((t) => t.isSolid)
 				.map((t) => ({
@@ -72,8 +72,8 @@ export class WorldCollision {
 		return this.solids.some((solid) => feet.intersects(solid.rect, true))
 	}
 
-	overlapsLava(rect: CoolRect): boolean {
-		return this.overlapsTileKind(rect, 'lava')
+	overlapsHazardTerrain(rect: CoolRect): boolean {
+		return this.overlapsTileKind(rect, 'lava') || this.overlapsTileKind(rect, 'spikes')
 	}
 
 	resolveMovement(rect: CoolRect, deltaX: number, deltaY: number): MovementResult {

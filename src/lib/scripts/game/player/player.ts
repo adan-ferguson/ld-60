@@ -22,7 +22,7 @@ export type AerialState =
 	  }
 
 const JUMP_VELOCITY = 65
-const X_VELOCITY = 36
+const X_VELOCITY = 32
 const GRAVITY = 125
 const MAX_FALL_SPEED = 200
 const WIDTH = 7.2

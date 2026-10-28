@@ -34,8 +34,9 @@ class Game {
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	public worldCollision: WorldCollision
 	private waveClearedEmitted = false
-	get activeEntites(): GameEntity[] {
-		return this.entitiesManager.activeEntites
+	public player: Player
+	get activeEntities(): GameEntity[] {
+		return this.entitiesManager.activeEntities
 	}
 	get score() {
 		return this.rollingScore
@@ -50,13 +51,15 @@ class Game {
 	constructor(wave: number = 1) {
 		this.entitiesManager = new EntitiesManager(this)
 		this.worldCollision = new WorldCollision(this)
+		this.player = new Player(this)
+		this.player.destroyed.listen(() => {
+			this.playerDied.emit(this.lives)
+		})
+		this.player.isActive = false
 		this.setWave(wave)
 	}
 	get loops() {
 		return this.level?.loops ?? 1
-	}
-	get player() {
-		return this.entitiesManager.player
 	}
 	nextWave() {
 		this.setWave(this.wave + 1)
@@ -99,9 +102,6 @@ class Game {
 	}
 	beginLevel() {
 		this.entitiesManager.prepareLevel()
-		this.entitiesManager.player!.destroyed.listen(() => {
-			this.playerDied.emit(this.lives)
-		})
 		this.playing = true
 		this.waveClearedEmitted = false
 		this.roundTimer = 0

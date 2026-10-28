@@ -20,6 +20,10 @@ type Lava = {
 	kind: 'lava'
 }
 
+type Spikes = {
+	kind: 'spikes'
+}
+
 type TreasureSpawn = {
 	kind: 'treasureSpawn'
 }
@@ -33,7 +37,8 @@ export type MovingBlockDef = {
 	range?: [number, number]
 }
 
-export type TileContents = Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlockDef
+export type TileContents =
+	Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlockDef | Spikes
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

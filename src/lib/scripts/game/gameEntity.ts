@@ -20,6 +20,9 @@ export abstract class GameEntity {
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get w(): number
 	public abstract get h(): number
+	public get diesToHazards() {
+		return false
+	}
 	public get canStand() {
 		return false
 	}
@@ -64,10 +67,10 @@ export abstract class GameEntity {
 	}
 
 	protected checkHazards() {
-		if (!this.isActive) {
+		if (!this.isActive || !this.diesToHazards) {
 			return
 		}
-		if (this.game.worldCollision.overlapsLava(this.worldBounds.midpoint)) {
+		if (this.game.worldCollision.overlapsHazardTerrain(this.worldBounds.midpoint)) {
 			this.takeDamage(this.maxHealth)
 		}
 	}
