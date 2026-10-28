@@ -21,7 +21,6 @@ export type Bonuses = {
 
 class Game {
 	public level!: LevelInstance
-	player: Player
 	playing = false
 	public entitiesManager: EntitiesManager
 	private roundTimer = 0
@@ -35,6 +34,9 @@ class Game {
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	public worldCollision: WorldCollision
 	private waveClearedEmitted = false
+	get activeEntites(): GameEntity[] {
+		return this.entitiesManager.activeEntites
+	}
 	get score() {
 		return this.rollingScore
 	}
@@ -46,20 +48,15 @@ class Game {
 		return new Game()
 	}
 	constructor(wave: number = 1) {
-		this.player = new Player(this)
-		this.player.destroyed.listen(() => {
-			this.playerDied.emit(this.lives)
-		})
-		this.player.isActive = false
 		this.entitiesManager = new EntitiesManager(this)
 		this.worldCollision = new WorldCollision(this)
 		this.setWave(wave)
 	}
-	get activeEntites(): GameEntity[] {
-		return [this.player, ...this.entitiesManager.entities].filter((e) => e.isActive)
-	}
 	get loops() {
 		return this.level?.loops ?? 1
+	}
+	get player() {
+		return this.entitiesManager.player
 	}
 	nextWave() {
 		this.setWave(this.wave + 1)
@@ -76,7 +73,6 @@ class Game {
 		}
 		this.updateScore(delta)
 		this.entitiesManager.update(delta)
-		this.player.update(delta)
 		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
 			this.spawnTreasure()
 		}
@@ -102,11 +98,10 @@ class Game {
 		this.waveClearedEmitted = true
 	}
 	beginLevel() {
-		this.entitiesManager.reset()
-		this.player.resetState()
-		this.player.position = this.level!.playerSpawnPosition
-		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
-		this.player.isActive = true
+		this.entitiesManager.prepareLevel()
+		this.entitiesManager.player!.destroyed.listen(() => {
+			this.playerDied.emit(this.lives)
+		})
 		this.playing = true
 		this.waveClearedEmitted = false
 		this.roundTimer = 0

@@ -46,8 +46,9 @@ export class Projectile extends GameEntity {
 				this.isActive = false
 			}
 		} else if (this.options.source === 'enemy') {
-			if (this.game.player.isActive && this.game.player.worldBounds.intersects(this.worldBounds)) {
-				this.game.player.takeDamage(1)
+			const { player } = this.game
+			if (player && player.isActive && player.worldBounds.intersects(this.worldBounds)) {
+				player.takeDamage(1)
 				this.isActive = false
 			}
 		}

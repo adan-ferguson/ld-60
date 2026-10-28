@@ -6,10 +6,15 @@ import { Random } from '#lib/scripts/utils/random.ts'
 import type { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Man } from '#lib/scripts/game/entities/man.ts'
 import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
+import { Player } from '#lib/scripts/game/player/player.ts'
 
 export class EntitiesManager {
-	public entities: Set<GameEntity> = new Set()
+	private entities: Set<GameEntity> = new Set()
+	public player: Player | undefined
 	constructor(private game: Game) {}
+	get activeEntites(): GameEntity[] {
+		return [...this.entities].filter((e) => e?.isActive) as GameEntity[]
+	}
 	get enemies() {
 		return [...this.entities].filter((e) => e instanceof Enemy)
 	}
@@ -19,7 +24,6 @@ export class EntitiesManager {
 				return true
 			}
 		}
-
 		return false
 	}
 	spawn(entity: GameEntity) {
@@ -35,9 +39,17 @@ export class EntitiesManager {
 		}
 	}
 
-	reset() {
+	prepareLevel() {
+		const { level } = this.game
+		if (!level) {
+			throw new Error('No level loaded')
+		}
 		this.entities.clear()
-		this.game.level?.tiles.values.forEach((tileDef) => {
+		this.player = new Player(this.game)
+		this.player.position = level.playerSpawnPosition
+		this.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
+		this.entities.add(this.player)
+		level.tiles.values.forEach((tileDef) => {
 			const entity = tryCreateEntity(this.game, tileDef)
 			if (entity) {
 				this.entities.add(entity)

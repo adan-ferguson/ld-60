@@ -46,7 +46,7 @@ export class WorldCollision {
 					velocityX: 0,
 					velocityY: 0,
 				})),
-			...this.game.entitiesManager.entities
+			...this.game.entitiesManager.activeEntites
 				.values()
 				.filter((t) => t.isSolid)
 				.map((t) => ({

@@ -97,7 +97,7 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private getEntitiesStandingOn() {
-		return [this.game.player, ...this.game.entitiesManager.entities.values()].filter((e) => {
+		return this.game.entitiesManager.activeEntites.filter((e) => {
 			if (!e.canStand) {
 				return
 			}
@@ -144,7 +144,7 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private killOverlappingEntities() {
-		const targets = [this.game.player, ...this.game.entitiesManager.enemies]
+		const targets = this.game.entitiesManager.activeEntites
 		for (const target of targets) {
 			if (!target.isActive) {
 				continue

@@ -28,7 +28,7 @@ export class Treasure extends GameEntity {
 		if (this.timer > DESPAWN_TIME) {
 			this.isActive = false
 		}
-		if (this.game.player.worldBounds.intersects(this.worldBounds)) {
+		if (this.game.player?.worldBounds.intersects(this.worldBounds)) {
 			this.isActive = false
 			this.game.addScore(750 + 250 * this.game.wave)
 		}

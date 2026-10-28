@@ -40,6 +40,9 @@ export class Turret extends Enemy {
 		this.fireTimeout = 1
 	}
 	private fire() {
+		if (!this.game.player?.isActive) {
+			return
+		}
 		const angle = this.angleTo(this.game.player)
 		const SPEED = 60
 		this.game.entitiesManager.spawn(

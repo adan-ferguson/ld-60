@@ -78,8 +78,9 @@ export class Man extends Enemy {
 		if (this.checkSquish()) {
 			return
 		}
-		if (this.worldBounds.intersects(this.game.player.worldBounds)) {
-			this.game.player.takeDamage(1)
+		const { player } = this.game
+		if (player && this.worldBounds.intersects(player.worldBounds)) {
+			player.takeDamage(1)
 		}
 		this.state.update(this, delta)
 	}
@@ -122,8 +123,8 @@ export class Man extends Enemy {
 		)
 	}
 
-	public seesPlayer() {
-		return this.game.player.worldBounds.intersects(this.toWorldBounds(this.visionRect))
+	public seesPlayer(): boolean {
+		return this.game.player?.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
 	}
 
 	private checkSquish(): boolean {
