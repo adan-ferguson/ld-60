@@ -101,11 +101,13 @@ export class MovingBlock extends GameEntity {
 
 	private getEntitiesStandingOn() {
 		return this.game.entitiesManager.activeEntities.filter((e) => {
+			if (!e.canStand) {
+				return
+			}
 			const solids = this.game.worldCollision.getGround(e.feet)
 			if (!solids.some((s) => s.entity === this)) {
 				return false
 			}
-			debugger
 			if (this.velY < 0) {
 				return true
 			} else if (this.velY > 0 && solids.length === 1) {
