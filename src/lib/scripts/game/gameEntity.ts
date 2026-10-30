@@ -39,6 +39,15 @@ export abstract class GameEntity {
 		return 1
 	}
 
+	public get feet() {
+		return new CoolRect({
+			x: this.worldBounds.x,
+			y: this.worldBounds.bottom,
+			width: this.worldBounds.width,
+			height: 0,
+		}).pad({ y: 0.01 })
+	}
+
 	public get localBounds(): CoolRect {
 		return new CoolRect().pad({ x: this.w / 2, y: this.h / 2 })
 	}

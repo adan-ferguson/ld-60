@@ -4,18 +4,18 @@ export const LevelBlades: LevelDef = {
 	displayName: 'Blades',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...x.......a.....a.....a...1..x
+x...x.......b.....b.....b...1..x
 x...x.......................1..x
 xs..a.......................1..x
 x........a.....a.....a......1..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
 x...............x1.............x
 x...............x1.............x
-x...............x1...........xxx
+x...............x1..........txxx
 x...........aa..x1.........aaxxx
 x....e......xx.xx1.......xxxxxxx
 x.xxxxxxxxx.xx.ax1.....aaxxxxxxx
-x...........xx.......xxxxxxxxxxx
+x.bbbbbbbbb.xx.......xxxxxxxxxxx
 x...........xx.e...aaxxxxxxxxxxx
 x..e.....e..xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -30,6 +30,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		v: { kind: 'movingBlock', isX: false },
 		w: { kind: 'movingBlock', isX: true },
 		a: { kind: 'spikes' },
+		b: { kind: 'spikes', loop: [2, 3] },
 		l: { kind: 'lava' },
 		e: { kind: 'man', facing: -1 },
 	},

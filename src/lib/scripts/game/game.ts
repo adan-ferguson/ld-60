@@ -27,7 +27,7 @@ class Game {
 	private turretTimer = 0
 	private rollingScore = 0
 	private targetScore = 0
-	lives = 3
+	lives = 5
 	wave = 1
 	public playerDied = CoolEvents.createHandler()
 	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()

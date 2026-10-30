@@ -98,22 +98,19 @@ export class MovingBlock extends GameEntity {
 
 	private getEntitiesStandingOn() {
 		return this.game.entitiesManager.activeEntities.filter((e) => {
-			if (!e.canStand) {
-				return
+			const solids = this.game.worldCollision.getGround(e.feet)
+			if (!solids.some((s) => s.entity === this)) {
+				return false
 			}
-			const myTop = new CoolRect({
-				x: this.worldBounds.x,
-				y: this.worldBounds.y,
-				width: this.worldBounds.width,
-				height: 0,
-			}).pad({ y: 0.01 })
-			const playerBottom = new CoolRect({
-				x: e.worldBounds.x,
-				y: e.worldBounds.bottom,
-				width: e.worldBounds.width,
-				height: 0,
-			}).pad({ y: 0.01 })
-			return myTop.intersects(playerBottom)
+			debugger
+			if (this.velY < 0) {
+				return true
+			} else if (this.velY > 0 && solids.length === 1) {
+				return true // If false, block is moving down but the player stays back
+			} else {
+				const overlap = e.worldBounds.overlap(this.worldBounds)
+				return overlap && overlap.width > e.worldBounds.width / 2
+			}
 		})
 	}
 

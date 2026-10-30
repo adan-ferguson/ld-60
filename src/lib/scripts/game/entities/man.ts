@@ -120,7 +120,7 @@ export class Man extends Enemy {
 				velY: 0,
 				angle: Math.atan2(0, this.facing),
 				x: this.x + 3 * this.facing,
-				y: this.y - 2,
+				y: this.y - 5,
 				tint: 'red',
 			}),
 		)

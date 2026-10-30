@@ -59,7 +59,7 @@ export class Projectile extends GameEntity {
 			this.options.source instanceof Player
 				? this.worldBounds.midpoint.pad(0.001)
 				: this.worldBounds
-		if (this.game.worldCollision.overlapsSolid(myWallCollisionBounds, this.options.source)) {
+		if (this.game.worldCollision.overlapsWall(myWallCollisionBounds)) {
 			this.isActive = false
 		}
 	}

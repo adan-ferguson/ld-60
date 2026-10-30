@@ -40,7 +40,7 @@ export class WorldCollision {
 	get solids(): Solid[] {
 		return [
 			...this.tiles.values
-				.filter((t) => t.contents.kind === 'wall' || t.contents.kind === 'spikes')
+				.filter((t) => t.contents.kind === 'wall')
 				.map((t) => ({
 					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
 					velocityX: 0,
@@ -61,14 +61,12 @@ export class WorldCollision {
 		return this.game.level.tiles
 	}
 
-	isGrounded(rect: CoolRect): boolean {
-		const feet = new CoolRect({
-			x: rect.x,
-			y: rect.bottom,
-			width: rect.width,
-			height: 0,
-		}).pad({ y: 0.01 })
-		return this.solids.some((solid) => feet.intersects(solid.rect, true))
+	getGround(feetRect: CoolRect) {
+		return this.solids.filter((solid) => feetRect.intersects(solid.rect, true))
+	}
+
+	isGrounded(feetRect: CoolRect): boolean {
+		return this.solids.some((solid) => feetRect.intersects(solid.rect, true))
 	}
 
 	overlapsHazardTerrain(rect: CoolRect): boolean {
@@ -91,6 +89,13 @@ export class WorldCollision {
 			hitHorizontal: horizontal.collided,
 			hitVertical: vertical.collided,
 		}
+	}
+
+	overlapsWall(myWallCollisionBounds: CoolRect) {
+		return (
+			this.overlapsTileKind(myWallCollisionBounds, 'wall') ||
+			this.overlapsTileKind(myWallCollisionBounds, 'movingBlock')
+		)
 	}
 
 	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
