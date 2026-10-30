@@ -1,4 +1,5 @@
 import { Rectangle } from 'pixi.js'
+import type { Edge } from '#lib/scripts/utils/cardinal.ts'
 
 type Coords = {
 	x?: number
@@ -44,6 +45,38 @@ class CoolRect {
 	}
 	asXywh() {
 		return [this.x, this.y, this.width, this.height] as const
+	}
+	getEdge(edge: Edge) {
+		switch (edge) {
+			case 'top':
+				return new CoolRect({
+					x: this.x,
+					y: this.y,
+					width: this.width,
+					height: 0,
+				})
+			case 'bottom':
+				return new CoolRect({
+					x: this.x,
+					y: this.y + this.height,
+					width: this.width,
+					height: 0,
+				})
+			case 'left':
+				return new CoolRect({
+					x: this.x,
+					y: this.y,
+					width: 0,
+					height: this.height,
+				})
+			case 'right':
+				return new CoolRect({
+					x: this.x + this.width,
+					y: this.y,
+					width: 0,
+					height: this.height,
+				})
+		}
 	}
 	intersects(rect: CoolRect, requireNonZeroArea = false) {
 		const overlap = this.overlap(rect)

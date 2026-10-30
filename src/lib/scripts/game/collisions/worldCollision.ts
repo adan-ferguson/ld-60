@@ -78,11 +78,15 @@ export class WorldCollision {
 	}
 
 	getGround(feetRect: CoolRect) {
-		return this.movementBlockers.filter((solid) => feetRect.intersects(solid.rect, true))
+		return this.movementBlockers.filter((solid) =>
+			feetRect.intersects(solid.rect.getEdge('top'), true),
+		)
 	}
 
 	isGrounded(feetRect: CoolRect): boolean {
-		return this.movementBlockers.some((solid) => feetRect.intersects(solid.rect, true))
+		return this.movementBlockers.some((solid) =>
+			feetRect.intersects(solid.rect.getEdge('top'), true),
+		)
 	}
 
 	overlapsHazardTerrain(rect: CoolRect): boolean {
