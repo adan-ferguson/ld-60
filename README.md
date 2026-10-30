@@ -1,3 +1,1 @@
-# TBD
-
-Ludum Dare 60 game compo entry, I have no ideas!
+This is like an arcade-style platformer game. You have to clear each enemy to clear a level.

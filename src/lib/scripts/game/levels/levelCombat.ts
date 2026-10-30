@@ -4,22 +4,22 @@ export const LevelCombat: LevelDef = {
 	displayName: 'Combat Level',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx..xxxxxxxxxxxxxx
-xx............xx..xxxxxxxxxxxxxx
+xx............x........xxxxxxxxx
+xx.....................xxxxxxxxx
 xx............xx.xxxxxxxxxxxxxxx
-xx.s..........xx.xxxxxxxxxxxxxxx
+xx..s.......1.xx.xxxxxxxxxxxxxxx
 xx.xxxxxxxxxx.xx..xxxxxxxxxxxxxx
-x...xxxx......xx..xxxxxxxxxxxxxx
-x...xxxx..1...xxx.xxxxxxxxxxxxxx
-xxxxxxxx.xxxxxxxx.xxxxxxxxxxxxxx
-xxxx.........xxx..xxxxxxxxxxxxxx
-xxxx.1....1..xxx..xxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxx.xxxxxxxxxxxxxxx
-xxxxxxxx.........xxxxxxxxxxxxxxx
-xxxxxxxx.1......1xxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx.xxxxxx.....xx..xxxxxxxxxxxxxx
+xx2xxxxxx2....xxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxx.xxxxxxxxxxxxxx
+xxt........x.xxx..xxxxxxxxxxxxxx
+xx.........x.xxx..xxxxxxxxxxxxxx
+xx.........x.xxx.xxxxxxxxxxxxxxx
+xx...............xxxxxxxxxxxxxxx
+xx2..............xxxxxxxxxxxxxxx
+xxx..xx...xxxxxxxxxxxxxxxxxxxxxx
+xxllllllllxxxxxxxxxxxxxxxxxxxxxx
+xxllllllllxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
@@ -27,5 +27,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		t: { kind: 'treasureSpawn' },
 		x: { kind: 'wall' },
 		1: { kind: 'man', health: 3, speed: 21 },
+		2: { kind: 'man', health: 3, behavior: 'stand' },
+		a: { kind: 'turret', health: 3 },
+		l: { kind: 'lava' },
 	},
 }

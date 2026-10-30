@@ -6,8 +6,13 @@ import { TurretEl } from '#lib/scripts/pixi/entities/turretEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 
+export type TurretProps = {
+	health: number
+}
+
 export class Turret extends Enemy {
 	public fireTimeout: number | undefined
+	private props: TurretProps
 	public update2(delta: number): void {
 		if (this.fireTimeout === undefined) {
 			return
@@ -27,14 +32,21 @@ export class Turret extends Enemy {
 	public get h(): number {
 		return 8
 	}
+	public override get maxHealth() {
+		return this.props.health
+	}
 	get score(): number {
 		return 1000
 	}
 	override get blocksMovement() {
 		return true
 	}
-	constructor(game: Game, tileXY: XY) {
+	constructor(game: Game, tileXY: XY, props: Partial<TurretProps>) {
 		super(game, tileXY)
+		this.props = {
+			health: 1,
+			...props,
+		}
 	}
 	queueFire() {
 		if (this.fireTimeout !== undefined) {

@@ -212,8 +212,8 @@ export class WorldCollision {
 
 	private overlapsOnAdjacentAxis(rect: CoolRect, solid: CoolRect, cardinal: Cardinal): boolean {
 		return (
-			rect[cardinal.adjacentEdgeLower] < solid[cardinal.adjacentEdgeUpper] &&
-			rect[cardinal.adjacentEdgeUpper] > solid[cardinal.adjacentEdgeLower]
+			rect[cardinal.adjacentEdgeLower] < solid[cardinal.adjacentEdgeUpper] - 0.001 &&
+			rect[cardinal.adjacentEdgeUpper] > solid[cardinal.adjacentEdgeLower] + 0.001
 		)
 	}
 

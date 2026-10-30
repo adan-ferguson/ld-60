@@ -1,4 +1,5 @@
 import type { ManProps } from '#lib/scripts/game/entities/man.ts'
+import type { TurretProps } from '#lib/scripts/game/entities/turret.ts'
 
 export type Man = {
 	kind: 'man'
@@ -6,7 +7,7 @@ export type Man = {
 
 type Turret = {
 	kind: 'turret'
-}
+} & Partial<TurretProps>
 
 type PlayerSpawn = {
 	kind: 'playerSpawn'

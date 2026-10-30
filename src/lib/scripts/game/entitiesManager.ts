@@ -65,7 +65,7 @@ export class EntitiesManager {
 
 export function tryCreateEntity(game: Game, def: TileDef) {
 	if (def.contents.kind === 'turret') {
-		return new Turret(game, def.tileXY)
+		return new Turret(game, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'man') {
 		return new Man(game, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'movingBlock') {
