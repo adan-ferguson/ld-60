@@ -7,7 +7,6 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
-import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 
 const DEFAULT_SPEED = 20
@@ -40,6 +39,9 @@ export class MovingBlock extends GameEntity {
 	public override get blocksProjectiles() {
 		return this.type === 'block'
 	}
+	public override get isHazard() {
+		return this.type === 'spike'
+	}
 	constructor(
 		game: Game,
 		tileXY: XY,
@@ -62,10 +64,6 @@ export class MovingBlock extends GameEntity {
 		return this[this.axis]
 	}
 	public update2(delta: number): void {
-		if (this.def.type === 'spike') {
-			this.killOverlappingEntities()
-		}
-
 		this.velX = 0
 		this.velY = 0
 		const speed = this.def.speed ?? DEFAULT_SPEED
@@ -142,18 +140,6 @@ export class MovingBlock extends GameEntity {
 		return {
 			min: negativeWall + 1,
 			max: positiveWall - 1,
-		}
-	}
-
-	private killOverlappingEntities() {
-		const targets = this.game.entitiesManager.activeEntities
-		for (const target of targets) {
-			if (!target.isActive || !target.diesToHazards) {
-				continue
-			}
-			if (this.worldBounds.intersects(target.worldBounds.midpoint, false)) {
-				target.takeDamage(target.maxHealth)
-			}
 		}
 	}
 }

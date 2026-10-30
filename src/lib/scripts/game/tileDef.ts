@@ -3,6 +3,7 @@ import { XYMap } from '#lib/scripts/utils/XYMap.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelDef, TileContents, VariableContents } from '#lib/scripts/game/levelDef.ts'
 import { Rectangle } from 'pixi.js'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 export type TileDef = {
 	tileXY: XY
@@ -88,11 +89,11 @@ export const TileDef = {
 		return number * Consts.TILE_SIZE_PX
 	},
 	toWorldRect(tileXY: XY) {
-		return new Rectangle(
-			TileDef.toWorld(tileXY.x),
-			TileDef.toWorld(tileXY.y),
-			Consts.TILE_SIZE_PX,
-			Consts.TILE_SIZE_PX,
-		)
+		return new CoolRect({
+			x: TileDef.toWorld(tileXY.x),
+			y: TileDef.toWorld(tileXY.y),
+			width: Consts.TILE_SIZE_PX,
+			height: Consts.TILE_SIZE_PX,
+		})
 	},
 }

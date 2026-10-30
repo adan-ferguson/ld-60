@@ -5,7 +5,6 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
-import { Rectangle } from 'pixi.js'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
@@ -95,16 +94,16 @@ export class Man extends Enemy {
 		}
 	}
 	hasGroundAhead(): boolean {
-		const body = this.worldBounds
+		const bounds = this.worldBounds
 		const LEDGE_LOOKAHEAD = -1.5
-		const x = this.facing > 0 ? body.right + LEDGE_LOOKAHEAD : body.x - LEDGE_LOOKAHEAD
+		const x = this.facing > 0 ? bounds.right + LEDGE_LOOKAHEAD : bounds.x - LEDGE_LOOKAHEAD
 		return this.game.worldCollision.isGrounded(
 			new CoolRect({
 				x,
-				y: body.y,
+				y: bounds.bottom,
 				width: 0.1,
-				height: body.height,
-			}),
+				height: 0,
+			}).pad({ y: 0.001 }),
 		)
 	}
 

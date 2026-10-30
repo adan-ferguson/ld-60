@@ -14,10 +14,6 @@ type MovementBlocker = {
 	velocityY: number
 }
 
-type ProjectileBlocker = {
-	rect: CoolRect
-}
-
 type PushCandidate = {
 	x: number
 	y: number
@@ -43,13 +39,11 @@ export class WorldCollision {
 	constructor(private game: Game) {}
 	get movementBlockers(): MovementBlocker[] {
 		return [
-			...this.tiles.values
-				.filter((t) => t.contents.kind === 'wall')
-				.map((t) => ({
-					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
-					velocityX: 0,
-					velocityY: 0,
-				})),
+			...this.tilesOfType('wall').map((t) => ({
+				rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
+				velocityX: 0,
+				velocityY: 0,
+			})),
 			...this.game.entitiesManager.activeEntities
 				.filter((t) => t.blocksMovement)
 				.map((t) => ({
@@ -61,18 +55,21 @@ export class WorldCollision {
 		]
 	}
 
-	get projectileBlockers(): ProjectileBlocker[] {
+	get projectileBlockers(): CoolRect[] {
 		return [
-			...this.tiles.values
-				.filter((t) => t.contents.kind === 'wall')
-				.map((t) => ({
-					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
-				})),
+			...this.tilesOfType('wall').map((t) => TileDef.toWorldRect(t.tileXY)),
 			...this.game.entitiesManager.activeEntities
 				.filter((t) => t.blocksProjectiles)
-				.map((t) => ({
-					rect: new CoolRect(t.worldBounds),
-				})),
+				.map((t) => t.worldBounds),
+		]
+	}
+
+	get hazards(): CoolRect[] {
+		return [
+			...this.tilesOfType('lava').map((t) => TileDef.toWorldRect(t.tileXY)),
+			...this.game.entitiesManager.activeEntities
+				.filter((t) => t.isHazard)
+				.map((t) => t.worldBounds),
 		]
 	}
 
@@ -282,5 +279,9 @@ export class WorldCollision {
 			position: bestPosition,
 			collided,
 		}
+	}
+
+	private tilesOfType(type: TileContents['kind']): TileDef[] {
+		return this.tiles.values.filter((t) => t.contents.kind === type)
 	}
 }

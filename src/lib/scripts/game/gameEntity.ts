@@ -49,6 +49,14 @@ export abstract class GameEntity {
 	public get blocksProjectiles() {
 		return false
 	}
+
+	/**
+	 * @virtual
+	 */
+	public get isHazard() {
+		return false
+	}
+
 	public destroyed = CoolEvents.createHandler()
 	public get maxHealth(): number {
 		return 1
@@ -94,7 +102,8 @@ export abstract class GameEntity {
 		if (!this.isActive || !this.diesToHazards) {
 			return
 		}
-		if (this.game.worldCollision.overlapsHazardTerrain(this.worldBounds.pad(-1))) {
+		const hazardHurtbox = this.worldBounds.pad(-1)
+		if (this.game.worldCollision.hazards.some((h) => h.intersects(hazardHurtbox))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}
