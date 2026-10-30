@@ -6,8 +6,8 @@ export const LevelBlades: LevelDef = {
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...x.......b.....b.....b...1..x
 x...x.......................1..x
-xs..a.......................1..x
-x........a.....a.....a......1..x
+x...a.......................1..x
+xs.......a.....a.....a......1..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
 x...............x1.............x
 x...............x1.............x

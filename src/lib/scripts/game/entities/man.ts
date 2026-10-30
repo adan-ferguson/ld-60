@@ -9,7 +9,6 @@ import { Projectile } from '#lib/scripts/game/projectile.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
-const MOVE_SPEED = 14
 const ATTACK_COOLDOWN = 1.4
 const ATTACK_WINDUP = 0.72
 const ATTACK_DURATION = 0.4
@@ -19,7 +18,8 @@ export type ManBehavior = 'patrol' | 'stand'
 export type ManProps = {
 	facing: 1 | -1
 	behavior: ManBehavior
-	maxHealth: number
+	health: number
+	speed: number
 }
 
 export class Man extends Enemy {
@@ -46,10 +46,10 @@ export class Man extends Enemy {
 		return true
 	}
 	get score(): number {
-		return 1000 * this.props.maxHealth
+		return 500 + 500 * this.props.health
 	}
 	public get maxHealth(): number {
-		return this.props.maxHealth
+		return this.props.health
 	}
 	get visionRect(): CoolRect {
 		const HEIGHT = 12
@@ -64,9 +64,10 @@ export class Man extends Enemy {
 	constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
 		super(game, tileXY)
 		this.props = {
-			maxHealth: 1,
+			health: 1,
 			facing: 1,
 			behavior: 'patrol',
+			speed: 14,
 			...props,
 		}
 		this.facing = this.props.facing
@@ -155,7 +156,7 @@ class IdleState extends State {
 			if (!man.hasGroundAhead()) {
 				man.facing *= -1
 			}
-			man.velX = man.facing * MOVE_SPEED * man.game.loops
+			man.velX = man.facing * man.props.speed //* man.game.loops
 		} else {
 			man.velX = 0
 		}

@@ -6,6 +6,7 @@ import { LevelTight } from '#lib/scripts/game/levels/levelTight.ts'
 import { LevelMovers } from '#lib/scripts/game/levels/levelMovers.ts'
 import { LevelBlades } from '#lib/scripts/game/levels/levelBlades.ts'
 import { LevelOrdeal } from '#lib/scripts/game/levels/levelOrdeal.ts'
+import { LevelCombat } from '#lib/scripts/game/levels/levelCombat.ts'
 
 const levels = [
 	Level001,
@@ -13,10 +14,10 @@ const levels = [
 	Level003,
 	Level004,
 	LevelTight,
+	LevelCombat,
 	LevelBlades,
 	LevelMovers,
 	LevelOrdeal,
-	// Another level?
 	//boss
 ] as const
 
