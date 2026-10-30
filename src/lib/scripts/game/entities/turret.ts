@@ -30,7 +30,7 @@ export class Turret extends Enemy {
 	get score(): number {
 		return 1000
 	}
-	get isSolid() {
+	override get blocksMovement() {
 		return true
 	}
 	constructor(game: Game, tileXY: XY) {

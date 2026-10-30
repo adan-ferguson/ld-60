@@ -11,7 +11,7 @@ import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 const MOVE_SPEED = 14
 const ATTACK_COOLDOWN = 1.4
-const ATTACK_WINDUP = 0.6
+const ATTACK_WINDUP = 0.72
 const ATTACK_DURATION = 0.4
 
 export type ManBehavior = 'patrol' | 'stand'
@@ -81,7 +81,7 @@ export class Man extends Enemy {
 			return
 		}
 		const { player } = this.game
-		if (player && this.worldBounds.intersects(player.worldBounds)) {
+		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
 			player.takeDamage(1)
 		}
 		this.state.update(this, delta)
@@ -119,7 +119,7 @@ export class Man extends Enemy {
 				velY: 0,
 				angle: Math.atan2(0, this.facing),
 				x: this.x + 3 * this.facing,
-				y: this.y - 5,
+				y: this.y - 1.5,
 				tint: 'red',
 			}),
 		)

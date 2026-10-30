@@ -1,5 +1,6 @@
 import { Rectangle } from 'pixi.js'
 import type { Edge } from '#lib/scripts/utils/cardinal.ts'
+import { clamp } from '#lib/scripts/utils/clamp.ts'
 
 type Coords = {
 	x?: number
@@ -46,34 +47,35 @@ class CoolRect {
 	asXywh() {
 		return [this.x, this.y, this.width, this.height] as const
 	}
-	getEdge(edge: Edge) {
+	getEdge(edge: Edge, pct: number = 0) {
+		pct = clamp(pct, 0, 1)
 		switch (edge) {
 			case 'top':
 				return new CoolRect({
 					x: this.x,
 					y: this.y,
 					width: this.width,
-					height: 0,
+					height: this.height * pct,
 				})
 			case 'bottom':
 				return new CoolRect({
 					x: this.x,
-					y: this.y + this.height,
+					y: this.y + this.height * (1 - pct),
 					width: this.width,
-					height: 0,
+					height: this.height * pct,
 				})
 			case 'left':
 				return new CoolRect({
 					x: this.x,
 					y: this.y,
-					width: 0,
+					width: this.width * pct,
 					height: this.height,
 				})
 			case 'right':
 				return new CoolRect({
-					x: this.x + this.width,
+					x: this.x + this.width * (1 - pct),
 					y: this.y,
-					width: 0,
+					width: this.width * pct,
 					height: this.height,
 				})
 		}

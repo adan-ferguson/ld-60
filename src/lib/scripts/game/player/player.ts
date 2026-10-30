@@ -159,7 +159,7 @@ export class Player extends GameEntity {
 				w: y ? 2 : 6,
 				h: y ? 6 : 2,
 				x: this.x + x * 3 + (y ? 0 : 3 * this.facing),
-				y: this.y + (crouching ? -0.5 : -5) + y * 3,
+				y: this.y + (crouching ? -0.5 : -1.5) + y * 5,
 				tint: 'cyan',
 			}),
 		)

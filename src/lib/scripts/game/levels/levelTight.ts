@@ -4,21 +4,21 @@ export const LevelTight: LevelDef = {
 	displayName: 'Cramped Spaces',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...xxxxxxxx........3xxxxxxxxxxx
-x.s.....................1xxxxxxx
-xxxx.xxxxxxxx...e....xxxxxxxxxxx
+x...xxxxxxxx........1xxxxxxxxxxx
+x.s.................1txxxxxxxxxx
+xxxx.xxxxxxxx.......1xxxxxxxxxxx
 xxxx....xxxxx...xxxxxxxxxxxxxxxx
 x1......xxxxx.................3x
 xxxxxxx.xxxxx..................x
-xxxx1xx.xx.........xx...v...xx.x
+xxxx1xx.xx.........xx.......xx.x
 xxxx.xx.xx......dxxxx...x...xx.x
 xxxx.xx.xx..xxxxxxxxxlllllllxx.x
 xxxx.xx.xx..xxxxxxxxxxxxxxxxxx.x
 xxxx.xx.xx.................xxx.x
-xxxx.xx.xx...d........d...uxxx.x
+xxxx.xx.xx...d........d....xxx.x
 xxxx.xx.xxxxxxxxxx.xxxxxxxxxxx.x
 xxxx.xx.xxxxxxxxxx.xxxxxxxxxxx.x
-xxxx...............xt..........x
+xxxx...............x...........x
 xxxxxxxxxxx.................abcx
 xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 `,
