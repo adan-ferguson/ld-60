@@ -103,7 +103,7 @@ export class Man extends Enemy {
 				y: bounds.bottom,
 				width: 0.1,
 				height: 0,
-			}).pad({ y: 0.001 }),
+			}),
 		)
 	}
 

@@ -102,7 +102,7 @@ export class MovingBlock extends GameEntity {
 			if (!e.canStand) {
 				return
 			}
-			const solids = this.game.worldCollision.getGround(e.feet)
+			const solids = this.game.worldCollision.getGround(e.worldBounds)
 			if (!solids.some((s) => s.entity === this)) {
 				return false
 			}

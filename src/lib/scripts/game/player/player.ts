@@ -131,7 +131,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	onGround() {
-		return this.game.worldCollision.isGrounded(this.feet) ?? false
+		return this.game.worldCollision.isGrounded(this.worldBounds) ?? false
 	}
 	private calcShotInfo() {
 		if (this.crouching) {

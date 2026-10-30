@@ -77,20 +77,18 @@ export class WorldCollision {
 		return this.game.level.tiles
 	}
 
-	getGround(feetRect: CoolRect) {
+	getGround(entityRect: CoolRect) {
+		const feetRect = entityRect.getEdge('bottom').pad({ y: 0.001 })
 		return this.movementBlockers.filter((solid) =>
 			feetRect.intersects(solid.rect.getEdge('top'), true),
 		)
 	}
 
-	isGrounded(feetRect: CoolRect): boolean {
+	isGrounded(entityRect: CoolRect): boolean {
+		const feetRect = entityRect.getEdge('bottom').pad({ y: 0.001 })
 		return this.movementBlockers.some((solid) =>
 			feetRect.intersects(solid.rect.getEdge('top'), true),
 		)
-	}
-
-	overlapsHazardTerrain(rect: CoolRect): boolean {
-		return this.overlapsTileKind(rect, 'lava') || this.overlapsTileKind(rect, 'spikes')
 	}
 
 	resolveMovement(rect: CoolRect, deltaX: number, deltaY: number): MovementResult {
