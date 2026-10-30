@@ -34,7 +34,10 @@ export class MovingBlock extends GameEntity {
 	public get type() {
 		return this.def.type ?? 'block'
 	}
-	public override get isSolid() {
+	public override get blocksMovement() {
+		return this.type === 'block'
+	}
+	public override get blocksProjectiles() {
 		return this.type === 'block'
 	}
 	constructor(

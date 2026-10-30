@@ -23,15 +23,30 @@ export abstract class GameEntity {
 	public get diesToHazards() {
 		return false
 	}
+	/**
+	 * @virtual
+	 */
 	public get canStand() {
 		return false
 	}
+
 	public setTileXY(tileXY: XY) {
 		const worldXY = TileDef.toWorldMidpoint(tileXY)
 		this.x = worldXY.x
 		this.y = worldXY.y
 	}
-	public get isSolid() {
+
+	/**
+	 * @virtual
+	 */
+	public get blocksMovement() {
+		return false
+	}
+
+	/**
+	 * @virtual
+	 */
+	public get blocksProjectiles() {
 		return false
 	}
 	public destroyed = CoolEvents.createHandler()

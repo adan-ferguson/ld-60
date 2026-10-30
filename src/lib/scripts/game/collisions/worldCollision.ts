@@ -7,11 +7,15 @@ import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 
-type Solid = {
+type MovementBlocker = {
 	entity?: GameEntity
 	rect: CoolRect
 	velocityX: number
 	velocityY: number
+}
+
+type ProjectileBlocker = {
+	rect: CoolRect
 }
 
 type PushCandidate = {
@@ -37,7 +41,7 @@ type MovementResult = {
 
 export class WorldCollision {
 	constructor(private game: Game) {}
-	get solids(): Solid[] {
+	get movementBlockers(): MovementBlocker[] {
 		return [
 			...this.tiles.values
 				.filter((t) => t.contents.kind === 'wall')
@@ -47,7 +51,7 @@ export class WorldCollision {
 					velocityY: 0,
 				})),
 			...this.game.entitiesManager.activeEntities
-				.filter((t) => t.isSolid)
+				.filter((t) => t.blocksMovement)
 				.map((t) => ({
 					entity: t,
 					rect: new CoolRect(t.worldBounds),
@@ -57,16 +61,31 @@ export class WorldCollision {
 		]
 	}
 
+	get projectileBlockers(): ProjectileBlocker[] {
+		return [
+			...this.tiles.values
+				.filter((t) => t.contents.kind === 'wall')
+				.map((t) => ({
+					rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
+				})),
+			...this.game.entitiesManager.activeEntities
+				.filter((t) => t.blocksProjectiles)
+				.map((t) => ({
+					rect: new CoolRect(t.worldBounds),
+				})),
+		]
+	}
+
 	get tiles() {
 		return this.game.level.tiles
 	}
 
 	getGround(feetRect: CoolRect) {
-		return this.solids.filter((solid) => feetRect.intersects(solid.rect, true))
+		return this.movementBlockers.filter((solid) => feetRect.intersects(solid.rect, true))
 	}
 
 	isGrounded(feetRect: CoolRect): boolean {
-		return this.solids.some((solid) => feetRect.intersects(solid.rect, true))
+		return this.movementBlockers.some((solid) => feetRect.intersects(solid.rect, true))
 	}
 
 	overlapsHazardTerrain(rect: CoolRect): boolean {
@@ -99,7 +118,7 @@ export class WorldCollision {
 	}
 
 	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
-		return this.solids.some((solid) => {
+		return this.movementBlockers.some((solid) => {
 			if (exclude !== undefined && solid.entity === exclude) {
 				return false
 			}
@@ -111,7 +130,7 @@ export class WorldCollision {
 		const MAX_PUSHES = 4
 		for (let i = 0; i < MAX_PUSHES; i++) {
 			const rect = entity.worldBounds
-			const overlaps = this.solids
+			const overlaps = this.movementBlockers
 				.filter((solid) => rect.intersects(solid.rect, true))
 				.flatMap((solid) => this.getPushCandidates(entity, solid))
 			if (overlaps.length === 0) {
@@ -155,7 +174,7 @@ export class WorldCollision {
 		return false
 	}
 
-	private getPushCandidates(entity: GameEntity, solid: Solid): PushCandidate[] {
+	private getPushCandidates(entity: GameEntity, solid: MovementBlocker): PushCandidate[] {
 		const body = entity.worldBounds
 		const obstacle = solid.rect
 
@@ -232,7 +251,7 @@ export class WorldCollision {
 		let bestPosition = nextRect[axis]
 		let collided = false
 
-		for (const solid of this.solids) {
+		for (const solid of this.movementBlockers) {
 			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
 				continue
 			}

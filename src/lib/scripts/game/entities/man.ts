@@ -131,7 +131,7 @@ export class Man extends Enemy {
 	}
 
 	private checkSquish(): boolean {
-		const solids = this.game.worldCollision.solids.map((s) => s.rect)
+		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
 		if (!isSquished(this.worldBounds, solids)) {
 			return false
 		}
