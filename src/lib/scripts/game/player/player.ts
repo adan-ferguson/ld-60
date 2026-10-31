@@ -9,6 +9,7 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import type { MovementBlocker } from '#lib/scripts/game/collisions/worldCollision.ts'
+import { getHorizontalSlice } from '#lib/scripts/game/collisions/getHorizontalSlice.ts'
 
 export type AerialState =
 	| {
@@ -181,16 +182,9 @@ export class Player extends GameEntity {
 				this.aerialState = { kind: 'grounded', time: 0 }
 				this.velY = 0
 			} else {
-				this.trySnapToCeilingGap(result.verticalSolids)
+				this.trySnapToCeilingGap()
 			}
 		}
-	}
-
-	private trySnapToCeilingGap(solids: MovementBlocker[]): boolean {
-		// If x velocity is too high, don't snap, it feels weird
-		// Else if the gap is too far away, don't snap,
-		// Else if the gap is too small, don't snap
-		// Otherwise, snap
 	}
 
 	resetState() {
@@ -227,5 +221,24 @@ export class Player extends GameEntity {
 
 	private pushOutOfSolids() {
 		this.game.worldCollision.pushOutOfSolids(this)
+	}
+
+	private trySnapToCeilingGap(): boolean {
+		const SNAP_DISTANCE = 1.5
+		const y = this.worldBounds.top
+		const minX = this.worldBounds.left - SNAP_DISTANCE - this.worldBounds.width
+		const maxX = this.worldBounds.right + SNAP_DISTANCE + this.worldBounds.width
+		const slice = getHorizontalSlice(
+			this.game.worldCollision.movementBlockers.map((b) => b.rect),
+			y,
+			minX,
+			maxX,
+		)
+		const gap = slice.find((s) => s.kind === 'gap' && s.length >= this.worldBounds.width)
+		if (!gap) {
+			return false
+		}
+		this.x = gap.start + (gap.length - this.worldBounds.width) / 2
+		return true
 	}
 }
