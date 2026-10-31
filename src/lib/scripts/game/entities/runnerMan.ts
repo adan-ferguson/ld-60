@@ -3,17 +3,18 @@ import type Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 
-const SPRINT_MULTI = 2
-
 export type RunnerManProps = ManProps & {
 	speed: number
+	sprintBonus: number
 }
 
 export class RunnerMan extends Man {
 	readonly #speed: number
+	readonly #sprintBonus: number
 	public constructor(game: Game, tileXY: XY, props: Partial<RunnerManProps>) {
 		super(game, tileXY, props)
-		this.#speed = props.speed ?? 20
+		this.#speed = props.speed ?? 25
+		this.#sprintBonus = props.sprintBonus ?? 15
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'
@@ -26,6 +27,6 @@ export class RunnerMan extends Man {
 		if (!this.hasGroundAhead()) {
 			this.facing *= -1
 		}
-		this.velX = this.facing * this.#speed * (this.seesPlayer() ? SPRINT_MULTI : 1)
+		this.velX = this.facing * (this.#speed + (this.seesPlayer() ? this.#sprintBonus : 0))
 	}
 }
