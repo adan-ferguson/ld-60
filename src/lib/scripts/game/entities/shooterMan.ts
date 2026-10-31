@@ -2,11 +2,10 @@ import { Man, type ManProps } from '#lib/scripts/game/entities/man.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
-const ATTACK_COOLDOWN = 1.0
+const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
-const ATTACK_DURATION = 0.4
+const ATTACK_DURATION = 1.4
 
 export type ShooterManProps = ManProps
 
@@ -26,25 +25,12 @@ export class ShooterMan extends Man {
 		this.#state = newState
 		this.animationChanged.emit(newState.animation)
 	}
-	get visionRect(): CoolRect {
-		const HEIGHT = 12
-		const WIDTH = 72
-		return new CoolRect({
-			x: this.facing === 1 ? 0 : -WIDTH,
-			y: -HEIGHT / 2,
-			width: WIDTH,
-			height: HEIGHT,
-		})
-	}
 	update2(delta: number): void {
 		const { player } = this.game
 		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
 			player.takeDamage(1)
 		}
 		this.state.update(this, delta)
-	}
-	public seesPlayer(): boolean {
-		return this.game.player?.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
 	}
 }
 
@@ -71,7 +57,6 @@ class IdleState extends State {
 			return
 		}
 		if (man.seesPlayer()) {
-			man.velX = 0
 			man.state = new AttackWindupState()
 		}
 	}

@@ -136,12 +136,6 @@ export abstract class GameEntity {
 		}
 	}
 
-	public angleTo(entity: GameEntity): number {
-		const dx = entity.x - this.x
-		const dy = entity.y - this.y
-		return Math.atan2(dy, dx)
-	}
-
 	/**
 	 * @virtual
 	 */

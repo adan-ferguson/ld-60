@@ -3,6 +3,8 @@ import type Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 
+const SPRINT_MULTI = 2
+
 export type RunnerManProps = ManProps & {
 	speed: number
 }
@@ -24,6 +26,6 @@ export class RunnerMan extends Man {
 		if (!this.hasGroundAhead()) {
 			this.facing *= -1
 		}
-		this.velX = this.facing * this.#speed
+		this.velX = this.facing * this.#speed * (this.seesPlayer() ? SPRINT_MULTI : 1)
 	}
 }

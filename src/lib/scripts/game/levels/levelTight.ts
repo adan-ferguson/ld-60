@@ -4,21 +4,21 @@ export const LevelTight: LevelDef = {
 	displayName: 'Cramped Spaces',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...xxxxxxxx........1xxxxxxxxxxx
-x.s.................1txxxxxxxxxx
-xxxx.xxxxxxxx.......1xxxxxxxxxxx
+x...xxxxxxxx..................1x
+x.s...........................xx
+xxxx.xxxxxxxx.....y...y...y...xx
 xxxx....xxxxx...xxxxxxxxxxxxxxxx
 x1......xxxxx.................3x
 xxxxxxx.xxxxx..................x
-xxxx1xx.xx.........xx.......xx.x
-xxxx.xx.xx......dxxxx...x...xx.x
-xxxx.xx.xx..xxxxxxxxxlllllllxx.x
-xxxx.xx.xx..xxxxxxxxxxxxxxxxxx.x
-xxxx.xx.xx.................xxx.x
-xxxx.xx.xx...d........d....xxx.x
+xxxxxxx.x..........xx.......xx.x
+xxxxxxx.x.......axxxx...x...xx.x
+xxxxxxx.x.xxxxxxxxxxxlllllllxx.x
+x1...xx.x.xxxxxxxxxxxxxxxxxxxx.x
+xxxx.xx.x..........xxxxxxxxxxx.x
+xxxx.xx.x....d.....xxxxxxxxxxx.x
 xxxx.xx.xxxxxxxxxx.xxxxxxxxxxx.x
 xxxx.xx.xxxxxxxxxx.xxxxxxxxxxx.x
-xxxx...............x...........x
+xxxx...............xt..........x
 xxxxxxxxxxx.................abcx
 xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 `,
@@ -28,12 +28,12 @@ xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 		u: { kind: 'treasureSpawn', loop: 2 },
 		v: { kind: 'treasureSpawn', loop: 3 },
 		x: { kind: 'wall' },
-		y: { kind: 'wall', loop: [2, 3] },
+		y: { kind: 'wall' },
 		l: { kind: 'lava' },
 		1: { kind: 'turret' },
 		2: { kind: 'turret', loop: [2, 3] },
 		3: { kind: 'turret', loop: [3] },
-		a: { kind: 'shooterMan', facing: -1, loop: 1 },
+		a: { kind: 'shooterMan', facing: -1 },
 		b: { kind: 'shooterMan', facing: -1, loop: 2 },
 		c: { kind: 'shooterMan', facing: -1, loop: 3 },
 		d: { kind: 'runnerMan' },

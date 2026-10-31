@@ -5,8 +5,8 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { type ManAnimationType, ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
-import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import CoolRect from '#lib/scripts/utils/coolRect.ts'
 
 export type ManProps = {
 	facing: 1 | -1
@@ -46,6 +46,16 @@ export abstract class Man extends Enemy {
 	override get maxHealth(): number {
 		return this.#maxHealth
 	}
+	get visionRect(): CoolRect {
+		const HEIGHT = 4
+		const WIDTH = 84
+		return new CoolRect({
+			x: this.facing === 1 ? 0 : -WIDTH,
+			y: -HEIGHT / 2,
+			width: WIDTH,
+			height: HEIGHT,
+		})
+	}
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ManEl(gc, this)
 	}
@@ -75,12 +85,7 @@ export abstract class Man extends Enemy {
 		)
 	}
 
-	private checkSquish(): boolean {
-		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
-		if (!isSquished(this.worldBounds, solids)) {
-			return false
-		}
-		this.takeDamage(this.maxHealth)
-		return true
+	public seesPlayer(): boolean {
+		return this.game.player?.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
 	}
 }

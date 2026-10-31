@@ -58,7 +58,7 @@ export class Turret extends Enemy {
 		if (!this.game.player?.isActive) {
 			return
 		}
-		const angle = this.angleTo(this.game.player)
+		const angle = this.worldBounds.angleTo(this.game.player.worldBounds.getEdge('bottom', 0.66))
 		const SPEED = 60
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {

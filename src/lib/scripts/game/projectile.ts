@@ -56,9 +56,7 @@ export class Projectile extends GameEntity {
 		}
 		// Player projectiles have a bit more leeway to avoid walls
 		const myWallCollisionBounds =
-			this.options.source instanceof Player
-				? this.worldBounds.midpoint.pad(0.001)
-				: this.worldBounds
+			this.options.source instanceof Player ? this.worldBounds.pad(-1) : this.worldBounds
 		if (
 			this.game.worldCollision.projectileBlockers.some((pb) => pb.intersects(myWallCollisionBounds))
 		) {

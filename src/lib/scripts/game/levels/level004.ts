@@ -4,11 +4,11 @@ export const Level004: LevelDef = {
 	displayName: 'Lava Lake',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.............11...............x
+x..............................x
 x...........................s..x
-x...2.....................xxxxxx
+x.........................xxxxxx
 x..........................x.1.x
-x.............b............x...x
+x.............a............x...x
 x..t..........xx...............x
 x........xx...xx....xx.........x
 xlllll...xx.........xx.....x...x
@@ -18,7 +18,7 @@ x...xx........xx...............x
 x.............xx....xx.....x...x
 x........c..........xx.....x...x
 x........xx.........xx...x.x...x
-x...xx...xx...c.....xx.....x...x
+x...xx...x1...c.....xx.....x...x
 x...xx.2.xx...xx....xx.....x...x
 xllllllllllllllllllllllllllllllx
 `,
@@ -32,7 +32,7 @@ xllllllllllllllllllllllllllllllx
 		1: { kind: 'turret' },
 		2: { kind: 'turret', loop: [2, 3] },
 		3: { kind: 'turret', loop: [3] },
-		a: { kind: 'runnerMan' },
+		a: { kind: 'shooterMan' },
 		b: { kind: 'runnerMan', loop: [2, 3] },
 		c: { kind: 'runnerMan', loop: [3] },
 	},

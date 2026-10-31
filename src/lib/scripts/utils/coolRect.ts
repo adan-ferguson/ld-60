@@ -127,6 +127,12 @@ class CoolRect {
 			height: this.height + (param.y ?? 0) * 2,
 		})
 	}
+
+	angleTo(other: CoolRect) {
+		const dx = other.x - this.x
+		const dy = other.y - this.y
+		return Math.atan2(dy, dx)
+	}
 }
 
 export default CoolRect
