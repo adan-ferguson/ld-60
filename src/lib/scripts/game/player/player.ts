@@ -238,7 +238,11 @@ export class Player extends GameEntity {
 		if (!gap) {
 			return false
 		}
-		this.x = gap.start + (gap.length - this.worldBounds.width) / 2
+		if (gap.start > this.worldBounds.left) {
+			this.x = gap.start
+		} else {
+			this.x = gap.end - this.worldBounds.width
+		}
 		return true
 	}
 }
