@@ -8,7 +8,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
-import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/getHorizontalSlice.ts'
+import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/trySnapToCeilingGap.ts'
 
 export type AerialState =
 	| {
@@ -30,6 +30,8 @@ const HEIGHT = 12
 const CROUCH_DIFF = 4
 const SHOT_COOLDOWN = 0.21
 const AIR_CONTROL = 0.04
+const MAX_X_VELOCITY_FOR_CEILING_SNAP = 2.5
+const CEILING_SNAP_DISTANCE = 1.5
 
 export class Player extends GameEntity {
 	static COYOTE_TIME = 0.07
@@ -53,7 +55,7 @@ export class Player extends GameEntity {
 	public get h(): number {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
-	public override get canStand() {
+	public override get canStandOnMovingBlocks() {
 		return true
 	}
 	public override get diesToHazards() {
@@ -82,9 +84,6 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
-		if (this.checkSquish()) {
-			return
-		}
 		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
@@ -103,8 +102,12 @@ export class Player extends GameEntity {
 			}
 		}
 		this.controlsManager.update()
-		if (this.aerialState.kind === 'grounded' && this.canShoot) {
-			this.velX = X_VELOCITY * this.controlsManager.x * (this.crouching ? 0.5 : 1)
+		if (this.aerialState.kind === 'grounded') {
+			if (this.canShoot) {
+				this.velX = X_VELOCITY * this.controlsManager.x * (this.crouching ? 0.5 : 1)
+			} else {
+				this.velX = 0
+			}
 		} else if (this.aerialState.kind === 'aerial') {
 			this.velX += this.controlsManager.x * AIR_CONTROL
 		}
@@ -176,12 +179,17 @@ export class Player extends GameEntity {
 		)
 		this.x += result.x - this.worldBounds.x
 		this.y += result.y - this.worldBounds.y
+		console.log(this.velX)
 		if (result.verticalSolids.length > 0) {
 			if (this.velY > 0) {
 				this.aerialState = { kind: 'grounded', time: 0 }
 				this.velY = 0
+			} else if (Math.abs(this.velX) < MAX_X_VELOCITY_FOR_CEILING_SNAP) {
+				if (!trySnapToCeilingGap(this, CEILING_SNAP_DISTANCE)) {
+					this.velY = 0
+				}
 			} else {
-				trySnapToCeilingGap(this)
+				this.velY = 0
 			}
 		}
 	}
@@ -206,19 +214,16 @@ export class Player extends GameEntity {
 		)
 	}
 
-	private checkSquish(): boolean {
-		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
-		if (!isSquished(this.worldBounds, solids)) {
-			return false
-		}
-		if (this.tryCrouch()) {
-			return this.checkSquish()
-		}
-		this.takeDamage(this.maxHealth)
-		return true
-	}
-
 	private pushOutOfSolids() {
 		this.game.worldCollision.pushOutOfSolids(this)
+	}
+
+	protected override isSquished() {
+		if (super.isSquished()) {
+			if (this.tryCrouch()) {
+				return super.isSquished()
+			}
+		}
+		return false
 	}
 }

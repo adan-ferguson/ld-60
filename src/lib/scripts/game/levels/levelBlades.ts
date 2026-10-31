@@ -32,6 +32,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		a: { kind: 'spikes' },
 		b: { kind: 'spikes', loop: [2, 3] },
 		l: { kind: 'lava' },
-		e: { kind: 'man', facing: -1 },
+		e: { kind: 'runnerMan', facing: -1 },
 	},
 }

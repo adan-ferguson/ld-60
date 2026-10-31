@@ -4,8 +4,9 @@ import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import { Turret } from '#lib/scripts/game/entities/turret.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
 import type { TileDef } from '#lib/scripts/game/tileDef.ts'
-import { Man } from '#lib/scripts/game/entities/man.ts'
 import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
+import { ShooterMan } from '#lib/scripts/game/entities/shooterMan.ts'
+import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 
 export class EntitiesManager {
 	private entities: Set<GameEntity> = new Set()
@@ -66,8 +67,10 @@ export class EntitiesManager {
 export function tryCreateEntity(game: Game, def: TileDef) {
 	if (def.contents.kind === 'turret') {
 		return new Turret(game, def.tileXY, def.contents)
-	} else if (def.contents.kind === 'man') {
-		return new Man(game, def.tileXY, def.contents)
+	} else if (def.contents.kind === 'runnerMan') {
+		return new RunnerMan(game, def.tileXY, def.contents)
+	} else if (def.contents.kind === 'shooterMan') {
+		return new ShooterMan(game, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'movingBlock') {
 		return new MovingBlock(game, def.tileXY, def.contents)
 	}

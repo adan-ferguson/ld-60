@@ -34,8 +34,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		o: { kind: 'movingBlock', isX: true, speed: 30 },
 		a: { kind: 'movingBlock', isX: true, type: 'spike' },
 		b: { kind: 'movingBlock', isX: false, type: 'spike' },
-		c: { kind: 'man', behavior: 'stand', facing: -1 },
+		c: { kind: 'shooterMan', facing: -1 },
 		d: { kind: 'movingBlock', isX: true, type: 'spike', speed: 50 },
-		e: { kind: 'man', facing: -1 },
+		e: { kind: 'runnerMan', facing: -1 },
 	},
 }

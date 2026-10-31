@@ -3,89 +3,51 @@ import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
-import { ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
-import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import { type ManAnimationType, ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
-import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
-
-const ATTACK_COOLDOWN = 1.4
-const ATTACK_WINDUP = 0.72
-const ATTACK_DURATION = 0.4
-
-export type ManBehavior = 'patrol' | 'stand'
+import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
 export type ManProps = {
 	facing: 1 | -1
-	behavior: ManBehavior
 	health: number
-	speed: number
 }
 
-export class Man extends Enemy {
-	public stateChanged = CoolEvents.createHandler<(state: State) => void>()
-	#state: State
-	props: ManProps
-	public get state(): State {
-		return this.#state
+export abstract class Man extends Enemy {
+	public animationChanged = CoolEvents.createHandler<(type: ManAnimationType) => void>()
+	protected constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
+		super(game, tileXY)
+		const p: ManProps = {
+			facing: 1,
+			health: 1,
+			...props,
+		}
+		this.facing = p.facing
+		this.#maxHealth = p.health
+		this.y -= 2
 	}
-	public set state(newState: State) {
-		this.#state = newState
-		this.stateChanged.emit(newState)
-	}
-	public get h(): number {
+	readonly #maxHealth: number
+	abstract get defaultAnimation(): ManAnimationType
+	override get h(): number {
 		return 12
 	}
-	public get w(): number {
+	override get w(): number {
 		return 8
 	}
 	public override get diesToHazards() {
 		return true
 	}
-	get canStand() {
+	override get canStandOnMovingBlocks() {
 		return true
 	}
-	get score(): number {
-		return 500 + 500 * this.props.health
+	override get score(): number {
+		return 500 + 500 * this.#maxHealth
 	}
-	public get maxHealth(): number {
-		return this.props.health
-	}
-	get visionRect(): CoolRect {
-		const HEIGHT = 12
-		const WIDTH = 72
-		return new CoolRect({
-			x: this.facing === 1 ? 0 : -WIDTH,
-			y: -HEIGHT / 2,
-			width: WIDTH,
-			height: HEIGHT,
-		})
-	}
-	constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
-		super(game, tileXY)
-		this.props = {
-			health: 1,
-			facing: 1,
-			behavior: 'patrol',
-			speed: 14,
-			...props,
-		}
-		this.facing = this.props.facing
-		this.y -= 2
-		this.#state = new IdleState()
+	override get maxHealth(): number {
+		return this.#maxHealth
 	}
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ManEl(gc, this)
-	}
-	update2(delta: number): void {
-		if (this.checkSquish()) {
-			return
-		}
-		const { player } = this.game
-		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
-			player.takeDamage(1)
-		}
-		this.state.update(this, delta)
 	}
 	protected override move(delta: number) {
 		const result = this.game.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
@@ -93,19 +55,6 @@ export class Man extends Enemy {
 		if (result.horizontalSolids.length > 0) {
 			this.facing *= -1
 		}
-	}
-	hasGroundAhead(): boolean {
-		const bounds = this.worldBounds
-		const LEDGE_LOOKAHEAD = 0.5
-		const x = this.facing > 0 ? bounds.right + LEDGE_LOOKAHEAD : bounds.x - LEDGE_LOOKAHEAD
-		return this.game.worldCollision.isGrounded(
-			new CoolRect({
-				x,
-				y: bounds.bottom,
-				width: 0.1,
-				height: 0,
-			}),
-		)
 	}
 
 	public fire() {
@@ -126,10 +75,6 @@ export class Man extends Enemy {
 		)
 	}
 
-	public seesPlayer(): boolean {
-		return this.game.player?.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
-	}
-
 	private checkSquish(): boolean {
 		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
 		if (!isSquished(this.worldBounds, solids)) {
@@ -138,54 +83,4 @@ export class Man extends Enemy {
 		this.takeDamage(this.maxHealth)
 		return true
 	}
-}
-
-abstract class State {
-	protected time = 0
-	constructor() {}
-	update(man: Man, delta: number): void {
-		this.update2(man, delta)
-		this.time += delta
-	}
-	abstract update2(man: Man, delta: number): void
-}
-
-class IdleState extends State {
-	update2(man: Man, _delta: number): void {
-		if (man.props.behavior === 'patrol') {
-			if (!man.hasGroundAhead()) {
-				man.facing *= -1
-			}
-			man.velX = man.facing * man.props.speed //* man.game.loops
-		} else {
-			man.velX = 0
-		}
-		if (this.time >= ATTACK_COOLDOWN && man.seesPlayer()) {
-			man.velX = 0
-			man.state = new AttackWindupState()
-		}
-	}
-}
-
-class AttackWindupState extends State {
-	update2(man: Man, _delta: number): void {
-		if (this.time >= ATTACK_WINDUP) {
-			man.fire()
-			man.state = new AttackState()
-		}
-	}
-}
-
-class AttackState extends State {
-	update2(man: Man, _delta: number): void {
-		if (this.time >= ATTACK_DURATION) {
-			man.state = new IdleState()
-		}
-	}
-}
-
-export const ManStateTypes = {
-	Idle: IdleState,
-	AttackWindup: AttackWindupState,
-	Attack: AttackState,
 }

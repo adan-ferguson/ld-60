@@ -1,9 +1,14 @@
-import type { ManProps } from '#lib/scripts/game/entities/man.ts'
 import type { TurretProps } from '#lib/scripts/game/entities/turret.ts'
+import { type ShooterManProps } from '#lib/scripts/game/entities/shooterMan.ts'
+import { type RunnerManProps } from '#lib/scripts/game/entities/runnerMan.ts'
 
-export type Man = {
-	kind: 'man'
-} & Partial<ManProps>
+export type ShooterDef = {
+	kind: 'shooterMan'
+} & Partial<ShooterManProps>
+
+export type RunnerDef = {
+	kind: 'runnerMan'
+} & Partial<RunnerManProps>
 
 type Turret = {
 	kind: 'turret'
@@ -39,7 +44,15 @@ export type MovingBlockDef = {
 }
 
 export type TileContents =
-	Man | Turret | PlayerSpawn | Wall | Lava | TreasureSpawn | MovingBlockDef | Spikes
+	| ShooterDef
+	| RunnerDef
+	| Turret
+	| PlayerSpawn
+	| Wall
+	| Lava
+	| TreasureSpawn
+	| MovingBlockDef
+	| Spikes
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

@@ -5,6 +5,7 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
+import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 export abstract class GameEntity {
 	public isActive = true
@@ -23,10 +24,18 @@ export abstract class GameEntity {
 	public get diesToHazards() {
 		return false
 	}
+
 	/**
 	 * @virtual
 	 */
-	public get canStand() {
+	public get squishable() {
+		return false
+	}
+
+	/**
+	 * @virtual
+	 */
+	public get canStandOnMovingBlocks() {
 		return false
 	}
 
@@ -79,9 +88,21 @@ export abstract class GameEntity {
 		this.y = val.y
 	}
 
+	public set left(val: number) {
+		this.x = val + this.w / 2
+	}
+
+	public set right(val: number) {
+		this.x = val - this.w / 2
+	}
+
 	public update(delta: number) {
 		this.time += delta
 		if (!this.isActive) {
+			return
+		}
+		if (this.isSquished()) {
+			this.takeDamage(this.maxHealth)
 			return
 		}
 		this.update2(delta)
@@ -119,5 +140,16 @@ export abstract class GameEntity {
 		const dx = entity.x - this.x
 		const dy = entity.y - this.y
 		return Math.atan2(dy, dx)
+	}
+
+	/**
+	 * @virtual
+	 */
+	protected isSquished(): boolean {
+		if (!this.squishable) {
+			return false
+		}
+		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
+		return isSquished(this.worldBounds, solids)
 	}
 }

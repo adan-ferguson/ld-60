@@ -8,12 +8,11 @@ export type HorizontalSliceSegment = {
 	length: number
 }
 
-export function trySnapToCeilingGap(entity: GameEntity): boolean {
-	const SNAP_DISTANCE = 1.5
+export function trySnapToCeilingGap(entity: GameEntity, snapDist: number): boolean {
 	const bounds = entity.worldBounds
 	const y = bounds.top
-	const minX = bounds.left - SNAP_DISTANCE - bounds.width
-	const maxX = bounds.right + SNAP_DISTANCE + bounds.width
+	const minX = bounds.left - snapDist - bounds.width
+	const maxX = bounds.right + snapDist + bounds.width
 	const slice = getHorizontalSlice(
 		entity.game.worldCollision.movementBlockers.map((b) => b.rect),
 		y,
@@ -26,13 +25,13 @@ export function trySnapToCeilingGap(entity: GameEntity): boolean {
 	}
 	for (const gap of gaps) {
 		const startDiff = gap.start - bounds.left
-		if (startDiff > 0 && startDiff <= SNAP_DISTANCE) {
-			entity.x = gap.start
+		if (startDiff > 0 && startDiff <= snapDist) {
+			entity.left = gap.start
 			return true
 		}
 		const endDiff = bounds.right - gap.end
-		if (endDiff > 0 && endDiff <= SNAP_DISTANCE) {
-			entity.x = gap.end - bounds.width
+		if (endDiff > 0 && endDiff <= snapDist) {
+			entity.right = gap.end
 			return true
 		}
 	}

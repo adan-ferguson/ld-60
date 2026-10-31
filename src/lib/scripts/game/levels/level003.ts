@@ -32,8 +32,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		1: { kind: 'turret' },
 		2: { kind: 'turret', loop: [2, 3] },
 		3: { kind: 'turret', loop: [3] },
-		a: { kind: 'man' },
-		b: { kind: 'man', loop: [2, 3] },
-		c: { kind: 'man', loop: [3] },
+		a: { kind: 'runnerMan' },
+		b: { kind: 'runnerMan', loop: [2, 3] },
+		c: { kind: 'runnerMan', loop: [3] },
 	},
 }
