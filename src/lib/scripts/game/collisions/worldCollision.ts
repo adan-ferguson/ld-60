@@ -1,4 +1,3 @@
-import { Consts } from '#lib/scripts/consts.ts'
 import type { TileContents } from '#lib/scripts/game/levelDef.ts'
 import type Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
@@ -7,7 +6,7 @@ import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 
-type MovementBlocker = {
+export type MovementBlocker = {
 	entity?: GameEntity
 	rect: CoolRect
 	velocityX: number
@@ -25,14 +24,14 @@ type Axis = 'x' | 'y'
 
 type AxisCollisionResult = {
 	position: number
-	collided: boolean
+	solids: MovementBlocker[]
 }
 
 type MovementResult = {
 	x: number
 	y: number
-	hitHorizontal: boolean
-	hitVertical: boolean
+	horizontalSolids: MovementBlocker[]
+	verticalSolids: MovementBlocker[]
 }
 
 export class WorldCollision {
@@ -102,16 +101,9 @@ export class WorldCollision {
 		return {
 			x: horizontal.position,
 			y: vertical.position,
-			hitHorizontal: horizontal.collided,
-			hitVertical: vertical.collided,
+			horizontalSolids: horizontal.solids,
+			verticalSolids: vertical.solids,
 		}
-	}
-
-	overlapsWall(myWallCollisionBounds: CoolRect) {
-		return (
-			this.overlapsTileKind(myWallCollisionBounds, 'wall') ||
-			this.overlapsTileKind(myWallCollisionBounds, 'movingBlock')
-		)
 	}
 
 	overlapsSolid(rect: CoolRect, exclude?: GameEntity): boolean {
@@ -148,27 +140,6 @@ export class WorldCollision {
 			entity.x += correction.x
 			entity.y += correction.y
 		}
-	}
-
-	private overlapsTileKind(rect: CoolRect, tileType: TileContents['kind']): boolean {
-		const { TILE_SIZE_PX } = Consts
-
-		const minTileX = Math.floor(rect.left / TILE_SIZE_PX)
-		const maxTileX = Math.floor((rect.right - 0.01) / TILE_SIZE_PX)
-		const minTileY = Math.floor(rect.top / TILE_SIZE_PX)
-		const maxTileY = Math.floor((rect.bottom - 0.01) / TILE_SIZE_PX)
-
-		for (let tileY = minTileY; tileY <= maxTileY; tileY++) {
-			for (let tileX = minTileX; tileX <= maxTileX; tileX++) {
-				const tile = this.tiles.get({ x: tileX, y: tileY })
-
-				if (tile?.contents.kind === tileType) {
-					return true
-				}
-			}
-		}
-
-		return false
 	}
 
 	private getPushCandidates(entity: GameEntity, solid: MovementBlocker): PushCandidate[] {
@@ -233,7 +204,7 @@ export class WorldCollision {
 		if (delta === 0) {
 			return {
 				position: rect[axis],
-				collided: false,
+				solids: [],
 			}
 		}
 
@@ -246,7 +217,7 @@ export class WorldCollision {
 
 		let bestDistance = Math.abs(delta)
 		let bestPosition = nextRect[axis]
-		let collided = false
+		const hitSolids: MovementBlocker[] = []
 
 		for (const solid of this.movementBlockers) {
 			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
@@ -270,14 +241,18 @@ export class WorldCollision {
 				continue
 			}
 
+			if (distance < bestDistance) {
+				hitSolids.length = 0
+			}
+
 			bestDistance = distance
 			bestPosition = obstacleEdge - this.leadingEdgeOffset(rect, cardinal.edge)
-			collided = true
+			hitSolids.push(solid)
 		}
 
 		return {
 			position: bestPosition,
-			collided,
+			solids: hitSolids,
 		}
 	}
 

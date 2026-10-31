@@ -7,8 +7,8 @@ import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
-import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
+import type { MovementBlocker } from '#lib/scripts/game/collisions/worldCollision.ts'
 
 export type AerialState =
 	| {
@@ -176,12 +176,21 @@ export class Player extends GameEntity {
 		)
 		this.x += result.x - this.worldBounds.x
 		this.y += result.y - this.worldBounds.y
-		if (result.hitVertical) {
+		if (result.verticalSolids.length > 0) {
 			if (this.velY > 0) {
 				this.aerialState = { kind: 'grounded', time: 0 }
+				this.velY = 0
+			} else {
+				this.trySnapToCeilingGap(result.verticalSolids)
 			}
-			this.velY = 0
 		}
+	}
+
+	private trySnapToCeilingGap(solids: MovementBlocker[]): boolean {
+		// If x velocity is too high, don't snap, it feels weird
+		// Else if the gap is too far away, don't snap,
+		// Else if the gap is too small, don't snap
+		// Otherwise, snap
 	}
 
 	resetState() {

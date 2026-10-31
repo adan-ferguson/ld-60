@@ -90,7 +90,7 @@ export class Man extends Enemy {
 	protected override move(delta: number) {
 		const result = this.game.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
 		this.x += result.x - this.worldBounds.x
-		if (result.hitHorizontal) {
+		if (result.horizontalSolids.length > 0) {
 			this.facing *= -1
 		}
 	}
