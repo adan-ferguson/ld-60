@@ -1,4 +1,5 @@
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 
 export type HorizontalSliceSegment = {
 	kind: 'solid' | 'gap'
@@ -7,12 +8,43 @@ export type HorizontalSliceSegment = {
 	length: number
 }
 
-export function getHorizontalSlice(solids: CoolRect[], y: number, minX: number, maxX: number) {
+export function trySnapToCeilingGap(entity: GameEntity): boolean {
+	const SNAP_DISTANCE = 1.5
+	const bounds = entity.worldBounds
+	const y = bounds.top
+	const minX = bounds.left - SNAP_DISTANCE - bounds.width
+	const maxX = bounds.right + SNAP_DISTANCE + bounds.width
+	const slice = getHorizontalSlice(
+		entity.game.worldCollision.movementBlockers.map((b) => b.rect),
+		y,
+		minX,
+		maxX,
+	)
+	const gaps = slice.filter((s) => s.kind === 'gap' && s.length >= bounds.width)
+	if (!gaps.length) {
+		return false
+	}
+	for (const gap of gaps) {
+		const startDiff = gap.start - bounds.left
+		if (startDiff > 0 && startDiff <= SNAP_DISTANCE) {
+			entity.x = gap.start
+			return true
+		}
+		const endDiff = bounds.right - gap.end
+		if (endDiff > 0 && endDiff <= SNAP_DISTANCE) {
+			entity.x = gap.end - bounds.width
+			return true
+		}
+	}
+	return false
+}
+
+function getHorizontalSlice(solids: CoolRect[], y: number, minX: number, maxX: number) {
 	if (minX >= maxX) {
 		return []
 	}
 	const intervals = solids
-		.filter((solid) => solid.top <= y && y <= solid.bottom)
+		.filter((solid) => solid.top < y && y <= solid.bottom)
 		.map((solid) => ({
 			start: Math.max(solid.left, minX),
 			end: Math.min(solid.right, maxX),
