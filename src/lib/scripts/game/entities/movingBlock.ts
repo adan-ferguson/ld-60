@@ -110,6 +110,8 @@ export class MovingBlock extends GameEntity {
 				return true
 			} else if (this.velY > 0 && solids.length === 1) {
 				return true // If false, block is moving down but the player stays back
+			} else if (solids.length === 1) {
+				return true
 			} else {
 				const overlap = e.worldBounds.overlap(this.worldBounds)
 				return overlap && overlap.width > e.worldBounds.width / 2

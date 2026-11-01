@@ -61,6 +61,9 @@ export class Player extends GameEntity {
 	public override get diesToHazards() {
 		return true
 	}
+	public override get squishable() {
+		return true
+	}
 	tryCrouch() {
 		if (this.crouching) {
 			return false
