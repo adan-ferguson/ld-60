@@ -4,7 +4,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 
-const DEBUG = true
+const DEBUG = false
 
 export abstract class GameEntityEl extends Container {
 	private debugGfx: Graphics

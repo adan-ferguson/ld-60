@@ -133,6 +133,13 @@ class CoolRect {
 		const dy = other.y - this.y
 		return Math.atan2(dy, dx)
 	}
+
+	static fromMidpointCoords(coords: Coords) {
+		return new CoolRect({ x: coords.x, y: coords.y }).pad({
+			x: (coords.width ?? 0) / 2,
+			y: (coords.height ?? 0) / 2,
+		})
+	}
 }
 
 export default CoolRect

@@ -63,8 +63,8 @@ export class Turret extends Enemy {
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'dot',
-				w: 2,
-				h: 2,
+				hitbox: { x: 2, y: 2 },
+				wallHitbox: { x: 2, y: 2 },
 				source: this,
 				lifetime: 10,
 				velX: Math.cos(angle) * SPEED,

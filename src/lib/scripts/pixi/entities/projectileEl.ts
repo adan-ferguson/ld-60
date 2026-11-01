@@ -30,8 +30,8 @@ export class ProjectileEl extends GameEntityEl {
 	}
 	gfxy() {
 		const gfx = new Graphics()
-		const { w, h } = this.proj.options
-		gfx.rect(-w / 2, -h / 2, w, h).fill('red')
+		const { x, y } = this.proj.options.hitbox
+		gfx.rect(-x / 2, -y / 2, x, y).fill('red')
 		this.addChild(gfx)
 	}
 	spritey() {

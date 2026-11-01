@@ -71,8 +71,8 @@ export abstract class Man extends Enemy {
 		this.game.entitiesManager.spawn(
 			new Projectile(this.game, {
 				style: 'small',
-				w: 4,
-				h: 1,
+				hitbox: { x: 4, y: 1 },
+				wallHitbox: { x: 4, y: 1 },
 				source: this,
 				lifetime: 10,
 				velX: 80 * this.facing,
