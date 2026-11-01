@@ -120,7 +120,7 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private autoCalcRange(tileXY: XY): { min: number; max: number } {
-		const terrainXYs = this.game.level.terrainTiles.map((t) => t.tileXY)
+		const terrainXYs = this.game.level.tilesOfKind('wall', 'lava').map((t) => t.tileXY)
 		const blockAdjacentPosition = tileXY[this.cardinal.adjacentAxis]
 
 		const relevantTerrain = terrainXYs.filter((tile) => {
