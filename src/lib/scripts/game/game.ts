@@ -7,10 +7,10 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { Treasure } from '#lib/scripts/game/treasure.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
+import { Phanta } from '#lib/scripts/game/entities/phanta.ts'
 
 const EXTRA_LIFE = 25000
 const TREASURE_SPAWN_TIME = 10
-const EVIL_GUY_SPAWN_TIME = 30
 const SCORE_ROLLING_SPEED = 2000
 
 export type Bonuses = {
@@ -30,10 +30,10 @@ class Game {
 	lives = 5
 	wave = 1
 	public playerDied = CoolEvents.createHandler()
-	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
+	public waveClearedEvent = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	public worldCollision: WorldCollision
-	private waveClearedEmitted = false
+	waveCleared = false
 	public player: Player
 	get activeEntities(): GameEntity[] {
 		return this.entitiesManager.activeEntities
@@ -43,7 +43,6 @@ class Game {
 	}
 	private get turretShotInterval() {
 		return 4 - Math.min(3, this.loops * 0.6)
-		// return 4 - Math.min(3, this.roundTimer * 0.02 + this.loops * 0.6)
 	}
 	static async load() {
 		return new Game()
@@ -71,7 +70,7 @@ class Game {
 		return this.level
 	}
 	update(delta: number) {
-		if (!this.playing) {
+		if (!this.playing || !this.level) {
 			return
 		}
 		this.updateScore(delta)
@@ -80,33 +79,39 @@ class Game {
 		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
 			this.spawnTreasure()
 		}
-		// if (crossedThreshold(EVIL_GUY_SPAWN_TIME, this.roundTimer, delta)) {
-		// 	this.spawnEvilGuy()
-		// }
+		if (crossedThreshold(this.level.phantaSpawnTime, this.roundTimer, delta)) {
+			this.spawnPhanta()
+		}
 		this.roundTimer += delta
 		this.turretTimer += delta
 		if (this.turretTimer > this.turretShotInterval) {
 			this.entitiesManager.fireRandomTurret()
 			this.turretTimer = 0
 		}
-		if (!this.entitiesManager.hasEnemy && !this.waveClearedEmitted) {
+		if (!this.entitiesManager.hasEnemy && !this.waveCleared) {
 			this.waveClear()
 		}
 	}
 	waveClear() {
-		this.waveCleared.emit({
+		this.waveClearedEvent.emit({
 			timeBonus: Math.max(0, 6000 - Math.round(this.roundTimer * 100)),
 			waveBonus: 1000 * this.wave,
 			arbitraryBonus: Math.round(2000 * Math.random()),
 		})
-		this.waveClearedEmitted = true
+		this.waveCleared = true
 	}
 	beginLevel() {
 		this.entitiesManager.prepareLevel()
 		this.playing = true
-		this.waveClearedEmitted = false
+		this.waveCleared = false
 		this.roundTimer = 0
 		this.turretTimer = 0
+	}
+	spawnPhanta() {
+		if (!this.level) {
+			return
+		}
+		this.entitiesManager.spawn(new Phanta(this, this.level.playerSpawnPosition))
 	}
 	spawnTreasure() {
 		if (!this.level) {
@@ -134,13 +139,6 @@ class Game {
 	addScore(amount: number, sourcePosition?: XY) {
 		this.targetScore += amount
 		this.scoreAdded.emit(amount, sourcePosition)
-	}
-	spawnEvilGuy() {
-		// if (!this.level) {
-		// 	return
-		// }
-		// const pos = this.level.getTreasureSpawnPosition()
-		// this.entitiesManager.spawn(new EvilGuy(this, pos))
 	}
 }
 

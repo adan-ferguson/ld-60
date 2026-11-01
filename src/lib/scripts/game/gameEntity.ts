@@ -28,6 +28,11 @@ export abstract class GameEntity {
 	/**
 	 * @virtual
 	 */
+	public async animateSpawn() {}
+
+	/**
+	 * @virtual
+	 */
 	public get squishable() {
 		return false
 	}
@@ -131,9 +136,13 @@ export abstract class GameEntity {
 		}
 		this.damageTaken += amount
 		if (this.damageTaken >= this.maxHealth) {
-			this.destroyed.emit()
-			this.isActive = false
+			this.destroy()
 		}
+	}
+
+	public destroy() {
+		this.destroyed.emit()
+		this.isActive = false
 	}
 
 	/**

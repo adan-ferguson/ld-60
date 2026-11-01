@@ -1,6 +1,5 @@
 import { type Application } from 'pixi.js'
 import Game, { type Bonuses } from '#lib/scripts/game/game.ts'
-import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 import { addHighScore, isHighScore } from '#lib/scripts/game/highScores.ts'
@@ -112,7 +111,7 @@ export class GameController {
 				}
 			}, 2400)
 		})
-		this.game.waveCleared.listen((bonuses) => {
+		this.game.waveClearedEvent.listen((bonuses) => {
 			this.waveCleared = true
 			setTimeout(() => {
 				if (!this.game) {
