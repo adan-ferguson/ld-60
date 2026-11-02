@@ -108,7 +108,7 @@ class Game {
 		this.turretTimer = 0
 	}
 	spawnPhanta() {
-		if (!this.level) {
+		if (!this.level || !this.player.isActive || this.waveCleared) {
 			return
 		}
 		this.entitiesManager.spawn(new Phanta(this, this.level.playerSpawnPosition))

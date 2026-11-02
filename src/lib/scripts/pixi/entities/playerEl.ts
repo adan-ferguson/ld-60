@@ -85,7 +85,7 @@ export class PlayerEl extends WithManSprite {
 		gfx.x = this.player.x
 		gfx.y = this.player.worldBounds.bottom - 2
 		const animation = new VfxAnimation(gfx, {
-			draw: (t) => {
+			update: ({ t }) => {
 				const x = WIDTH * t
 				gfx
 					.clear()

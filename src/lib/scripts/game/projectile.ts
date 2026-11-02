@@ -42,8 +42,8 @@ export class Projectile extends GameEntity {
 			this.isActive = false
 		}
 		if (this.options.source instanceof Player) {
-			const target = this.game.entitiesManager.enemies.find((enemy) =>
-				enemy.worldBounds.intersects(this.worldBounds),
+			const target = this.game.entitiesManager.activeEntities.find(
+				(ent) => ent.canBeHitByPlayer && ent.worldBounds.intersects(this.worldBounds),
 			)
 			if (target) {
 				target.takeDamage(1)

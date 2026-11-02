@@ -35,7 +35,7 @@ export function destroyIntoSquaresAnimation(
 
 	return new VfxAnimation(gfx, {
 		duration: 1,
-		draw: (t) => {
+		update: ({ t }) => {
 			gfx.clear()
 			gfx.alpha = 1 - t
 			for (const square of squares) {

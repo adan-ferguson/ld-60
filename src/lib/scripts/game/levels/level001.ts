@@ -2,6 +2,7 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level001: LevelDef = {
 	displayName: 'Level 1',
+	phantaSpawnTime: [5, 5, 5],
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x3.............3..............3x

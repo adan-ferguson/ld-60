@@ -11,6 +11,9 @@ export abstract class Enemy extends GameEntity {
 			game.addScore(this.score, this)
 		})
 	}
+	override get canBeHitByPlayer() {
+		return true
+	}
 	abstract get score(): number
 	hasGroundAhead(): boolean {
 		const bounds = this.worldBounds

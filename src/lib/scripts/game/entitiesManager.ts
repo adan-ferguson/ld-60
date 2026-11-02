@@ -47,7 +47,7 @@ export class EntitiesManager {
 		}
 		this.entities.clear()
 		this.game.player.resetState()
-		this.game.player.position = level.playerSpawnPosition
+		this.game.player.xy = level.playerSpawnPosition
 		this.game.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
 		this.game.player.isActive = true
 		level.tiles.values.forEach((tileDef) => {

@@ -28,6 +28,13 @@ export abstract class GameEntity {
 	/**
 	 * @virtual
 	 */
+	public get canBeHitByPlayer() {
+		return false
+	}
+
+	/**
+	 * @virtual
+	 */
 	public async animateSpawn() {}
 
 	/**
@@ -88,7 +95,11 @@ export abstract class GameEntity {
 		return localBounds.shift({ x: this.x, y: this.y })
 	}
 
-	public set position(val: XY) {
+	public get xy() {
+		return { x: this.x, y: this.y }
+	}
+
+	public set xy(val: XY) {
 		this.x = val.x
 		this.y = val.y
 	}

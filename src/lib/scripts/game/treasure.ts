@@ -12,7 +12,7 @@ export class Treasure extends GameEntity {
 
 	constructor(game: Game, pos: XY) {
 		super(game)
-		this.position = pos
+		this.xy = pos
 	}
 
 	createPixiEl(gc: GameController): GameEntityEl {

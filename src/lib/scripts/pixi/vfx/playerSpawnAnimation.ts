@@ -38,7 +38,7 @@ export function playerSpawnAnimation(options: Options) {
 			options.onFinished()
 		},
 		duration: 1.5,
-		draw: (t: number) => {
+		update: ({ t }) => {
 			t = easeOutQuad(t)
 			const radius = lerp(Consts.GAME_HEIGHT / 2, 0, t)
 			container.x = r(lerp(Consts.GAME_WIDTH / 2, targetXY.x, t))

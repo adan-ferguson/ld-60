@@ -1,13 +1,13 @@
 import { Container } from 'pixi.js'
 
 type Options = {
-	draw: (t: number) => void
-	finished: () => void
 	duration: number
+	update: (args: { t: number; delta: number; time: number }) => void
+	finished: () => void
 }
 
 export class VfxAnimation {
-	timeMS = 0
+	time = 0
 	isFinished = false
 	options: Options
 	constructor(
@@ -15,7 +15,7 @@ export class VfxAnimation {
 		options: Partial<Options>,
 	) {
 		this.options = {
-			draw: () => {},
+			update: () => {},
 			finished: () => {},
 			duration: 0.5,
 			...options,
@@ -25,9 +25,13 @@ export class VfxAnimation {
 		if (this.isFinished) {
 			return
 		}
-		this.timeMS += Math.min(this.options.duration, delta)
-		this.options.draw(this.timeMS / this.options.duration)
-		if (this.timeMS >= this.options.duration) {
+		this.time += Math.min(this.options.duration, delta)
+		this.options.update({
+			t: this.time / this.options.duration,
+			time: this.time,
+			delta: delta,
+		})
+		if (this.time >= this.options.duration) {
 			this.options.finished()
 			this.pixiEl.destroy()
 			this.isFinished = true
