@@ -26,9 +26,7 @@ export class EntitiesManager {
 		return false
 	}
 	spawn(entity: GameEntity) {
-		entity.animateSpawn().then(() => {
-			this.entities.add(entity)
-		})
+		this.entities.add(entity)
 	}
 	update(delta: number) {
 		for (const entity of [...this.entities]) {

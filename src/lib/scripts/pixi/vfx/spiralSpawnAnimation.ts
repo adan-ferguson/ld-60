@@ -1,12 +1,14 @@
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
-import { Assets, Container, Graphics, Sprite } from 'pixi.js'
+import { Assets, Container, Sprite } from 'pixi.js'
 import { Consts } from '#lib/scripts/consts.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 
 type Options = {
-	onFinished: () => void
+	onFinished?: () => void
 	targetPosition: XY
+	duration?: number
+	color?: string
 }
 
 const r = Math.round
@@ -18,7 +20,7 @@ AssetUtils.requestPreload({
 	alias: `x`,
 })
 
-export function playerSpawnAnimation(options: Options) {
+export function spiralSpawnAnimation(options: Options) {
 	const container = new Container()
 	const targetXY = options.targetPosition
 	container.x = Consts.GAME_WIDTH / 2
@@ -26,6 +28,7 @@ export function playerSpawnAnimation(options: Options) {
 	const sprites = Array.from({ length: SHAPE_COUNT }, (_, i) => {
 		return new Sprite({
 			texture: Assets.get('x'),
+			tint: options.color ?? 'white',
 			anchor: {
 				x: 0.5,
 				y: 0.5,
@@ -35,9 +38,9 @@ export function playerSpawnAnimation(options: Options) {
 	sprites.forEach((s) => container.addChild(s))
 	return new VfxAnimation(container, {
 		finished: () => {
-			options.onFinished()
+			options.onFinished?.()
 		},
-		duration: 1.5,
+		duration: options.duration ?? 1.5,
 		update: ({ t }) => {
 			t = easeOutQuad(t)
 			const radius = lerp(Consts.GAME_HEIGHT / 2, 0, t)

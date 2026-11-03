@@ -4,7 +4,7 @@ import { Container } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
-import { playerSpawnAnimation } from '#lib/scripts/pixi/vfx/playerSpawnAnimation.ts'
+import { spiralSpawnAnimation } from '#lib/scripts/pixi/vfx/spiralSpawnAnimation.ts'
 
 export class MainContainer extends Container {
 	private terrainLayer: TerrainLayer
@@ -36,14 +36,14 @@ export class MainContainer extends Container {
 		this.entitiesLayer.update(delta)
 		this.vfxLayer.update(delta)
 	}
-	beginLevel() {}
-
 	showPlayerSpawnAnimation(level: LevelInstance) {
 		return new Promise<void>((onFinished) => {
 			this.vfxLayer.addAnimation(
-				playerSpawnAnimation({
+				spiralSpawnAnimation({
 					targetPosition: level.playerSpawnPosition,
 					onFinished,
+					duration: 1.5,
+					color: 'cyan',
 				}),
 			)
 		})

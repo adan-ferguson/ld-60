@@ -6,6 +6,7 @@ import { Assets, Graphics, Sprite } from 'pixi.js'
 import { Intervaler } from '#lib/scripts/utils/intervaler.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
+import { spiralSpawnAnimation } from '#lib/scripts/pixi/vfx/spiralSpawnAnimation.ts'
 
 AssetUtils.requestPreload({
 	alias: 'phanta',
@@ -20,18 +21,37 @@ const SMOKE_EMIT_INTERVAL = 0.35
 const SMOKE_SPEED = 24
 
 export class PhantaEl extends GameEntityEl {
-	private smokeEmitter: Intervaler
+	#smokeEmitter: Intervaler | undefined
+	#sprite: Sprite | undefined
 	constructor(
 		gc: GameController,
 		private phanta: Phanta,
 	) {
 		super(gc, phanta)
-		const sprite = makeSprite()
-		let flyingAway = false
-		this.addChild(sprite)
-		this.smokeEmitter = new Intervaler(() => {
+		this.#playSpawnAnimation()
+		phanta.events.flyingAway.listen(() => {
+			if (!this.#sprite) {
+				return
+			}
+			this.#sprite.texture = Assets.get('phantameh')
+		})
+		phanta.events.spawned.listen(() => {
+			if (phanta.flyingAway) {
+				return
+			}
+			this.#create()
+		})
+	}
+	override update2(delta: number) {
+		this.#smokeEmitter?.add(delta)
+		this.scale.x = this.phanta.playerOnRight ? 1 : -1
+	}
+	#create() {
+		this.#sprite = makeSprite()
+		this.addChild(this.#sprite)
+		this.#smokeEmitter = new Intervaler(() => {
 			const smokeParticle = new Graphics()
-			smokeParticle.rect(-1, -1, 2, 2).fill(flyingAway ? 'white' : 'red')
+			smokeParticle.rect(-1, -1, 2, 2).fill(this.phanta.flyingAway ? 'white' : 'red')
 			smokeParticle.x = this.x + Random.between(-4, 4)
 			smokeParticle.y = this.y
 			this.gc.addAnimation(
@@ -44,14 +64,15 @@ export class PhantaEl extends GameEntityEl {
 				}),
 			)
 		}, SMOKE_EMIT_INTERVAL)
-		phanta.flyingAway.listen(() => {
-			flyingAway = true
-			sprite.texture = Assets.get('phantameh')
-		})
 	}
-	override update2(delta: number) {
-		this.smokeEmitter.add(delta)
-		this.scale.x = this.phanta.playerOnRight ? 1 : -1
+	#playSpawnAnimation() {
+		this.gc.addAnimation(
+			spiralSpawnAnimation({
+				targetPosition: this.position,
+				duration: 1.5,
+				color: 'red',
+			}),
+		)
 	}
 }
 

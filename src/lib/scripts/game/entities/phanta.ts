@@ -7,6 +7,8 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { PhantaEl } from '#lib/scripts/pixi/entities/phantaEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
+const SPAWN_TIME = 1.5
+
 const INITIAL_SPEED = 1
 const ACCEL = 0.8
 const ACCEL_ACCEL = 0.1
@@ -16,9 +18,13 @@ const FLY_AWAY_BASE_SPEED = 10
 const FLY_AWAY_ACCEL = 10
 
 export class Phanta extends GameEntity {
-	#flyingAway = false
+	flyingAway = false
 	#speed: number
-	flyingAway = CoolEvents.createHandler()
+	events = CoolEvents.map({
+		flyingAway() {},
+		spawned() {},
+	})
+	#spawned = false
 	get playerOnRight() {
 		return this.game.player.x > this.x
 	}
@@ -33,7 +39,11 @@ export class Phanta extends GameEntity {
 	}
 
 	get isHazard() {
-		return !this.#flyingAway
+		return !this.flyingAway
+	}
+
+	get isSpawning() {
+		return this.time < SPAWN_TIME
 	}
 
 	get w(): number {
@@ -45,13 +55,19 @@ export class Phanta extends GameEntity {
 	}
 
 	update2(delta: number): void {
-		if (this.game.waveCleared && !this.#flyingAway) {
-			this.#flyingAway = true
+		if (this.time < SPAWN_TIME) {
+			return
+		}
+		if (!this.#spawned) {
+			this.events.spawned.emit()
+		}
+		if (this.game.waveCleared && !this.flyingAway) {
+			this.flyingAway = true
 			this.#speed = FLY_AWAY_BASE_SPEED
-			this.flyingAway.emit()
+			this.events.flyingAway.emit()
 		}
 		const angleToPlayer = Math.atan2(this.game.player.y - this.y, this.game.player.x - this.x)
-		if (this.#flyingAway) {
+		if (this.flyingAway) {
 			this.#speed += FLY_AWAY_ACCEL * delta
 			this.x += this.#speed * delta * Math.cos(angleToPlayer) * -1
 			this.y += this.#speed * delta * Math.sin(angleToPlayer) * -1
@@ -68,10 +84,5 @@ export class Phanta extends GameEntity {
 
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new PhantaEl(gc, this)
-	}
-
-	override async animateSpawn() {
-		// TODO: animate spawn here
-		// this.game.vfxManager.addEffect(new SpawnEffect(this.game, this.position))
 	}
 }

@@ -35,11 +35,6 @@ export abstract class GameEntity {
 	/**
 	 * @virtual
 	 */
-	public async animateSpawn() {}
-
-	/**
-	 * @virtual
-	 */
 	public get squishable() {
 		return false
 	}
