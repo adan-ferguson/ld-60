@@ -39,21 +39,21 @@ export class Projectile extends GameEntity {
 	public update2(delta: number) {
 		this.time += delta
 		if (this.time > this.options.lifetime) {
-			this.isActive = false
+			this.destroy('lifetime')
 		}
 		if (this.options.source instanceof Player) {
-			const target = this.game.entitiesManager.activeEntities.find(
+			const target = this.game.entitiesManager.all.find(
 				(ent) => ent.canBeHitByPlayer && ent.worldBounds.intersects(this.worldBounds),
 			)
 			if (target) {
 				target.takeDamage(1)
-				this.isActive = false
+				this.destroy('hit')
 			}
 		} else if (this.options.source instanceof Enemy) {
 			const { player } = this.game
-			if (player && player.isActive && player.worldBounds.intersects(this.worldBounds)) {
+			if (player && player.isReady && player.worldBounds.intersects(this.worldBounds)) {
 				player.takeDamage(1)
-				this.isActive = false
+				this.destroy('hit')
 			}
 		}
 		// Player projectiles have a bit more leeway to avoid walls
@@ -66,7 +66,7 @@ export class Projectile extends GameEntity {
 		if (
 			this.game.worldCollision.projectileBlockers.some((pb) => pb.intersects(myWallCollisionBounds))
 		) {
-			this.isActive = false
+			this.destroy('hit')
 		}
 	}
 	public createPixiEl(gc: GameController): GameEntityEl {

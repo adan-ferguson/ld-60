@@ -59,6 +59,7 @@ export class Phanta extends GameEntity {
 			return
 		}
 		if (!this.#spawned) {
+			this.#spawned = true
 			this.events.spawned.emit()
 		}
 		if (this.game.waveCleared && !this.flyingAway) {

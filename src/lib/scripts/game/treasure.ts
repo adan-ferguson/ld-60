@@ -26,10 +26,10 @@ export class Treasure extends GameEntity {
 	update2(delta: number): void {
 		this.timer += delta
 		if (this.timer > DESPAWN_TIME) {
-			this.isActive = false
+			this.destroy('lifetime')
 		}
 		if (this.game.player?.worldBounds.intersects(this.worldBounds)) {
-			this.isActive = false
+			this.destroy('collected')
 			this.game.addScore(750 + 250 * this.game.wave)
 		}
 	}

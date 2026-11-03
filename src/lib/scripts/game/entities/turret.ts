@@ -55,7 +55,7 @@ export class Turret extends Enemy {
 		this.fireTimeout = 1
 	}
 	private fire() {
-		if (!this.game.player?.isActive) {
+		if (!this.game.player?.isReady) {
 			return
 		}
 		const angle = this.worldBounds.angleTo(this.game.player.worldBounds.getEdge('bottom', 0.66))

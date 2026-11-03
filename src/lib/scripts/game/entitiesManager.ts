@@ -11,15 +11,15 @@ import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 export class EntitiesManager {
 	private entities: Set<GameEntity> = new Set()
 	constructor(private game: Game) {}
-	get activeEntities(): GameEntity[] {
-		return [...this.entities, this.game.player].filter((e) => e?.isActive) as GameEntity[]
+	get all(): GameEntity[] {
+		return [...this.entities, this.game.player]
 	}
 	get enemies() {
 		return [...this.entities].filter((e) => e instanceof Enemy)
 	}
 	get hasEnemy() {
 		for (const entity of this.entities) {
-			if (entity instanceof Enemy && entity.isActive) {
+			if (entity instanceof Enemy && entity.isReady) {
 				return true
 			}
 		}
@@ -30,7 +30,7 @@ export class EntitiesManager {
 	}
 	update(delta: number) {
 		for (const entity of [...this.entities]) {
-			if (entity.isActive) {
+			if (entity.isDestroyed) {
 				entity.update(delta)
 			} else {
 				this.entities.delete(entity)
@@ -47,7 +47,7 @@ export class EntitiesManager {
 		this.game.player.resetState()
 		this.game.player.xy = level.playerSpawnPosition
 		this.game.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
-		this.game.player.isActive = true
+		this.game.player.isReady = true
 		level.tiles.values.forEach((tileDef) => {
 			const entity = tryCreateEntity(this.game, tileDef)
 			if (entity) {

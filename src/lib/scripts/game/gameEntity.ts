@@ -8,7 +8,8 @@ import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 export abstract class GameEntity {
-	public isActive = true
+	public isDestroyed = false
+	public isReady = false
 	public x = 0
 	public y = 0
 	public velX = 0
@@ -21,6 +22,10 @@ export abstract class GameEntity {
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get w(): number
 	public abstract get h(): number
+
+	/**
+	 * @virtual
+	 */
 	public get diesToHazards() {
 		return false
 	}
@@ -31,6 +36,11 @@ export abstract class GameEntity {
 	public get canBeHitByPlayer() {
 		return false
 	}
+
+	/**
+	 * @virtual
+	 */
+	public async animateSpawn() {}
 
 	/**
 	 * @virtual
@@ -73,7 +83,7 @@ export abstract class GameEntity {
 		return false
 	}
 
-	public destroyed = CoolEvents.createHandler()
+	public destroyed = CoolEvents.createHandler<(reason: string) => void>()
 	public get maxHealth(): number {
 		return 1
 	}
@@ -109,20 +119,22 @@ export abstract class GameEntity {
 
 	public update(delta: number) {
 		this.time += delta
-		if (!this.isActive) {
-			return
-		}
-		if (this.isSquished()) {
-			this.takeDamage(this.maxHealth)
+		if (this.isDestroyed) {
 			return
 		}
 		this.update2(delta)
-		this.move(delta)
-		this.checkHazards()
+		if (this.isReady) {
+			if (this.isSquished()) {
+				this.takeDamage(this.maxHealth)
+				return
+			}
+			this.move(delta)
+			this.checkHazards()
+		}
 	}
 
-	protected checkHazards() {
-		if (!this.isActive || !this.diesToHazards) {
+	private checkHazards() {
+		if (!this.diesToHazards) {
 			return
 		}
 		const hazardHurtbox = this.worldBounds.pad(-1)
@@ -137,7 +149,7 @@ export abstract class GameEntity {
 	}
 
 	public takeDamage(amount: number) {
-		if (!this.isActive) {
+		if (this.isDestroyed || !this.isReady) {
 			return
 		}
 		this.damageTaken += amount
@@ -146,9 +158,9 @@ export abstract class GameEntity {
 		}
 	}
 
-	public destroy() {
-		this.destroyed.emit()
-		this.isActive = false
+	public destroy(reason: string = '') {
+		this.destroyed.emit(reason)
+		this.isDestroyed = true
 	}
 
 	/**

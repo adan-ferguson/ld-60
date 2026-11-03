@@ -36,7 +36,7 @@ class Game {
 	waveCleared = false
 	public player: Player
 	get activeEntities(): GameEntity[] {
-		return this.entitiesManager.activeEntities
+		return this.entitiesManager.all
 	}
 	get score() {
 		return this.rollingScore
@@ -54,7 +54,7 @@ class Game {
 		this.player.destroyed.listen(() => {
 			this.playerDied.emit(this.lives)
 		})
-		this.player.isActive = false
+		this.player.isReady = false
 		this.setWave(wave)
 	}
 	get loops() {
@@ -108,7 +108,7 @@ class Game {
 		this.turretTimer = 0
 	}
 	spawnPhanta() {
-		if (!this.level || !this.player.isActive || this.waveCleared) {
+		if (!this.level || this.player.isDestroyed || this.waveCleared) {
 			return
 		}
 		this.entitiesManager.spawn(new Phanta(this, this.level.playerSpawnPosition))
