@@ -39,7 +39,9 @@ export class LevelInstance {
 
 		this.roundTimer.addThreshold(TREASURE_SPAWN_TIME, () => this.#spawnTreasure())
 		this.roundTimer.addThreshold(this.#phantaSpawnTime, () => this.#spawnPhanta())
-		this.roundTimer.addInterval(this.#turretShotInterval, () => this.#spawnPhanta())
+		this.roundTimer.addInterval(this.#turretShotInterval, () =>
+			this.entitiesManager.fireRandomTurret(),
+		)
 	}
 	get #phantaSpawnTime() {
 		return (this.levelDef.phantaSpawnTime ?? [30, 25, 20])[this.loops] ?? 30
@@ -63,10 +65,6 @@ export class LevelInstance {
 		this.player.update(delta)
 		this.roundTimer.value += delta
 		this.#turretTimer += delta
-		if (this.#turretTimer > this.#turretShotInterval) {
-			this.entitiesManager.fireRandomTurret()
-			this.#turretTimer = 0
-		}
 		if (!this.#cleared && !this.entitiesManager.hasEnemy) {
 			this.#cleared = true
 			this.waveCleared.emit()

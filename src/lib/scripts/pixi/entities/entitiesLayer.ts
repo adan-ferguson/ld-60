@@ -13,7 +13,7 @@ export class EntitiesLayer extends Container {
 		if (!level) {
 			return
 		}
-		for (const entity of level.entitiesManager.activeEntities) {
+		for (const entity of level.entitiesManager.entities) {
 			if (!this.onScreen.has(entity)) {
 				const pixiEl = entity.createPixiEl(this.gc)
 				this.onScreen.set(entity, pixiEl)

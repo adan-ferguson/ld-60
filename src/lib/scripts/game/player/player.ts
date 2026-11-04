@@ -186,7 +186,6 @@ export class Player extends GameEntity {
 		)
 		this.x += result.x - this.worldBounds.x
 		this.y += result.y - this.worldBounds.y
-		console.log(this.velX)
 		if (result.verticalSolids.length > 0) {
 			if (this.velY > 0) {
 				this.aerialState = { kind: 'grounded', time: 0 }

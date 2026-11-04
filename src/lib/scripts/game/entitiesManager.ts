@@ -1,4 +1,3 @@
-import Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import { Turret } from '#lib/scripts/game/entities/turret.ts'
@@ -8,26 +7,28 @@ import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 import { ShooterMan } from '#lib/scripts/game/entities/shooterMan.ts'
 import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
-import type { Player } from '#lib/scripts/game/player/player.ts'
 
 export class EntitiesManager {
-	private entities: Set<GameEntity> = new Set()
+	#spawnedEntities: Set<GameEntity> = new Set()
 	constructor(private level: LevelInstance) {
 		level.tiles.values.forEach((tileDef) => {
 			const entity = tryCreateEntity(this.level, tileDef)
 			if (entity) {
-				this.entities.add(entity)
+				this.#spawnedEntities.add(entity)
 			}
 		})
 	}
 	get activeEntities(): GameEntity[] {
-		return [...this.entities, this.level.player].filter((entity) => entity.isActive)
+		return this.entities.filter((entity) => entity.isActive)
+	}
+	get entities() {
+		return [...this.#spawnedEntities, this.level.player]
 	}
 	get enemies() {
-		return [...this.entities].filter((e) => e instanceof Enemy)
+		return [...this.#spawnedEntities].filter((e) => e instanceof Enemy)
 	}
 	get hasEnemy() {
-		for (const entity of this.entities) {
+		for (const entity of this.#spawnedEntities) {
 			if (entity instanceof Enemy && entity.isReady) {
 				return true
 			}
@@ -35,20 +36,20 @@ export class EntitiesManager {
 		return false
 	}
 	spawn(entity: GameEntity) {
-		this.entities.add(entity)
+		this.#spawnedEntities.add(entity)
 	}
 	update(delta: number) {
-		for (const entity of [...this.entities]) {
+		for (const entity of [...this.#spawnedEntities]) {
 			if (!entity.isDestroyed) {
 				entity.update(delta)
 			} else {
-				this.entities.delete(entity)
+				this.#spawnedEntities.delete(entity)
 			}
 		}
 	}
 
 	fireRandomTurret() {
-		const turrets = [...this.entities].filter((e) => e instanceof Turret)
+		const turrets = [...this.#spawnedEntities].filter((e) => e instanceof Turret)
 		const turret =
 			Random.chooseOne(turrets.filter((t) => !t.fireTimeout)) ?? Random.chooseOne(turrets)
 		turret?.queueFire()
