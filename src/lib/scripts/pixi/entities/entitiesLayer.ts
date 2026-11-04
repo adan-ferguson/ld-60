@@ -23,7 +23,7 @@ export class EntitiesLayer extends Container {
 			}
 		}
 		for (const [entity, pixiEl] of this.onScreen) {
-			if (!level.entitiesManager.activeEntities.includes(entity)) {
+			if (!level.entitiesManager.entities.includes(entity)) {
 				this.removeChild(pixiEl)
 				pixiEl.destroy()
 				this.onScreen.delete(entity)

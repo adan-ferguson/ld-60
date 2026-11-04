@@ -13,6 +13,7 @@ export function destroyIntoSquaresAnimation(
 	color: ColorSource,
 	x = 2,
 	y = 2,
+	amount = 1,
 ) {
 	const gfx = new Graphics()
 	gfx.x = worldBounds.x - worldBounds.width / 2
@@ -21,15 +22,17 @@ export function destroyIntoSquaresAnimation(
 	const INITIAL_SPEED = 100
 	const GRAVITY = 250
 	const squares: FlyingSquare[] = []
-	for (let row = 0; row < y; row++) {
-		for (let column = 0; column < x; column++) {
-			squares.push({
-				initialPosition: {
-					x: column * size.x,
-					y: row * size.y,
-				},
-				velocity: random(),
-			})
+	for (let i = 0; i < amount; i++) {
+		for (let row = 0; row < y; row++) {
+			for (let column = 0; column < x; column++) {
+				squares.push({
+					initialPosition: {
+						x: column * size.x,
+						y: row * size.y,
+					},
+					velocity: random(),
+				})
+			}
 		}
 	}
 

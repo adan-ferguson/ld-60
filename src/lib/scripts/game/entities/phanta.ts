@@ -32,6 +32,11 @@ export class Phanta extends GameEntity {
 		this.isReady = false
 		this.xy = position
 		this.#speed = INITIAL_SPEED
+		level.waveCleared.listen(() => {
+			this.flyingAway = true
+			this.#speed = FLY_AWAY_BASE_SPEED
+			this.events.flyingAway.emit()
+		})
 	}
 
 	override get canBeHitByPlayer() {
@@ -50,18 +55,13 @@ export class Phanta extends GameEntity {
 		return 4
 	}
 
-	update2(delta: number): void {
+	override update2(delta: number): void {
 		if (this.time < SPAWN_TIME) {
 			return
 		}
 		if (!this.isReady) {
 			this.isReady = true
 			this.events.spawned.emit()
-		}
-		if (this.game.waveCleared && !this.flyingAway) {
-			this.flyingAway = true
-			this.#speed = FLY_AWAY_BASE_SPEED
-			this.events.flyingAway.emit()
 		}
 		const angleToPlayer = Math.atan2(this.level.player.y - this.y, this.level.player.x - this.x)
 		if (this.flyingAway) {

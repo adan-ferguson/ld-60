@@ -56,7 +56,7 @@ export class PlayerEl extends WithManSprite {
 			}
 		})
 		player.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3))
+			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3, 6))
 		})
 		player.shotFired.listen(() => {
 			this.setAnimationType(this.player.crouching ? 'crouchAttack' : 'attack')
