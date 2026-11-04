@@ -10,6 +10,9 @@ export class CoolCounter {
 		this.#thresholds.add({ threshold, cb })
 		return this
 	}
+	get value() {
+		return this.#value
+	}
 	set value(val: number) {
 		if (val < this.#value) {
 			this.#value = val

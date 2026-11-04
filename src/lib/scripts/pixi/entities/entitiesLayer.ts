@@ -10,7 +10,7 @@ export class EntitiesLayer extends Container {
 	}
 	update(delta: number) {
 		const level = this.gc.game?.level
-		if (!level) {
+		if (!level?.running) {
 			return
 		}
 		for (const entity of level.entitiesManager.entities) {

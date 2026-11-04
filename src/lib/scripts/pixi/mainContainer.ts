@@ -42,7 +42,6 @@ export class MainContainer extends Container {
 				spiralSpawnAnimation({
 					targetPosition: level.player.xy,
 					onFinished,
-					duration: 1.5,
 					color: 'cyan',
 				}),
 			)

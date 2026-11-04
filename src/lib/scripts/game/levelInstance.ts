@@ -21,7 +21,7 @@ export class LevelInstance {
 	worldCollision: WorldCollision
 	roundTimer = new CoolCounter()
 	#turretTimer = 0
-	#running = false
+	running = false
 	#cleared = false
 	#playerSpawnPosition: XY
 	waveCleared = CoolEvents.createHandler()
@@ -50,15 +50,15 @@ export class LevelInstance {
 		return (this.levelDef.turretShotTime ?? [4, 3.5, 3])[this.loops] ?? 4
 	}
 	begin() {
-		this.#running = true
+		this.running = true
 		// other stuff?
 	}
 	end() {
-		this.#running = false
+		this.running = false
 		// other stuff?
 	}
 	update(delta: number) {
-		if (!this.#running) {
+		if (!this.running) {
 			return
 		}
 		this.entitiesManager.update(delta)
