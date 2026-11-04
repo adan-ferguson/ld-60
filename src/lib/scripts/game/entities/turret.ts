@@ -5,6 +5,7 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { TurretEl } from '#lib/scripts/pixi/entities/turretEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export type TurretProps = {
 	health: number
@@ -41,8 +42,8 @@ export class Turret extends Enemy {
 	override get blocksMovement() {
 		return true
 	}
-	constructor(game: Game, tileXY: XY, props: Partial<TurretProps>) {
-		super(game, tileXY)
+	constructor(level: LevelInstance, tileXY: XY, props: Partial<TurretProps>) {
+		super(level, tileXY)
 		this.props = {
 			health: 1,
 			...props,
@@ -55,13 +56,13 @@ export class Turret extends Enemy {
 		this.fireTimeout = 1
 	}
 	private fire() {
-		if (!this.game.player?.isReady) {
+		if (!this.level.player.isActive) {
 			return
 		}
-		const angle = this.worldBounds.angleTo(this.game.player.worldBounds.getEdge('bottom', 0.66))
+		const angle = this.worldBounds.angleTo(this.level.player.worldBounds.getEdge('bottom', 0.66))
 		const SPEED = 60
-		this.game.entitiesManager.spawn(
-			new Projectile(this.game, {
+		this.level.entitiesManager.spawn(
+			new Projectile(this.level, {
 				style: 'dot',
 				hitbox: { x: 2, y: 2 },
 				wallHitbox: { x: 2, y: 2 },

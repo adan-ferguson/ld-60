@@ -8,6 +8,7 @@ import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 const DEFAULT_SPEED = 20
 
@@ -43,11 +44,11 @@ export class MovingBlock extends GameEntity {
 		return this.type === 'spike'
 	}
 	constructor(
-		game: Game,
+		level: LevelInstance,
 		tileXY: XY,
 		private def: MovingBlockDef,
 	) {
-		super(game)
+		super(level)
 		this.setTileXY(tileXY)
 		const toWorld = (val: number) => TileDef.toWorld(val) + Consts.TILE_SIZE_PX / 2
 		if (def.range) {
@@ -98,11 +99,11 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private getEntitiesStandingOn() {
-		return this.game.entitiesManager.activeEntities.filter((e) => {
+		return this.level.entitiesManager.activeEntities.filter((e) => {
 			if (!e.canStandOnMovingBlocks) {
 				return
 			}
-			const solids = this.game.worldCollision.getGround(e.worldBounds)
+			const solids = this.level.worldCollision.getGround(e.worldBounds)
 			if (!solids.some((s) => s.entity === this)) {
 				return false
 			}
@@ -120,7 +121,7 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private autoCalcRange(tileXY: XY): { min: number; max: number } {
-		const terrainXYs = this.game.level.tilesOfKind('wall', 'lava').map((t) => t.tileXY)
+		const terrainXYs = this.level.tilesOfKind('wall', 'lava').map((t) => t.tileXY)
 		const blockAdjacentPosition = tileXY[this.cardinal.adjacentAxis]
 
 		const relevantTerrain = terrainXYs.filter((tile) => {

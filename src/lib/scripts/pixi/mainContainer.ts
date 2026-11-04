@@ -21,7 +21,7 @@ export class MainContainer extends Container {
 			this.entitiesLayer.clear()
 			this.terrainLayer.clear()
 			if (gc.phase.kind === 'wave') {
-				const level = gc.game!.level
+				const level = gc.game!.level!
 				this.terrainLayer.setLevel(level)
 				this.visible = true
 			} else {
@@ -40,7 +40,7 @@ export class MainContainer extends Container {
 		return new Promise<void>((onFinished) => {
 			this.vfxLayer.addAnimation(
 				spiralSpawnAnimation({
-					targetPosition: level.playerSpawnPosition,
+					targetPosition: level.player.xy,
 					onFinished,
 					duration: 1.5,
 					color: 'cyan',

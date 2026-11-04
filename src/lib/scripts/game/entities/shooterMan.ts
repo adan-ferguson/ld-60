@@ -2,6 +2,7 @@ import { Man, type ManProps } from '#lib/scripts/game/entities/man.ts'
 import Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
@@ -11,8 +12,8 @@ export type ShooterManProps = ManProps
 
 export class ShooterMan extends Man {
 	#state: State
-	public constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
-		super(game, tileXY, props)
+	public constructor(level: LevelInstance, tileXY: XY, props: Partial<ManProps>) {
+		super(level, tileXY, props)
 		this.#state = new IdleState(false)
 	}
 	get defaultAnimation(): ManAnimationType {
@@ -26,7 +27,7 @@ export class ShooterMan extends Man {
 		this.animationChanged.emit(newState.animation)
 	}
 	update2(delta: number): void {
-		const { player } = this.game
+		const { player } = this.level
 		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
 			player.takeDamage(1)
 		}

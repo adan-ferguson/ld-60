@@ -3,7 +3,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import type { Phanta } from '#lib/scripts/game/entities/phanta.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 import { Assets, Graphics, Sprite } from 'pixi.js'
-import { Intervaler } from '#lib/scripts/utils/intervaler.ts'
+import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Random } from '#lib/scripts/utils/random.ts'
 import { spiralSpawnAnimation } from '#lib/scripts/pixi/vfx/spiralSpawnAnimation.ts'
@@ -21,7 +21,7 @@ const SMOKE_EMIT_INTERVAL = 0.35
 const SMOKE_SPEED = 24
 
 export class PhantaEl extends GameEntityEl {
-	#smokeEmitter: Intervaler | undefined
+	#smokeEmitter: CoolCounter | undefined
 	#sprite: Sprite | undefined
 	constructor(
 		gc: GameController,
@@ -43,13 +43,16 @@ export class PhantaEl extends GameEntityEl {
 		})
 	}
 	override update2(delta: number) {
-		this.#smokeEmitter?.add(delta)
+		if (this.#smokeEmitter) {
+			this.#smokeEmitter.value += delta
+		}
 		this.scale.x = this.phanta.playerOnRight ? 1 : -1
 	}
 	#create() {
 		this.#sprite = makeSprite()
 		this.addChild(this.#sprite)
-		this.#smokeEmitter = new Intervaler(() => {
+		this.#smokeEmitter = new CoolCounter()
+		this.#smokeEmitter.addInterval(SMOKE_EMIT_INTERVAL, () => {
 			const smokeParticle = new Graphics()
 			smokeParticle.rect(-1, -1, 2, 2).fill(this.phanta.flyingAway ? 'white' : 'red')
 			smokeParticle.x = this.x + Random.between(-4, 4)
@@ -63,7 +66,7 @@ export class PhantaEl extends GameEntityEl {
 					duration: 0.8,
 				}),
 			)
-		}, SMOKE_EMIT_INTERVAL)
+		})
 	}
 	#playSpawnAnimation() {
 		this.gc.addAnimation(

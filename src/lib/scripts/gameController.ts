@@ -111,7 +111,7 @@ export class GameController {
 				}
 			}, 2400)
 		})
-		this.game.waveClearedEvent.listen((bonuses) => {
+		this.game.waveCleared.listen((bonuses) => {
 			this.waveCleared = true
 			setTimeout(() => {
 				if (!this.game) {
@@ -122,7 +122,7 @@ export class GameController {
 					wave: this.game.wave,
 					bonuses,
 				})
-				this.game.addScore(bonuses.timeBonus + bonuses.waveBonus + bonuses.arbitraryBonus)
+				this.game.addScore(bonuses.timeBonus + bonuses.waveBonus)
 				if (!this.isTestMode) {
 					this.game.nextWave()
 				}
@@ -153,16 +153,17 @@ export class GameController {
 		if (!this.game) {
 			return
 		}
-		this.game.playing = false
+		if (phase.kind !== 'wave') {
+			this.game.endLevel()
+		}
 		this.phase = phase
 		this.phaseChanged.emit(phase)
 	}
 	startLevel() {
 		const game = this.game
-		if (!game) {
+		if (!game?.level) {
 			throw 'No game'
 		}
-		this.waveCleared = false
 		this.setScreenPhase({ kind: 'wave' })
 		// this.soundManager.setMusic('spawn')
 		this.mainContainer.showPlayerSpawnAnimation(game.level).then(() => {

@@ -1,10 +1,10 @@
 import type { TileContents } from '#lib/scripts/game/levelDef.ts'
-import type Game from '#lib/scripts/game/game.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export type MovementBlocker = {
 	entity?: GameEntity
@@ -35,7 +35,7 @@ type MovementResult = {
 }
 
 export class WorldCollision {
-	constructor(private game: Game) {}
+	constructor(private level: LevelInstance) {}
 	get movementBlockers(): MovementBlocker[] {
 		return [
 			...this.tilesOfType('wall').map((t) => ({
@@ -43,7 +43,7 @@ export class WorldCollision {
 				velocityX: 0,
 				velocityY: 0,
 			})),
-			...this.game.entitiesManager.activeEntities
+			...this.level.entitiesManager.activeEntities
 				.filter((t) => t.blocksMovement)
 				.map((t) => ({
 					entity: t,
@@ -57,7 +57,7 @@ export class WorldCollision {
 	get projectileBlockers(): CoolRect[] {
 		return [
 			...this.tilesOfType('wall').map((t) => TileDef.toWorldRect(t.tileXY)),
-			...this.game.entitiesManager.activeEntities
+			...this.level.entitiesManager.activeEntities
 				.filter((t) => t.blocksProjectiles)
 				.map((t) => t.worldBounds),
 		]
@@ -68,14 +68,14 @@ export class WorldCollision {
 			...this.tilesOfType('lava', 'spikes').map((t) =>
 				TileDef.toWorldRect(t.tileXY).getEdge('bottom', 0.35),
 			),
-			...this.game.entitiesManager.activeEntities
+			...this.level.entitiesManager.activeEntities
 				.filter((t) => t.isHazard)
 				.map((t) => t.worldBounds),
 		]
 	}
 
 	get tiles() {
-		return this.game.level.tiles
+		return this.level.tiles
 	}
 
 	getGround(entityRect: CoolRect) {

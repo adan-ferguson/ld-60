@@ -65,4 +65,5 @@ export type LevelDef = {
 	tiles: string
 	contents: TileDefs
 	phantaSpawnTime?: [number, number, number]
+	turretShotTime?: [number, number, number]
 }

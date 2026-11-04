@@ -1,11 +1,11 @@
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import Game from '#lib/scripts/game/game.ts'
 
 import type { GameController } from '#lib/scripts/gameController.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { PhantaEl } from '#lib/scripts/pixi/entities/phantaEl.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 const SPAWN_TIME = 1.5
 
@@ -25,10 +25,10 @@ export class Phanta extends GameEntity {
 		spawned() {},
 	})
 	get playerOnRight() {
-		return this.game.player.x > this.x
+		return this.level.player.x > this.x
 	}
-	constructor(game: Game, position: XY) {
-		super(game)
+	constructor(level: LevelInstance, position: XY) {
+		super(level)
 		this.isReady = false
 		this.xy = position
 		this.#speed = INITIAL_SPEED
@@ -63,7 +63,7 @@ export class Phanta extends GameEntity {
 			this.#speed = FLY_AWAY_BASE_SPEED
 			this.events.flyingAway.emit()
 		}
-		const angleToPlayer = Math.atan2(this.game.player.y - this.y, this.game.player.x - this.x)
+		const angleToPlayer = Math.atan2(this.level.player.y - this.y, this.level.player.x - this.x)
 		if (this.flyingAway) {
 			this.#speed += FLY_AWAY_ACCEL * delta
 			this.x += this.#speed * delta * Math.cos(angleToPlayer) * -1

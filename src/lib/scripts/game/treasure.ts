@@ -4,14 +4,15 @@ import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { TreasureEl } from '#lib/scripts/pixi/entities/treasureEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type Game from '#lib/scripts/game/game.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 const DESPAWN_TIME = 10
 
 export class Treasure extends GameEntity {
 	private timer = 0
 
-	constructor(game: Game, pos: XY) {
-		super(game)
+	constructor(level: LevelInstance, pos: XY) {
+		super(level)
 		this.xy = pos
 	}
 
@@ -28,7 +29,7 @@ export class Treasure extends GameEntity {
 		if (this.timer > DESPAWN_TIME) {
 			this.destroy('lifetime')
 		}
-		if (this.game.player?.worldBounds.intersects(this.worldBounds)) {
+		if (this.level.player.worldBounds.intersects(this.worldBounds)) {
 			this.destroy('collected')
 			this.game.addScore(750 + 250 * this.game.wave)
 		}

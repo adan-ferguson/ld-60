@@ -9,6 +9,8 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/trySnapToCeilingGap.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import type { XY } from '#lib/scripts/utils/XY.ts'
 
 export type AerialState =
 	| {
@@ -42,8 +44,10 @@ export class Player extends GameEntity {
 	lastShotTime = 0
 	crouching: boolean = false
 	public shotFired = CoolEvents.createHandler()
-	constructor(game: Game) {
-		super(game)
+	constructor(level: LevelInstance, spawnPosition: XY) {
+		super(level)
+		this.setTileXY(spawnPosition)
+		this.y -= 2 // place on floor
 		this.controlsManager = new ControlsManager(this)
 	}
 	get canShoot() {
@@ -137,7 +141,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	onGround() {
-		return this.game.worldCollision.isGrounded(this.worldBounds) ?? false
+		return this.level.worldCollision.isGrounded(this.worldBounds) ?? false
 	}
 	private calcShotInfo() {
 		if (this.crouching) {
@@ -154,8 +158,8 @@ export class Player extends GameEntity {
 			this.velX = 0
 		}
 		const { x, y, crouching } = this.calcShotInfo()
-		this.game.entitiesManager.spawn(
-			new Projectile(this.game, {
+		this.level.entitiesManager.spawn(
+			new Projectile(this.level, {
 				style: 'small',
 				source: this,
 				lifetime: 1.25,
@@ -175,7 +179,7 @@ export class Player extends GameEntity {
 		return new PlayerEl(gc, this)
 	}
 	protected override move(delta: number) {
-		const result = this.game.worldCollision.resolveMovement(
+		const result = this.level.worldCollision.resolveMovement(
 			this.worldBounds,
 			this.velX * delta,
 			this.velY * delta,
@@ -207,7 +211,7 @@ export class Player extends GameEntity {
 
 	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
-		return !this.game.worldCollision.overlapsSolid(
+		return !this.level.worldCollision.overlapsSolid(
 			new CoolRect({
 				x: worldBounds.x,
 				width: worldBounds.width,
@@ -218,7 +222,7 @@ export class Player extends GameEntity {
 	}
 
 	private pushOutOfSolids() {
-		this.game.worldCollision.pushOutOfSolids(this)
+		this.level.worldCollision.pushOutOfSolids(this)
 	}
 
 	protected override isSquished() {

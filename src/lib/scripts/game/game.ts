@@ -1,61 +1,42 @@
 import { LevelsManager } from '#lib/scripts/game/levelsManager.ts'
 import { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
-import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import { EntitiesManager } from '#lib/scripts/game/entitiesManager.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
-import { Treasure } from '#lib/scripts/game/treasure.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
-import { Phanta } from '#lib/scripts/game/entities/phanta.ts'
+import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 
 const EXTRA_LIFE = 25000
-const TREASURE_SPAWN_TIME = 10
 const SCORE_ROLLING_SPEED = 2000
 
 export type Bonuses = {
 	timeBonus: number
 	waveBonus: number
-	arbitraryBonus: number
 }
 
 class Game {
-	public level!: LevelInstance
-	playing = false
-	public entitiesManager: EntitiesManager
-	private roundTimer = 0
-	private turretTimer = 0
-	private rollingScore = 0
+	public level: LevelInstance | undefined
+	private rollingScore = new CoolCounter()
 	private targetScore = 0
 	lives = 5
 	wave = 1
 	public playerDied = CoolEvents.createHandler()
-	public waveClearedEvent = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
+	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
-	public worldCollision: WorldCollision
-	waveCleared = false
-	public player: Player
 	get activeEntities(): GameEntity[] {
-		return this.entitiesManager.activeEntities
+		return this.level?.entitiesManager.activeEntities ?? []
 	}
 	get score() {
-		return this.rollingScore
-	}
-	private get turretShotInterval() {
-		return 4 - Math.min(3, this.loops * 0.6)
+		return this.rollingScore.value
 	}
 	static async load() {
 		return new Game()
 	}
 	constructor(wave: number = 1) {
-		this.entitiesManager = new EntitiesManager(this)
-		this.worldCollision = new WorldCollision(this)
-		this.player = new Player(this)
-		this.player.destroyed.listen(() => {
-			this.playerDied.emit(this.lives)
-		})
-		this.player.isReady = false
 		this.setWave(wave)
+		this.rollingScore.addInterval(EXTRA_LIFE, () => {
+			// TODO: play extra life sound
+			this.lives++
+		})
 	}
 	get loops() {
 		return this.level?.loops ?? 1
@@ -67,89 +48,53 @@ class Game {
 		const lvl = LevelsManager.getWave(wave)
 		this.wave = wave
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
+		this.level.player.destroyed.listen(() => {
+			this.playerDied.emit(this.lives)
+		})
+		this.level.waveCleared.listen(() => {
+			this.waveCleared.emit({
+				timeBonus: Math.max(0, 6000 - Math.round(this.level!.roundTimer.value * 100)),
+				waveBonus: 1000 * this.wave,
+			})
+		})
 		return this.level
 	}
 	update(delta: number) {
-		if (!this.playing || !this.level) {
-			return
-		}
-		this.updateScore(delta)
-		this.entitiesManager.update(delta)
-		this.player.update(delta)
-		if (crossedThreshold(TREASURE_SPAWN_TIME, this.roundTimer, delta)) {
-			this.spawnTreasure()
-		}
-		if (crossedThreshold(this.level.phantaSpawnTime, this.roundTimer, delta)) {
-			this.spawnPhanta()
-		}
-		this.roundTimer += delta
-		this.turretTimer += delta
-		if (this.turretTimer > this.turretShotInterval) {
-			this.entitiesManager.fireRandomTurret()
-			this.turretTimer = 0
-		}
-		if (!this.entitiesManager.hasEnemy && !this.waveCleared) {
-			this.waveClear()
-		}
-	}
-	waveClear() {
-		this.waveClearedEvent.emit({
-			timeBonus: Math.max(0, 6000 - Math.round(this.roundTimer * 100)),
-			waveBonus: 1000 * this.wave,
-			arbitraryBonus: Math.round(2000 * Math.random()),
-		})
-		this.waveCleared = true
-	}
-	beginLevel() {
-		this.entitiesManager.prepareLevel()
-		this.playing = true
-		this.waveCleared = false
-		this.roundTimer = 0
-		this.turretTimer = 0
-	}
-	spawnPhanta() {
-		if (!this.level || this.player.isDestroyed || this.waveCleared) {
-			return
-		}
-		this.entitiesManager.spawn(new Phanta(this, this.level.playerSpawnPosition))
-	}
-	spawnTreasure() {
 		if (!this.level) {
 			return
 		}
-		this.entitiesManager.spawn(new Treasure(this, this.level.getTreasureSpawnPosition()))
+		this.updateScore(delta)
+		this.level.update(delta)
+	}
+	beginLevel() {
+		if (!this.level) {
+			throw 'Level not set'
+		}
+		this.level.begin()
+		// this.waveCleared = false
+	}
+	endLevel() {
+		if (this.level) {
+			this.level = undefined
+			// other stuff?
+		}
 	}
 	updateScore(delta: number) {
-		if (this.targetScore <= this.rollingScore) {
+		if (this.targetScore <= this.rollingScore.value) {
 			// TODO: stop rolling score sound
-			this.rollingScore = this.targetScore
+			this.rollingScore.value = this.targetScore
 			return
 		}
 		// TODO: maintain rolling score sound
 		const change = Math.round(
-			Math.min(this.targetScore - this.rollingScore, delta * SCORE_ROLLING_SPEED),
+			Math.min(this.targetScore - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
 		)
-		const extraLives = intervalsCrossed(EXTRA_LIFE, this.rollingScore, change)
-		if (extraLives > 0) {
-			// TODO: play extra life sound
-			this.lives += extraLives
-		}
-		this.rollingScore += change
+		this.rollingScore.value += change
 	}
 	addScore(amount: number, sourcePosition?: XY) {
 		this.targetScore += amount
 		this.scoreAdded.emit(amount, sourcePosition)
 	}
-}
-
-function crossedThreshold(threshold: number, currentTime: number, delta: number) {
-	return currentTime < threshold && currentTime + delta >= threshold
-}
-
-function intervalsCrossed(interval: number, currentValue: number, delta: number) {
-	const before = Math.floor(currentValue / interval)
-	const after = Math.floor((currentValue + delta) / interval)
-	return after - before
 }
 
 export default Game

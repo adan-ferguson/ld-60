@@ -1,12 +1,12 @@
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
-import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { type ManAnimationType, ManEl } from '#lib/scripts/pixi/entities/manEl.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export type ManProps = {
 	facing: 1 | -1
@@ -15,8 +15,8 @@ export type ManProps = {
 
 export abstract class Man extends Enemy {
 	public animationChanged = CoolEvents.createHandler<(type: ManAnimationType) => void>()
-	protected constructor(game: Game, tileXY: XY, props: Partial<ManProps>) {
-		super(game, tileXY)
+	protected constructor(level: LevelInstance, tileXY: XY, props: Partial<ManProps>) {
+		super(level, tileXY)
 		const p: ManProps = {
 			facing: 1,
 			health: 1,
@@ -63,7 +63,7 @@ export abstract class Man extends Enemy {
 		return new ManEl(gc, this)
 	}
 	protected override move(delta: number) {
-		const result = this.game.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
+		const result = this.level.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
 		this.x += result.x - this.worldBounds.x
 		if (result.horizontalSolids.length > 0) {
 			this.facing *= -1
@@ -71,8 +71,8 @@ export abstract class Man extends Enemy {
 	}
 
 	public fire() {
-		this.game.entitiesManager.spawn(
-			new Projectile(this.game, {
+		this.level.entitiesManager.spawn(
+			new Projectile(this.level, {
 				style: 'small',
 				hitbox: { x: 4, y: 1 },
 				wallHitbox: { x: 4, y: 1 },
@@ -89,6 +89,6 @@ export abstract class Man extends Enemy {
 	}
 
 	public seesPlayer(): boolean {
-		return this.game.player?.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
+		return this.level.player.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
 	}
 }

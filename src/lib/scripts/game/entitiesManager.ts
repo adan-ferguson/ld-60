@@ -7,12 +7,21 @@ import type { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 import { ShooterMan } from '#lib/scripts/game/entities/shooterMan.ts'
 import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import type { Player } from '#lib/scripts/game/player/player.ts'
 
 export class EntitiesManager {
 	private entities: Set<GameEntity> = new Set()
-	constructor(private game: Game) {}
+	constructor(private level: LevelInstance) {
+		level.tiles.values.forEach((tileDef) => {
+			const entity = tryCreateEntity(this.level, tileDef)
+			if (entity) {
+				this.entities.add(entity)
+			}
+		})
+	}
 	get activeEntities(): GameEntity[] {
-		return [...this.entities, this.game.player].filter((entity) => entity.isActive)
+		return [...this.entities, this.level.player].filter((entity) => entity.isActive)
 	}
 	get enemies() {
 		return [...this.entities].filter((e) => e instanceof Enemy)
@@ -38,24 +47,6 @@ export class EntitiesManager {
 		}
 	}
 
-	prepareLevel() {
-		const { level } = this.game
-		if (!level) {
-			throw new Error('No level loaded')
-		}
-		this.entities.clear()
-		this.game.player.resetState()
-		this.game.player.xy = level.playerSpawnPosition
-		this.game.player.y -= 2 // offset player up a bit so they don't spawn inside the floor
-		this.game.player.isReady = true
-		level.tiles.values.forEach((tileDef) => {
-			const entity = tryCreateEntity(this.game, tileDef)
-			if (entity) {
-				this.entities.add(entity)
-			}
-		})
-	}
-
 	fireRandomTurret() {
 		const turrets = [...this.entities].filter((e) => e instanceof Turret)
 		const turret =
@@ -64,15 +55,15 @@ export class EntitiesManager {
 	}
 }
 
-export function tryCreateEntity(game: Game, def: TileDef) {
+export function tryCreateEntity(level: LevelInstance, def: TileDef) {
 	if (def.contents.kind === 'turret') {
-		return new Turret(game, def.tileXY, def.contents)
+		return new Turret(level, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'runnerMan') {
-		return new RunnerMan(game, def.tileXY, def.contents)
+		return new RunnerMan(level, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'shooterMan') {
-		return new ShooterMan(game, def.tileXY, def.contents)
+		return new ShooterMan(level, def.tileXY, def.contents)
 	} else if (def.contents.kind === 'movingBlock') {
-		return new MovingBlock(game, def.tileXY, def.contents)
+		return new MovingBlock(level, def.tileXY, def.contents)
 	}
 	return false
 }

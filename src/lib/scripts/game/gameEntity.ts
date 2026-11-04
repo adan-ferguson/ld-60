@@ -1,4 +1,3 @@
-import Game from '#lib/scripts/game/game.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
@@ -6,6 +5,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export abstract class GameEntity {
 	public isDestroyed = false
@@ -17,7 +17,10 @@ export abstract class GameEntity {
 	public facing = 1
 	public time = 0
 	private damageTaken = 0
-	protected constructor(public game: Game) {}
+	protected constructor(public level: LevelInstance) {}
+	public get game() {
+		return this.level.game
+	}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get w(): number
@@ -141,7 +144,7 @@ export abstract class GameEntity {
 			return
 		}
 		const hazardHurtbox = this.worldBounds.pad(-1)
-		if (this.game.worldCollision.hazards.some((h) => h.intersects(hazardHurtbox))) {
+		if (this.level.worldCollision.hazards.some((h) => h.intersects(hazardHurtbox))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}
@@ -173,7 +176,7 @@ export abstract class GameEntity {
 		if (!this.squishable) {
 			return false
 		}
-		const solids = this.game.worldCollision.movementBlockers.map((s) => s.rect)
+		const solids = this.level.worldCollision.movementBlockers.map((s) => s.rect)
 		return isSquished(this.worldBounds, solids)
 	}
 }

@@ -1,13 +1,13 @@
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import type { GameEntityEl } from '../pixi/entities/gameEntityEl'
 import { ProjectileEl } from '#lib/scripts/pixi/entities/projectileEl.ts'
-import Game from '#lib/scripts/game/game.ts'
 import type { ColorSource } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
 import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
+import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export type ProjectileStyle = 'small' | 'large' | 'dot'
 
@@ -27,10 +27,10 @@ type Options = {
 
 export class Projectile extends GameEntity {
 	constructor(
-		game: Game,
+		level: LevelInstance,
 		public options: Options,
 	) {
-		super(game)
+		super(level)
 		this.x = options.x
 		this.y = options.y
 		this.velX = options.velX
@@ -42,7 +42,7 @@ export class Projectile extends GameEntity {
 			this.destroy('lifetime')
 		}
 		if (this.options.source instanceof Player) {
-			const target = this.game.entitiesManager.activeEntities.find(
+			const target = this.level.entitiesManager.activeEntities.find(
 				(ent) => ent.canBeHitByPlayer && ent.worldBounds.intersects(this.worldBounds),
 			)
 			if (target) {
@@ -50,7 +50,7 @@ export class Projectile extends GameEntity {
 				this.destroy('hit')
 			}
 		} else if (this.options.source instanceof Enemy) {
-			const { player } = this.game
+			const { player } = this.level
 			if (player && player.isReady && player.worldBounds.intersects(this.worldBounds)) {
 				player.takeDamage(1)
 				this.destroy('hit')
@@ -64,7 +64,9 @@ export class Projectile extends GameEntity {
 			height: this.options.wallHitbox.y,
 		})
 		if (
-			this.game.worldCollision.projectileBlockers.some((pb) => pb.intersects(myWallCollisionBounds))
+			this.level.worldCollision.projectileBlockers.some((pb) =>
+				pb.intersects(myWallCollisionBounds),
+			)
 		) {
 			this.destroy('hit')
 		}

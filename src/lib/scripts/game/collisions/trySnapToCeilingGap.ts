@@ -14,7 +14,7 @@ export function trySnapToCeilingGap(entity: GameEntity, snapDist: number): boole
 	const minX = bounds.left - snapDist - bounds.width
 	const maxX = bounds.right + snapDist + bounds.width
 	const slice = getHorizontalSlice(
-		entity.game.worldCollision.movementBlockers.map((b) => b.rect),
+		entity.level.worldCollision.movementBlockers.map((b) => b.rect),
 		y,
 		minX,
 		maxX,
