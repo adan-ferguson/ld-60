@@ -45,8 +45,17 @@ class Game {
 		this.setWave(this.wave + 1)
 	}
 	setWave(wave: number) {
-		const lvl = LevelsManager.getWave(wave)
 		this.wave = wave
+	}
+	update(delta: number) {
+		if (!this.level) {
+			return
+		}
+		this.updateScore(delta)
+		this.level.update(delta)
+	}
+	prepareLevel() {
+		const lvl = LevelsManager.getWave(this.wave)
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		this.level.player.destroyed.listen(() => {
 			this.playerDied.emit(this.lives)
@@ -59,24 +68,15 @@ class Game {
 		})
 		return this.level
 	}
-	update(delta: number) {
-		if (!this.level) {
-			return
-		}
-		this.updateScore(delta)
-		this.level.update(delta)
-	}
 	beginLevel() {
 		if (!this.level) {
 			throw 'Level not set'
 		}
 		this.level.begin()
-		// this.waveCleared = false
 	}
 	endLevel() {
 		if (this.level) {
-			this.level = undefined
-			// other stuff?
+			this.level.end()
 		}
 	}
 	updateScore(delta: number) {

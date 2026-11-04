@@ -144,7 +144,11 @@ export class GameController {
 		}, 6000)
 	}
 	preWave() {
-		this.setScreenPhase({ kind: 'prewave', wave: this.game?.wave ?? 1 })
+		if (!this.game) {
+			throw 'No game'
+		}
+		this.setScreenPhase({ kind: 'prewave', wave: this.game.wave ?? 1 })
+		this.game.prepareLevel()
 		setTimeout(() => {
 			this.startLevel()
 		}, 2500)
