@@ -11,8 +11,8 @@ import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 export class EntitiesManager {
 	private entities: Set<GameEntity> = new Set()
 	constructor(private game: Game) {}
-	get all(): GameEntity[] {
-		return [...this.entities, this.game.player]
+	get activeEntities(): GameEntity[] {
+		return [...this.entities, this.game.player].filter((entity) => entity.isActive)
 	}
 	get enemies() {
 		return [...this.entities].filter((e) => e instanceof Enemy)
@@ -30,7 +30,7 @@ export class EntitiesManager {
 	}
 	update(delta: number) {
 		for (const entity of [...this.entities]) {
-			if (entity.isDestroyed) {
+			if (!entity.isDestroyed) {
 				entity.update(delta)
 			} else {
 				this.entities.delete(entity)

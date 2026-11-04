@@ -43,7 +43,7 @@ export class WorldCollision {
 				velocityX: 0,
 				velocityY: 0,
 			})),
-			...this.game.entitiesManager.all
+			...this.game.entitiesManager.activeEntities
 				.filter((t) => t.blocksMovement)
 				.map((t) => ({
 					entity: t,
@@ -57,7 +57,9 @@ export class WorldCollision {
 	get projectileBlockers(): CoolRect[] {
 		return [
 			...this.tilesOfType('wall').map((t) => TileDef.toWorldRect(t.tileXY)),
-			...this.game.entitiesManager.all.filter((t) => t.blocksProjectiles).map((t) => t.worldBounds),
+			...this.game.entitiesManager.activeEntities
+				.filter((t) => t.blocksProjectiles)
+				.map((t) => t.worldBounds),
 		]
 	}
 
@@ -66,7 +68,9 @@ export class WorldCollision {
 			...this.tilesOfType('lava', 'spikes').map((t) =>
 				TileDef.toWorldRect(t.tileXY).getEdge('bottom', 0.35),
 			),
-			...this.game.entitiesManager.all.filter((t) => t.isHazard).map((t) => t.worldBounds),
+			...this.game.entitiesManager.activeEntities
+				.filter((t) => t.isHazard)
+				.map((t) => t.worldBounds),
 		]
 	}
 

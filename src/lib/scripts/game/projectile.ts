@@ -42,7 +42,7 @@ export class Projectile extends GameEntity {
 			this.destroy('lifetime')
 		}
 		if (this.options.source instanceof Player) {
-			const target = this.game.entitiesManager.all.find(
+			const target = this.game.entitiesManager.activeEntities.find(
 				(ent) => ent.canBeHitByPlayer && ent.worldBounds.intersects(this.worldBounds),
 			)
 			if (target) {

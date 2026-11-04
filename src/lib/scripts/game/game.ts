@@ -36,7 +36,7 @@ class Game {
 	waveCleared = false
 	public player: Player
 	get activeEntities(): GameEntity[] {
-		return this.entitiesManager.all
+		return this.entitiesManager.activeEntities
 	}
 	get score() {
 		return this.rollingScore

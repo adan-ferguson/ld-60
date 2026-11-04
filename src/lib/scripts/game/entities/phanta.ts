@@ -24,12 +24,12 @@ export class Phanta extends GameEntity {
 		flyingAway() {},
 		spawned() {},
 	})
-	#spawned = false
 	get playerOnRight() {
 		return this.game.player.x > this.x
 	}
 	constructor(game: Game, position: XY) {
 		super(game)
+		this.isReady = false
 		this.xy = position
 		this.#speed = INITIAL_SPEED
 	}
@@ -40,10 +40,6 @@ export class Phanta extends GameEntity {
 
 	get isHazard() {
 		return !this.flyingAway
-	}
-
-	get isSpawning() {
-		return this.time < SPAWN_TIME
 	}
 
 	get w(): number {
@@ -58,8 +54,8 @@ export class Phanta extends GameEntity {
 		if (this.time < SPAWN_TIME) {
 			return
 		}
-		if (!this.#spawned) {
-			this.#spawned = true
+		if (!this.isReady) {
+			this.isReady = true
 			this.events.spawned.emit()
 		}
 		if (this.game.waveCleared && !this.flyingAway) {

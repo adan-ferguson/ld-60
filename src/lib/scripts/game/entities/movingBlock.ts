@@ -98,7 +98,7 @@ export class MovingBlock extends GameEntity {
 	}
 
 	private getEntitiesStandingOn() {
-		return this.game.entitiesManager.all.filter((e) => {
+		return this.game.entitiesManager.activeEntities.filter((e) => {
 			if (!e.canStandOnMovingBlocks) {
 				return
 			}

@@ -9,7 +9,7 @@ import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 
 export abstract class GameEntity {
 	public isDestroyed = false
-	public isReady = false
+	public isReady = true
 	public x = 0
 	public y = 0
 	public velX = 0
@@ -84,6 +84,9 @@ export abstract class GameEntity {
 	}
 
 	public destroyed = CoolEvents.createHandler<(reason: string) => void>()
+	public get isActive() {
+		return this.isReady && !this.isDestroyed
+	}
 	public get maxHealth(): number {
 		return 1
 	}
