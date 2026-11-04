@@ -26,11 +26,11 @@ export function spiralSpawnAnimation(options: Partial<Options>) {
 	const o: Options = {
 		onFinished: () => {},
 		targetPosition: { x: 0, y: 0 },
-		waves: 8,
-		shapeCount: 8,
+		waves: 1,
+		shapeCount: 16,
 		rotationSpeed: Math.PI * 2,
 		waveDuration: 1.5,
-		waveTimeOffset: 0.05,
+		waveTimeOffset: 0.15,
 		color: 'white',
 		...options,
 	}
@@ -57,9 +57,10 @@ export function spiralSpawnAnimation(options: Partial<Options>) {
 				x: 0.5,
 				y: 0.5,
 			},
+			visible: false,
 		})
 	})
-
+	container.addChild(...allSprites)
 	return new VfxAnimation(container, {
 		finished: () => {
 			onFinished()

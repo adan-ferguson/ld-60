@@ -28,7 +28,6 @@ export class PhantaEl extends GameEntityEl {
 		private phanta: Phanta,
 	) {
 		super(gc, phanta)
-		debugger
 		this.#playSpawnAnimation()
 		phanta.events.flyingAway.listen(() => {
 			if (!this.#sprite) {
@@ -72,7 +71,7 @@ export class PhantaEl extends GameEntityEl {
 	#playSpawnAnimation() {
 		this.gc.addAnimation(
 			spiralSpawnAnimation({
-				targetPosition: this.position,
+				targetPosition: this.phanta.xy,
 				color: 'red',
 			}),
 		)

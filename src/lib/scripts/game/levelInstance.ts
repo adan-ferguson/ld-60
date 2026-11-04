@@ -20,7 +20,6 @@ export class LevelInstance {
 	player: Player
 	worldCollision: WorldCollision
 	roundTimer = new CoolCounter()
-	#turretTimer = 0
 	running = false
 	#cleared = false
 	#playerSpawnPosition: XY
@@ -64,7 +63,6 @@ export class LevelInstance {
 		this.entitiesManager.update(delta)
 		this.player.update(delta)
 		this.roundTimer.value += delta
-		this.#turretTimer += delta
 		if (!this.#cleared && !this.entitiesManager.hasEnemy) {
 			this.#cleared = true
 			this.waveCleared.emit()
