@@ -7,6 +7,7 @@ import { LevelMovers } from '#lib/scripts/game/levels/levelMovers.ts'
 import { LevelBlades } from '#lib/scripts/game/levels/levelBlades.ts'
 import { LevelOrdeal } from '#lib/scripts/game/levels/levelOrdeal.ts'
 import { LevelCombat } from '#lib/scripts/game/levels/levelCombat.ts'
+import { LevelBoss } from '#lib/scripts/game/levels/levelBoss.ts'
 
 const levels = [
 	Level001,
@@ -18,7 +19,7 @@ const levels = [
 	LevelBlades,
 	LevelMovers,
 	LevelOrdeal,
-	//boss
+	LevelBoss,
 ] as const
 
 const LEVEL_COUNT = levels.length

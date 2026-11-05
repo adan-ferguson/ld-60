@@ -13,9 +13,9 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 const DEFAULT_SPEED = 20
 
 export class MovingBlock extends GameEntity {
-	private min: number
-	private max: number
-	private dir: -1 | 1
+	#min = 0
+	#max = 0
+	#dir: -1 | 1 = 1
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new MovingBlockEl(gc, this)
 	}
@@ -45,21 +45,9 @@ export class MovingBlock extends GameEntity {
 	}
 	constructor(
 		level: LevelInstance,
-		tileXY: XY,
 		private def: MovingBlockDef,
 	) {
 		super(level)
-		this.setTileXY(tileXY)
-		const toWorld = (val: number) => TileDef.toWorld(val) + Consts.TILE_SIZE_PX / 2
-		if (def.range) {
-			this.min = toWorld(tileXY[this.axis] + def.range[0])
-			this.max = toWorld(tileXY[this.axis] + def.range[1])
-		} else {
-			const { min, max } = this.autoCalcRange(tileXY)
-			this.min = toWorld(min)
-			this.max = toWorld(max)
-		}
-		this.dir = def.initialDir ?? 1
 	}
 	private get current() {
 		return this[this.axis]
@@ -68,13 +56,13 @@ export class MovingBlock extends GameEntity {
 		this.velX = 0
 		this.velY = 0
 		const speed = this.def.speed ?? DEFAULT_SPEED
-		const distance = this.dir === 1 ? this.max - this.current : this.current - this.min
+		const distance = this.#dir === 1 ? this.#max - this.current : this.current - this.#min
 		if (distance <= 0) {
-			this.dir = this.dir === 1 ? -1 : 1
+			this.#dir = this.#dir === 1 ? -1 : 1
 			return
 		}
 
-		const velocity = this.dir * Math.min(speed, distance / delta)
+		const velocity = this.#dir * Math.min(speed, distance / delta)
 
 		if (this.axis === 'x') {
 			this.velX = velocity
@@ -83,7 +71,7 @@ export class MovingBlock extends GameEntity {
 		}
 
 		if (Math.abs(velocity * delta) >= distance) {
-			this.dir = this.dir === 1 ? -1 : 1
+			this.#dir = this.#dir === 1 ? -1 : 1
 		}
 	}
 	override move(delta: number) {

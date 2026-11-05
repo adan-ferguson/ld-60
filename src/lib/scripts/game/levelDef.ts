@@ -22,6 +22,10 @@ type Wall = {
 	kind: 'wall'
 }
 
+type AfterBossWall = {
+	kind: 'afterBossWall'
+}
+
 type Lava = {
 	kind: 'lava'
 }
@@ -32,6 +36,14 @@ type Spikes = {
 
 type TreasureSpawn = {
 	kind: 'treasureSpawn'
+}
+
+type PrincessTile = {
+	kind: 'princess'
+}
+
+type BossManTile = {
+	kind: 'bossMan'
 }
 
 export type MovingBlockDef = {
@@ -53,6 +65,9 @@ export type TileContents =
 	| TreasureSpawn
 	| MovingBlockDef
 	| Spikes
+	| PrincessTile
+	| BossManTile
+	| AfterBossWall
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

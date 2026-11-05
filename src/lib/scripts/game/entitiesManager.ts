@@ -7,6 +7,7 @@ import { MovingBlock } from '#lib/scripts/game/entities/movingBlock.ts'
 import { ShooterMan } from '#lib/scripts/game/entities/shooterMan.ts'
 import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { BossMan } from '#lib/scripts/game/entities/bossMan.ts'
 
 export class EntitiesManager {
 	#spawnedEntities: Set<GameEntity> = new Set()
@@ -18,11 +19,20 @@ export class EntitiesManager {
 			}
 		})
 	}
-	get activeEntities(): GameEntity[] {
-		return this.entities.filter((entity) => entity.isActive)
-	}
-	get entities() {
+	get #entitiesIncludingPlayer() {
 		return [...this.#spawnedEntities, this.level.player]
+	}
+	get activeEntities(): GameEntity[] {
+		return this.#entitiesIncludingPlayer.filter((entity) => entity.isActive)
+	}
+
+	/**
+	 * Should have an associated pixi element, but logically not interacting in terms of collision/damage/etc.
+	 * Generally used for spawning effects.
+	 * I don't LOVE the setup but...it's fine.
+	 */
+	get presentEntities(): GameEntity[] {
+		return this.#entitiesIncludingPlayer.filter((entity) => !entity.isDestroyed)
 	}
 	get enemies() {
 		return [...this.#spawnedEntities].filter((e) => e instanceof Enemy)
@@ -57,14 +67,23 @@ export class EntitiesManager {
 }
 
 export function tryCreateEntity(level: LevelInstance, def: TileDef) {
-	if (def.contents.kind === 'turret') {
-		return new Turret(level, def.tileXY, def.contents)
-	} else if (def.contents.kind === 'runnerMan') {
-		return new RunnerMan(level, def.tileXY, def.contents)
-	} else if (def.contents.kind === 'shooterMan') {
-		return new ShooterMan(level, def.tileXY, def.contents)
-	} else if (def.contents.kind === 'movingBlock') {
-		return new MovingBlock(level, def.tileXY, def.contents)
+	const entity = create()
+	if (entity) {
+		entity.setTileXY(def.tileXY)
+		return entity
 	}
 	return false
+	function create() {
+		if (def.contents.kind === 'turret') {
+			return new Turret(level, def.contents)
+		} else if (def.contents.kind === 'runnerMan') {
+			return new RunnerMan(level, def.contents)
+		} else if (def.contents.kind === 'shooterMan') {
+			return new ShooterMan(level, def.contents)
+		} else if (def.contents.kind === 'movingBlock') {
+			return new MovingBlock(level, def.contents)
+		} else if (def.contents.kind === 'bossMan') {
+			return new BossMan(level)
+		}
+	}
 }

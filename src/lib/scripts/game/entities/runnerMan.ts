@@ -12,8 +12,8 @@ export type RunnerManProps = ManProps & {
 export class RunnerMan extends Man {
 	readonly #speed: number
 	readonly #sprintBonus: number
-	public constructor(level: LevelInstance, tileXY: XY, props: Partial<RunnerManProps>) {
-		super(level, tileXY, props)
+	public constructor(level: LevelInstance, props: Partial<RunnerManProps>) {
+		super(level, props)
 		this.#speed = props.speed ?? 25
 		this.#sprintBonus = props.sprintBonus ?? 15
 	}

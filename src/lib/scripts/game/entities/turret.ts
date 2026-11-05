@@ -42,8 +42,8 @@ export class Turret extends Enemy {
 	override get blocksMovement() {
 		return true
 	}
-	constructor(level: LevelInstance, tileXY: XY, props: Partial<TurretProps>) {
-		super(level, tileXY)
+	constructor(level: LevelInstance, props: Partial<TurretProps>) {
+		super(level)
 		this.props = {
 			health: 1,
 			...props,

@@ -5,9 +5,8 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export abstract class Enemy extends GameEntity {
-	constructor(level: LevelInstance, tileXY: XY) {
+	constructor(level: LevelInstance) {
 		super(level)
-		this.setTileXY(tileXY)
 		this.destroyed.listen(() => {
 			level.game.addScore(this.score, this)
 		})

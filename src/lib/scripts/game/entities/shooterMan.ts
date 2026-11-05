@@ -3,6 +3,7 @@ import Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { GenericState } from '#lib/scripts/game/genericState.ts'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
@@ -12,8 +13,8 @@ export type ShooterManProps = ManProps
 
 export class ShooterMan extends Man {
 	#state: State
-	public constructor(level: LevelInstance, tileXY: XY, props: Partial<ManProps>) {
-		super(level, tileXY, props)
+	public constructor(level: LevelInstance, props: Partial<ManProps>) {
+		super(level, props)
 		this.#state = new IdleState(false)
 	}
 	get defaultAnimation(): ManAnimationType {
@@ -35,14 +36,7 @@ export class ShooterMan extends Man {
 	}
 }
 
-abstract class State {
-	protected time = 0
-	constructor() {}
-	update(man: Man, delta: number): void {
-		this.update2(man, delta)
-		this.time += delta
-	}
-	abstract update2(man: Man, delta: number): void
+abstract class State extends GenericState<Man> {
 	abstract get animation(): ManAnimationType
 }
 

@@ -11,20 +11,21 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 export type ManProps = {
 	facing: 1 | -1
 	health: number
+	scale: number
 }
 
 export abstract class Man extends Enemy {
 	public animationChanged = CoolEvents.createHandler<(type: ManAnimationType) => void>()
-	protected constructor(level: LevelInstance, tileXY: XY, props: Partial<ManProps>) {
-		super(level, tileXY)
+	protected constructor(level: LevelInstance, props: Partial<ManProps> = {}) {
+		super(level)
 		const p: ManProps = {
 			facing: 1,
 			health: 1,
+			scale: 1,
 			...props,
 		}
 		this.facing = p.facing
 		this.#maxHealth = p.health
-		this.y -= 2
 	}
 	readonly #maxHealth: number
 	abstract get defaultAnimation(): ManAnimationType

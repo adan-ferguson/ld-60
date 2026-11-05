@@ -59,10 +59,14 @@ export abstract class GameEntity {
 		return false
 	}
 
+	/**
+	 * Set our XY with the tileXY so the have the same X midpoint and Y bottom
+	 * @param tileXY
+	 */
 	public setTileXY(tileXY: XY) {
-		const worldXY = TileDef.toWorldMidpoint(tileXY)
-		this.x = worldXY.x
-		this.y = worldXY.y
+		const worldXY = TileDef.toWorldRect(tileXY)
+		this.x = worldXY.midpoint.x
+		this.y = worldXY.bottom - this.h / 2
 	}
 
 	/**

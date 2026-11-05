@@ -96,4 +96,10 @@ export const TileDef = {
 			height: Consts.TILE_SIZE_PX,
 		})
 	},
+	toTileXY(xy: XY) {
+		return {
+			x: Math.round(xy.x / Consts.TILE_SIZE_PX),
+			y: Math.round(xy.y / Consts.TILE_SIZE_PX),
+		}
+	},
 }

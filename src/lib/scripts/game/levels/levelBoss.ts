@@ -1,0 +1,34 @@
+import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
+
+export const LevelBoss: LevelDef = {
+	displayName: 'Boss',
+	tiles: `
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..............................x
+x......t................p......x
+x.xxxxxxxxxxx......xxxxxxxxxxx.x
+x..............................x
+x..............................x
+x..............................x
+x...............y..............x
+x..............................x
+x..............................x
+x..............................x
+x.............y................x
+x..............................x
+x..............................x
+x..s........................1..x
+x.xxxxxxxxxxxxxxxxxxxxxxxxxxxx.x
+x..............................x
+xllllllllllllllllllllllllllllllx
+`,
+	contents: {
+		s: { kind: 'playerSpawn' },
+		t: { kind: 'treasureSpawn' },
+		p: { kind: 'princess' },
+		x: { kind: 'wall' },
+		y: { kind: 'afterBossWall' },
+		l: { kind: 'lava' },
+		1: { kind: 'bossMan' },
+	},
+}

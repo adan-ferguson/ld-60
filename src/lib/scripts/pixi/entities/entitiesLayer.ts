@@ -13,7 +13,7 @@ export class EntitiesLayer extends Container {
 		if (!level?.running) {
 			return
 		}
-		for (const entity of level.entitiesManager.entities) {
+		for (const entity of level.entitiesManager.presentEntities) {
 			if (!this.onScreen.has(entity)) {
 				const pixiEl = entity.createPixiEl(this.gc)
 				this.onScreen.set(entity, pixiEl)
@@ -23,7 +23,7 @@ export class EntitiesLayer extends Container {
 			}
 		}
 		for (const [entity, pixiEl] of this.onScreen) {
-			if (!level.entitiesManager.entities.includes(entity)) {
+			if (!level.entitiesManager.presentEntities.includes(entity)) {
 				this.removeChild(pixiEl)
 				pixiEl.destroy()
 				this.onScreen.delete(entity)
