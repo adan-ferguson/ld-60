@@ -27,10 +27,10 @@ export class Turret extends Enemy {
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new TurretEl(gc, this)
 	}
-	public get w(): number {
+	public get baseWidth(): number {
 		return 8
 	}
-	public get h(): number {
+	public get baseHeight(): number {
 		return 8
 	}
 	public override get maxHealth() {

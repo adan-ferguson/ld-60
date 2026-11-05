@@ -16,6 +16,7 @@ export abstract class GameEntity {
 	public velY = 0
 	public facing = 1
 	public time = 0
+	public scale = 1
 	private damageTaken = 0
 	protected constructor(public level: LevelInstance) {}
 	public get game() {
@@ -23,8 +24,8 @@ export abstract class GameEntity {
 	}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
-	public abstract get w(): number
-	public abstract get h(): number
+	public abstract get baseWidth(): number
+	public abstract get baseHeight(): number
 
 	/**
 	 * @virtual
@@ -66,7 +67,7 @@ export abstract class GameEntity {
 	public setTileXY(tileXY: XY) {
 		const worldXY = TileDef.toWorldRect(tileXY)
 		this.x = worldXY.midpoint.x
-		this.y = worldXY.bottom - this.h / 2
+		this.y = worldXY.bottom - this.height / 2
 	}
 
 	/**
@@ -99,7 +100,10 @@ export abstract class GameEntity {
 	}
 
 	public get localBounds(): CoolRect {
-		return new CoolRect().pad({ x: this.w / 2, y: this.h / 2 })
+		return new CoolRect().pad({
+			x: (this.baseWidth * this.scale) / 2,
+			y: (this.baseHeight * this.scale) / 2,
+		})
 	}
 
 	public get worldBounds(): CoolRect {
@@ -119,12 +123,20 @@ export abstract class GameEntity {
 		this.y = val.y
 	}
 
+	public get height() {
+		return this.baseHeight * this.scale
+	}
+
+	public get width() {
+		return this.baseWidth * this.scale
+	}
+
 	public set left(val: number) {
-		this.x = val + this.w / 2
+		this.x = val + this.width / 2
 	}
 
 	public set right(val: number) {
-		this.x = val - this.w / 2
+		this.x = val - this.width / 2
 	}
 
 	public update(delta: number) {

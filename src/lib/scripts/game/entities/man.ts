@@ -25,14 +25,15 @@ export abstract class Man extends Enemy {
 			...props,
 		}
 		this.facing = p.facing
+		this.scale = p.scale
 		this.#maxHealth = p.health
 	}
 	readonly #maxHealth: number
 	abstract get defaultAnimation(): ManAnimationType
-	override get h(): number {
+	override get baseHeight(): number {
 		return 12
 	}
-	override get w(): number {
+	override get baseWidth(): number {
 		return 8
 	}
 	public override get diesToHazards() {

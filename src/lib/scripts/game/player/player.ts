@@ -47,16 +47,15 @@ export class Player extends GameEntity {
 	constructor(level: LevelInstance, spawnPosition: XY) {
 		super(level)
 		this.setTileXY(spawnPosition)
-		this.y -= 2 // place on floor
 		this.controlsManager = new ControlsManager(this)
 	}
 	get canShoot() {
 		return this.time - this.lastShotTime >= SHOT_COOLDOWN
 	}
-	public get w(): number {
+	public get baseWidth(): number {
 		return WIDTH
 	}
-	public get h(): number {
+	public get baseHeight(): number {
 		return this.crouching ? HEIGHT - CROUCH_DIFF : HEIGHT
 	}
 	public override get canStandOnMovingBlocks() {

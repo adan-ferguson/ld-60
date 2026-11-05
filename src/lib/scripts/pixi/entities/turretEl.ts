@@ -20,7 +20,12 @@ export class TurretEl extends GameEntityEl {
 	update2() {
 		this.gfx.clear()
 		this.gfx
-			.rect(-this.turret.w / 2, -this.turret.h / 2, this.turret.w, this.turret.h)
+			.rect(
+				-this.turret.baseWidth / 2,
+				-this.turret.baseHeight / 2,
+				this.turret.baseWidth,
+				this.turret.baseHeight,
+			)
 			.fill('magenta')
 		let color = 'black'
 		if (this.turret.fireTimeout) {

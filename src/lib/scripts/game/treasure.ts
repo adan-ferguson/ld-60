@@ -20,7 +20,7 @@ export class Treasure extends GameEntity {
 		return new TreasureEl(gc, this)
 	}
 
-	get h(): number {
+	get baseHeight(): number {
 		return 7
 	}
 
@@ -35,7 +35,7 @@ export class Treasure extends GameEntity {
 		}
 	}
 
-	get w(): number {
+	get baseWidth(): number {
 		return 7
 	}
 }

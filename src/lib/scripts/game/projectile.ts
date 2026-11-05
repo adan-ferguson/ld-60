@@ -23,6 +23,7 @@ type Options = {
 	velY: number
 	angle: number
 	tint: ColorSource
+	scale?: number
 }
 
 export class Projectile extends GameEntity {
@@ -35,6 +36,7 @@ export class Projectile extends GameEntity {
 		this.y = options.y
 		this.velX = options.velX
 		this.velY = options.velY
+		this.scale = options.scale ?? 1
 	}
 	public update2(delta: number) {
 		this.time += delta
@@ -74,10 +76,10 @@ export class Projectile extends GameEntity {
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new ProjectileEl(gc, this)
 	}
-	public get w(): number {
+	public get baseWidth(): number {
 		return this.options.hitbox.x
 	}
-	public get h(): number {
+	public get baseHeight(): number {
 		return this.options.hitbox.y
 	}
 }

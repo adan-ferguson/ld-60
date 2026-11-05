@@ -25,10 +25,10 @@ export class MovingBlock extends GameEntity {
 	public get cardinal() {
 		return Cardinal.fromAxis(this.def.isX)
 	}
-	public get w(): number {
+	public get baseWidth(): number {
 		return Consts.TILE_SIZE_PX
 	}
-	public get h(): number {
+	public get baseHeight(): number {
 		return Consts.TILE_SIZE_PX
 	}
 	public get type() {

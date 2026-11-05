@@ -47,11 +47,11 @@ export class Phanta extends GameEntity {
 		return !this.flyingAway
 	}
 
-	get w(): number {
+	get baseWidth(): number {
 		return 4
 	}
 
-	get h(): number {
+	get baseHeight(): number {
 		return 4
 	}
 
