@@ -38,7 +38,9 @@ export class ManEl extends WithManSprite {
 		})
 	}
 
-	update2() {
-		this.sprite.scale.x = Math.sign(this.man.facing)
+	override get debugRects() {
+		return [this.man.hitbox]
 	}
+
+	update2() {}
 }

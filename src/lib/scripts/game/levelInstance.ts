@@ -37,13 +37,15 @@ export class LevelInstance {
 		this.worldCollision = new WorldCollision(this)
 
 		this.roundTimer.addThreshold(TREASURE_SPAWN_TIME, () => this.#spawnTreasure())
-		this.roundTimer.addThreshold(this.#phantaSpawnTime, () => this.#spawnPhanta())
+		if (this.#phantaSpawnTime) {
+			this.roundTimer.addThreshold(this.#phantaSpawnTime, () => this.#spawnPhanta())
+		}
 		this.roundTimer.addInterval(this.#turretShotInterval, () =>
 			this.entitiesManager.fireRandomTurret(),
 		)
 	}
 	get #phantaSpawnTime() {
-		return (this.levelDef.phantaSpawnTime ?? [30, 25, 20])[this.loops] ?? 30
+		return this.levelDef.phantaSpawnTime ? this.levelDef.phantaSpawnTime[this.loops] : undefined
 	}
 	get #turretShotInterval() {
 		return (this.levelDef.turretShotTime ?? [4, 3.5, 3])[this.loops] ?? 4

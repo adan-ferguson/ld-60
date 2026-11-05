@@ -10,6 +10,7 @@ export class BossMan extends Man {
 		super(level, {
 			health: 16 * level.loops,
 			scale: 2,
+			facing: -1,
 		})
 		this.state = new RunningState()
 	}
@@ -18,6 +19,10 @@ export class BossMan extends Man {
 	}
 	public update2(delta: number) {
 		this.state.update(this, delta)
+		const { player } = this.level
+		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
+			player.takeDamage(1)
+		}
 	}
 }
 
@@ -29,19 +34,26 @@ class RunningState extends State {
 	get animation() {
 		return 'run' as const
 	}
-	update2(owner: BossMan, delta: number) {}
+	update2(owner: BossMan) {
+		owner.velX = 40 * owner.facing
+		if (!owner.hasGroundAhead()) {
+			owner.facing *= -1
+			owner.velX = 0
+			owner.state = new AttackWindupState()
+		}
+	}
 }
 
 class AttackWindupState extends State {
 	get animation() {
 		return 'attackWindup' as const
 	}
-	update2(owner: BossMan, delta: number){}
+	update2(owner: BossMan, delta: number) {}
 }
 
 class AttackState extends State {
 	get animation() {
 		return 'attack' as const
 	}
-	update2(owner: BossMan, delta: number){}
+	update2(owner: BossMan, delta: number) {}
 }

@@ -1,7 +1,5 @@
 import { Man, type ManProps } from '#lib/scripts/game/entities/man.ts'
-import type Game from '#lib/scripts/game/game.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
-import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export type RunnerManProps = ManProps & {
@@ -29,5 +27,12 @@ export class RunnerMan extends Man {
 			this.facing *= -1
 		}
 		this.velX = this.facing * (this.#speed + (this.seesPlayer() ? this.#sprintBonus : 0))
+	}
+	protected override move(delta: number) {
+		const result = this.level.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
+		this.x += result.x - this.worldBounds.x
+		if (result.horizontalSolids.length > 0) {
+			this.facing *= -1
+		}
 	}
 }

@@ -73,6 +73,7 @@ export class Phanta extends GameEntity {
 			this.x += this.#speed * delta * Math.cos(angleToPlayer)
 			this.y += this.#speed * delta * Math.sin(angleToPlayer)
 		}
+		this.facing = this.playerOnRight ? 1 : -1
 	}
 
 	override takeDamage() {

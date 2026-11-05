@@ -28,6 +28,9 @@ export class ProjectileEl extends GameEntityEl {
 			this.spritey()
 		}
 	}
+	override get debugRects() {
+		return [this.proj.wallHitbox]
+	}
 	gfxy() {
 		const gfx = new Graphics()
 		const { x, y } = this.proj.options.hitbox

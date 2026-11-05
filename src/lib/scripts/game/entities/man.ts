@@ -36,7 +36,7 @@ export abstract class Man extends Enemy {
 	override get baseWidth(): number {
 		return 8
 	}
-	public override get diesToHazards() {
+	override get diesToHazards() {
 		return true
 	}
 	override get canStandOnMovingBlocks() {
@@ -45,11 +45,14 @@ export abstract class Man extends Enemy {
 	override get score(): number {
 		return 500 + 500 * this.#maxHealth
 	}
-	public override get squishable() {
+	override get squishable() {
 		return true
 	}
 	override get maxHealth(): number {
 		return this.#maxHealth
+	}
+	get hitbox() {
+		return this.worldBounds.pad({ y: -3 })
 	}
 	get visionRect(): CoolRect {
 		const HEIGHT = 4
@@ -64,32 +67,6 @@ export abstract class Man extends Enemy {
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ManEl(gc, this)
 	}
-	protected override move(delta: number) {
-		const result = this.level.worldCollision.resolveMovement(this.worldBounds, this.velX * delta, 0)
-		this.x += result.x - this.worldBounds.x
-		if (result.horizontalSolids.length > 0) {
-			this.facing *= -1
-		}
-	}
-
-	public fire() {
-		this.level.entitiesManager.spawn(
-			new Projectile(this.level, {
-				style: 'small',
-				hitbox: { x: 4, y: 1 },
-				wallHitbox: { x: 4, y: 1 },
-				source: this,
-				lifetime: 10,
-				velX: 80 * this.facing,
-				velY: 0,
-				angle: Math.atan2(0, this.facing),
-				x: this.x + 3 * this.facing,
-				y: this.y - 1.5,
-				tint: 'red',
-			}),
-		)
-	}
-
 	public seesPlayer(): boolean {
 		return this.level.player.worldBounds.intersects(this.toWorldBounds(this.visionRect)) ?? false
 	}

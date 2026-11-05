@@ -1,5 +1,3 @@
-import type { XY } from '#lib/scripts/utils/XY.ts'
-import Game from '#lib/scripts/game/game.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'

@@ -20,6 +20,7 @@ export abstract class GameEntityEl extends Container {
 		this.addChild((this.debugGfx = new Graphics()))
 	}
 	public update(delta: number) {
+		this.scale.set(this.entity.scale * this.entity.facing, this.entity.scale)
 		this.x = Math.round(this.entity.x * Consts.RESOLUTION) / Consts.RESOLUTION
 		this.y = Math.round(this.entity.y * Consts.RESOLUTION) / Consts.RESOLUTION
 		if (DEBUG) {

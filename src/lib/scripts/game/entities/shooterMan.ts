@@ -4,6 +4,7 @@ import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
+import { Projectile } from '#lib/scripts/game/projectile.ts'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
@@ -33,6 +34,23 @@ export class ShooterMan extends Man {
 			player.takeDamage(1)
 		}
 		this.state.update(this, delta)
+	}
+	fire() {
+		this.level.entitiesManager.spawn(
+			new Projectile(this.level, {
+				style: 'small',
+				hitbox: { x: 4, y: 1 },
+				wallHitbox: { x: 4, y: 1 },
+				source: this,
+				lifetime: 10,
+				velX: 80 * this.facing,
+				velY: 0,
+				angle: Math.atan2(0, this.facing),
+				x: this.x + 3 * this.facing,
+				y: this.y - 1.5,
+				tint: 'red',
+			}),
+		)
 	}
 }
 

@@ -70,7 +70,6 @@ export class PlayerEl extends WithManSprite {
 		if (nextAnimation && nextAnimation !== this.currentAnimation) {
 			this.setAnimationType(nextAnimation)
 		}
-		this.sprite.scale.x = Math.sign(this.player.facing)
 		this.sprite.y = this.player.crouching ? -2 : 0
 	}
 

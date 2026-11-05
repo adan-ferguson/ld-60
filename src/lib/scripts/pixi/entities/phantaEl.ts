@@ -46,7 +46,6 @@ export class PhantaEl extends GameEntityEl {
 		if (this.#smokeEmitter) {
 			this.#smokeEmitter.value += delta
 		}
-		this.scale.x = this.phanta.playerOnRight ? 1 : -1
 	}
 	#create() {
 		this.#sprite = makeSprite()

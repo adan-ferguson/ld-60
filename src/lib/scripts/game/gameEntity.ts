@@ -101,8 +101,8 @@ export abstract class GameEntity {
 
 	public get localBounds(): CoolRect {
 		return new CoolRect().pad({
-			x: (this.baseWidth * this.scale) / 2,
-			y: (this.baseHeight * this.scale) / 2,
+			x: this.baseWidth / 2,
+			y: this.baseHeight / 2,
 		})
 	}
 
@@ -111,7 +111,12 @@ export abstract class GameEntity {
 	}
 
 	public toWorldBounds(localBounds: CoolRect): CoolRect {
-		return localBounds.shift({ x: this.x, y: this.y })
+		return new CoolRect({
+			x: this.x + localBounds.x * this.scale,
+			y: this.y + localBounds.y * this.scale,
+			width: localBounds.width * this.scale,
+			height: localBounds.height * this.scale,
+		})
 	}
 
 	public get xy() {

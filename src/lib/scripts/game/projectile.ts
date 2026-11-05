@@ -58,18 +58,7 @@ export class Projectile extends GameEntity {
 				this.destroy('hit')
 			}
 		}
-		// Player projectiles have a bit more leeway to avoid walls
-		const myWallCollisionBounds = CoolRect.fromMidpointCoords({
-			x: this.x,
-			y: this.y,
-			width: this.options.wallHitbox.x,
-			height: this.options.wallHitbox.y,
-		})
-		if (
-			this.level.worldCollision.projectileBlockers.some((pb) =>
-				pb.intersects(myWallCollisionBounds),
-			)
-		) {
+		if (this.level.worldCollision.projectileBlockers.some((pb) => pb.intersects(this.wallHitbox))) {
 			this.destroy('hit')
 		}
 	}
@@ -81,5 +70,13 @@ export class Projectile extends GameEntity {
 	}
 	public get baseHeight(): number {
 		return this.options.hitbox.y
+	}
+	public get wallHitbox() {
+		return CoolRect.fromMidpointCoords({
+			x: this.x,
+			y: this.y,
+			width: this.options.wallHitbox.x * this.scale,
+			height: this.options.wallHitbox.y * this.scale,
+		})
 	}
 }
