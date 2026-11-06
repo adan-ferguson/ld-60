@@ -23,6 +23,9 @@ export abstract class GameEntity {
 	public get game() {
 		return this.level.game
 	}
+	public get health() {
+		return this.maxHealth - this.#damageTaken
+	}
 	public abstract update2(delta: number): void
 	public abstract createPixiEl(gc: GameController): GameEntityEl
 	public abstract get baseWidth(): number

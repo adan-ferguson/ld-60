@@ -5,14 +5,12 @@ import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { ColorSource } from 'pixi.js'
 
-const ATTACK_FLASH_INTERVAL = 0.1
-
 export class BossMan extends Man {
 	iterations = 0
 	#state: State
 	constructor(level: LevelInstance) {
 		super(level, {
-			health: 16 * level.loops,
+			health: 8 + 8 * level.loops,
 			scale: 2,
 			facing: -1,
 		})
@@ -65,9 +63,6 @@ class RunningState extends State {
 class AttackWindupState extends State {
 	get animation() {
 		return 'attackWindup' as const
-	}
-	get flashInterval() {
-		return ATTACK_FLASH_INTERVAL
 	}
 	update2(owner: BossMan) {
 		if (this.time > 1.6) {

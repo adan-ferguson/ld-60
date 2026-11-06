@@ -18,9 +18,8 @@ export class EntitiesLayer extends Container {
 				const pixiEl = entity.createPixiEl(this.gc)
 				this.onScreen.set(entity, pixiEl)
 				this.addChild(pixiEl)
-			} else {
-				this.onScreen.get(entity)!.update(delta)
 			}
+			this.onScreen.get(entity)!.update(delta)
 		}
 		for (const [entity, pixiEl] of this.onScreen) {
 			if (!level.entitiesManager.presentEntities.includes(entity)) {

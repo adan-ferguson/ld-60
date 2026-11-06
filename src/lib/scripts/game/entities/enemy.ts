@@ -1,6 +1,10 @@
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import type { ColorSource } from 'pixi.js'
+
+const ONE_HEALTH_COLOR = 'magenta'
+const MULTI_HEALTH_COLOR = 'purple'
 
 export abstract class Enemy extends GameEntity {
 	flashInterval = 0
@@ -9,6 +13,12 @@ export abstract class Enemy extends GameEntity {
 		this.destroyed.listen(() => {
 			level.game.addScore(this.score, this)
 		})
+	}
+	override get color() {
+		if (this.maxHealth === 1) {
+			return ONE_HEALTH_COLOR
+		}
+		return pctToColor(this.health / this.maxHealth)
 	}
 	override get canBeHitByPlayer() {
 		return true
@@ -27,4 +37,8 @@ export abstract class Enemy extends GameEntity {
 			}),
 		)
 	}
+}
+
+function pctToColor(pct: number): ColorSource {
+	// TODO: This
 }
