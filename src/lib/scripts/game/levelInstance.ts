@@ -65,9 +65,13 @@ export class LevelInstance {
 		this.entitiesManager.update(delta)
 		this.player.update(delta)
 		this.roundTimer.value += delta
-		if (!this.#cleared && !this.entitiesManager.hasEnemy) {
-			this.#cleared = true
-			this.waveCleared.emit()
+		if (!this.#cleared) {
+			if (this.entitiesManager.hasPrincess) {
+				return
+			} else if (!this.entitiesManager.hasEnemy) {
+				this.#cleared = true
+				this.waveCleared.emit()
+			}
 		}
 	}
 	tilesOfKind(...kinds: string[]) {
@@ -83,5 +87,12 @@ export class LevelInstance {
 		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')
 		const xy = Random.chooseOne(treasures)?.tileXY ?? { x: 0, y: 0 }
 		this.entitiesManager.spawn(new Treasure(this, TileDef.toWorldMidpoint(xy)))
+	}
+
+	princessRescued() {
+		if (!this.#cleared) {
+			this.#cleared = true
+			this.waveCleared.emit()
+		}
 	}
 }

@@ -18,7 +18,7 @@ export abstract class GameEntity {
 	public time = 0
 	public scale = 1
 	private damageTaken = 0
-	protected constructor(public level: LevelInstance) {}
+	constructor(public level: LevelInstance) {}
 	public get game() {
 		return this.level.game
 	}

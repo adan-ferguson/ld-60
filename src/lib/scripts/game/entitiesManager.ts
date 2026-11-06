@@ -8,6 +8,7 @@ import { ShooterMan } from '#lib/scripts/game/entities/shooterMan.ts'
 import { RunnerMan } from '#lib/scripts/game/entities/runnerMan.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { BossMan } from '#lib/scripts/game/entities/bossMan.ts'
+import { Princess } from '#lib/scripts/game/entities/princess.ts'
 
 export class EntitiesManager {
 	#spawnedEntities: Set<GameEntity> = new Set()
@@ -44,6 +45,9 @@ export class EntitiesManager {
 			}
 		}
 		return false
+	}
+	get hasPrincess() {
+		return this.presentEntities.some((e) => e instanceof Princess)
 	}
 	spawn(entity: GameEntity) {
 		this.#spawnedEntities.add(entity)
@@ -84,6 +88,8 @@ export function tryCreateEntity(level: LevelInstance, def: TileDef) {
 			return new MovingBlock(level, def.contents)
 		} else if (def.contents.kind === 'bossMan') {
 			return new BossMan(level)
+		} else if (def.contents.kind === 'princess') {
+			return new Princess(level)
 		}
 	}
 }
