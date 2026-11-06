@@ -3,6 +3,7 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export abstract class Enemy extends GameEntity {
+	flashInterval = 0
 	constructor(level: LevelInstance) {
 		super(level)
 		this.destroyed.listen(() => {

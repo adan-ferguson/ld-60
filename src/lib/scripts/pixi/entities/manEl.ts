@@ -22,22 +22,26 @@ const defs: Record<ManAnimationType, AnimationDef> = {
 	},
 }
 
+const DAMAGE_FLASH_TIME = 0.1
+
 export class ManEl extends WithManSprite {
+	#flashTime = 0
 	constructor(
 		gc: GameController,
 		private man: Man,
 	) {
 		super(gc, man)
 		this.setAnimation(defs[man.defaultAnimation])
-		this.sprite.tint = 'red'
+		this.sprite.tint = man.color
 		man.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(man.worldBounds, 'red', 2, 3))
+			gc.addAnimation(destroyIntoSquaresAnimation(man.worldBounds, man.color, 2, 3))
 		})
 		man.animationChanged.listen((type) => {
 			this.setAnimation(defs[type])
 		})
 		man.damageTaken.listen(() => {
-			// TODO: This
+			this.#flashTime = DAMAGE_FLASH_TIME
+			this.sprite.tint = 'white'
 		})
 	}
 
@@ -45,5 +49,16 @@ export class ManEl extends WithManSprite {
 		return [this.man.hitbox]
 	}
 
-	update2() {}
+	update2(delta: number) {
+		if (this.#flashTime > 0) {
+			this.#flashTime -= delta
+			if (this.#flashTime <= 0) {
+				this.sprite.tint = this.man.color
+			}
+		}
+		if (this.man.flashInterval) {
+			const flash = Math.floor(this.man.time / this.man.flashInterval) % 2 === 0
+			this.sprite.tint = flash ? 'white' : this.man.color
+		}
+	}
 }

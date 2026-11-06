@@ -1,6 +1,7 @@
 import { Man, type ManProps } from '#lib/scripts/game/entities/man.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import type { ColorSource } from 'pixi.js'
 
 export type RunnerManProps = ManProps & {
 	speed: number
@@ -14,6 +15,9 @@ export class RunnerMan extends Man {
 		super(level, props)
 		this.#speed = props.speed ?? 25
 		this.#sprintBonus = props.sprintBonus ?? 15
+	}
+	get color(): ColorSource {
+		return 'red'
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'

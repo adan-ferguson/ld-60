@@ -3,6 +3,9 @@ import { Man } from '#lib/scripts/game/entities/man.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
+import type { ColorSource } from 'pixi.js'
+
+const ATTACK_FLASH_INTERVAL = 0.1
 
 export class BossMan extends Man {
 	iterations = 0
@@ -14,6 +17,9 @@ export class BossMan extends Man {
 			facing: -1,
 		})
 		this.#state = new RunningState()
+	}
+	get color(): ColorSource {
+		return 'red'
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'
@@ -30,12 +36,16 @@ export class BossMan extends Man {
 	}
 	setState(newState: State) {
 		this.#state = newState
+		this.flashInterval = newState.flashInterval
 		this.animationChanged.emit(newState.animation)
 	}
 }
 
 abstract class State extends GenericState<BossMan> {
 	abstract get animation(): ManAnimationType
+	get flashInterval(): number {
+		return 0
+	}
 }
 
 class RunningState extends State {
@@ -55,6 +65,9 @@ class RunningState extends State {
 class AttackWindupState extends State {
 	get animation() {
 		return 'attackWindup' as const
+	}
+	get flashInterval() {
+		return ATTACK_FLASH_INTERVAL
 	}
 	update2(owner: BossMan) {
 		if (this.time > 1.6) {
@@ -88,9 +101,9 @@ class AttackState extends State {
 				}),
 			)
 		}
-		const shotTime = owner.level.loops === 3 ? 1.3 : 1.5
+		const shotTime = owner.loops === 3 ? 1.3 : 1.5
 		if (this.time > shotTime) {
-			if (this.attackCount < owner.level.loops) {
+			if (this.attackCount < owner.loops) {
 				owner.setState(new AttackState(this.attackCount + 1))
 			}
 		}

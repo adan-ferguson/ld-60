@@ -4,8 +4,11 @@ import { Graphics } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
 
+const DAMAGE_FLASH_TIME = 0.1
+
 export class TurretEl extends GameEntityEl {
 	private gfx: Graphics
+	#flashTime = 0
 	constructor(
 		gc: GameController,
 		private turret: Turret,
@@ -16,8 +19,11 @@ export class TurretEl extends GameEntityEl {
 		turret.destroyed.listen(() => {
 			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, 'magenta'))
 		})
+		turret.damageTaken.listen(() => {
+			this.#flashTime = DAMAGE_FLASH_TIME
+		})
 	}
-	update2() {
+	update2(delta: number) {
 		this.gfx.clear()
 		this.gfx
 			.rect(
@@ -26,12 +32,13 @@ export class TurretEl extends GameEntityEl {
 				this.turret.baseWidth,
 				this.turret.baseHeight,
 			)
-			.fill('magenta')
+			.fill(this.#flashTime > 0 ? 'white' : 'magenta')
 		let color = 'black'
 		if (this.turret.fireTimeout) {
 			color = this.turret.fireTimeout % 0.16 < 0.08 ? 'red' : 'black'
 		}
 		this.gfx.rect(-2, -1, 4, 2).fill(color)
 		this.gfx.rect(-1, -2, 2, 4).fill(color)
+		this.#flashTime = Math.max(0, this.#flashTime - delta)
 	}
 }

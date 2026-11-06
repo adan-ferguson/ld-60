@@ -7,6 +7,7 @@ import { Projectile } from '#lib/scripts/game/projectile.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import type { ColorSource } from 'pixi.js'
 
 export type ManProps = {
 	facing: 1 | -1
@@ -30,6 +31,7 @@ export abstract class Man extends Enemy {
 	}
 	readonly #maxHealth: number
 	abstract get defaultAnimation(): ManAnimationType
+	abstract get color(): ColorSource
 	override get baseHeight(): number {
 		return 12
 	}
