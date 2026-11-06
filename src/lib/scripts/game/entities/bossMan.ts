@@ -75,7 +75,7 @@ class AttackState extends State {
 			owner.level.entitiesManager.spawn(
 				new Projectile(owner.level, {
 					style: 'large',
-					hitbox: { x: 4, y: 24 },
+					hitbox: { x: 4, y: 20 },
 					wallHitbox: { x: 4, y: 24 },
 					source: owner,
 					lifetime: 15,
@@ -88,7 +88,7 @@ class AttackState extends State {
 				}),
 			)
 		}
-		const shotTime = owner.level.loops === 3 ? 1.35 : 1.5
+		const shotTime = owner.level.loops === 3 ? 1.3 : 1.5
 		if (this.time > shotTime) {
 			if (this.attackCount < owner.level.loops) {
 				owner.setState(new AttackState(this.attackCount + 1))

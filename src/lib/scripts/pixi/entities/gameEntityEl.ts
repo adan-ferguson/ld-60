@@ -37,5 +37,5 @@ export abstract class GameEntityEl extends Container {
 		}
 		this.update2(delta)
 	}
-	public update2(_delta: number) {}
+	protected update2(_delta: number) {}
 }

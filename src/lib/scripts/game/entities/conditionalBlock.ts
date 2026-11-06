@@ -5,10 +5,15 @@ import { ConditionalBlockEl } from '#lib/scripts/pixi/entities/conditionalBlockE
 import { Consts } from '#lib/scripts/consts.ts'
 import type { ConditionalBlockDef } from '#lib/scripts/game/levelDef.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { BossMan } from '#lib/scripts/game/entities/bossMan.ts'
 
 export class ConditionalBlock extends GameEntity {
-	constructor(level: LevelInstance, def: ConditionalBlockDef) {
+	constructor(
+		level: LevelInstance,
+		private def: ConditionalBlockDef,
+	) {
 		super(level)
+		this.isReady = false
 	}
 
 	get baseHeight(): number {
@@ -19,9 +24,21 @@ export class ConditionalBlock extends GameEntity {
 		return Consts.TILE_SIZE_PX
 	}
 
+	override get blocksMovement() {
+		return true // TODO: test that this doesn't work until isReady is true
+	}
+
+	override get blocksProjectiles() {
+		return true // TODO: test that this doesn't work until isReady is true
+	}
+
 	createPixiEl(gc: GameController): GameEntityEl {
 		return new ConditionalBlockEl(gc, this)
 	}
 
-	update2(): void {}
+	update2(): void {
+		if (!this.level.entitiesManager.activeEntities.some((e) => e instanceof BossMan)) {
+			this.isReady = true
+		}
+	}
 }
