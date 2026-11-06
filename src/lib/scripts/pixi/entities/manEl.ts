@@ -36,6 +36,9 @@ export class ManEl extends WithManSprite {
 		man.animationChanged.listen((type) => {
 			this.setAnimation(defs[type])
 		})
+		man.damageTaken.listen(() => {
+			// TODO: This
+		})
 	}
 
 	override get debugRects() {

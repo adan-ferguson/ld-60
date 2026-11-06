@@ -8,6 +8,7 @@ import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 export abstract class GameEntity {
+	public damageTaken = CoolEvents.createHandler<(amount: number) => void>()
 	public isDestroyed = false
 	public isReady = true
 	public x = 0
@@ -17,7 +18,7 @@ export abstract class GameEntity {
 	public facing = 1
 	public time = 0
 	public scale = 1
-	private damageTaken = 0
+	#damageTaken = 0
 	constructor(public level: LevelInstance) {}
 	public get game() {
 		return this.level.game
@@ -179,9 +180,11 @@ export abstract class GameEntity {
 		if (this.isDestroyed || !this.isReady) {
 			return
 		}
-		this.damageTaken += amount
-		if (this.damageTaken >= this.maxHealth) {
+		this.#damageTaken += amount
+		if (this.#damageTaken >= this.maxHealth) {
 			this.destroy()
+		} else {
+			this.damageTaken.emit(amount)
 		}
 	}
 
