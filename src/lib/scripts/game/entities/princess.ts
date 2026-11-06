@@ -18,6 +18,7 @@ export class Princess extends GameEntity {
 
 	update2(): void {
 		const { player } = this.level
+		this.facing = -1
 		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
 			this.level.princessRescued()
 		}

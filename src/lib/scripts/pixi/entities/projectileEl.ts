@@ -50,7 +50,7 @@ export class ProjectileEl extends GameEntityEl {
 			anchor: { x: 0.5, y: 0.5 },
 			rotation: this.proj.options.angle,
 		})
-		this.tint = this.proj.options.tint
+		sprite.tint = this.proj.options.tint
 		this.zIndex = 2
 		this.addChild(sprite)
 	}

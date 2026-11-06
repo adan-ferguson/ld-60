@@ -22,8 +22,9 @@ type Wall = {
 	kind: 'wall'
 }
 
-type AfterBossWall = {
-	kind: 'afterBossWall'
+export type ConditionalBlockDef = {
+	kind: 'conditionalBlock'
+	condition: 'afterBoss'
 }
 
 type Lava = {
@@ -67,7 +68,7 @@ export type TileContents =
 	| Spikes
 	| PrincessTile
 	| BossManTile
-	| AfterBossWall
+	| ConditionalBlockDef
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

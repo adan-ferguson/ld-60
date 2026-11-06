@@ -1,12 +1,10 @@
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
-import type Game from '#lib/scripts/game/game.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import type { MovingBlockDef } from '#lib/scripts/game/levelDef.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import type { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
-import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 

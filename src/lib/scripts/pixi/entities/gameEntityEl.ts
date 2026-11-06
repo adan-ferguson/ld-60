@@ -29,7 +29,10 @@ export abstract class GameEntityEl extends Container {
 				.rect(...this.entity.localBounds.asXywh())
 				.stroke({ color: 0x00ff00, width: 0.25 })
 			this.debugRects.forEach((r) => {
-				this.debugGfx.rect(...r.asXywh()).stroke({ color: 0x0000ff, width: 0.25 })
+				this.debugGfx
+					.rect(...r.asXywh())
+					.stroke({ color: 0x0000ff, width: 0.25 })
+					.fill('yellow')
 			})
 		}
 		this.update2(delta)

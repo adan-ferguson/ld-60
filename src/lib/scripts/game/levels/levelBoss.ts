@@ -27,7 +27,7 @@ xllllllllllllllllllllllllllllllx
 		t: { kind: 'treasureSpawn' },
 		p: { kind: 'princess' },
 		x: { kind: 'wall' },
-		y: { kind: 'afterBossWall' },
+		y: { kind: 'conditionalBlock', condition: 'afterBoss' },
 		l: { kind: 'lava' },
 		1: { kind: 'bossMan' },
 	},
