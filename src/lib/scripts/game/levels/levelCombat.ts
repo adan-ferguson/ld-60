@@ -1,25 +1,25 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelCombat: LevelDef = {
-	displayName: 'Combat Level',
+	displayName: 'Tough Mans',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx....x.x.....................xx
-xx....xsx.....................xx
-xx.....y......xx..xx..........xx
-xx...........xxx..xxx.........xx
-xx...........xxx..xxx.........xx
-x............xxx.xxxx.........xx
-x1......3....xxx.xxxx3......3.xx
-xxxxxxxxxxxx.xxx..xxxxxxxxxxx.xx
-xx...........xxx..xxx.........xx
-xx...........xxxx.xxx.........xx
-xx...........xxxx.xxx.........xx
-xx................xxx.........xx
-xx1..............2xxx.........xx
-xxx..xx...xxxx.xxxxxx.........xx
-xxllllllllxxxx.xxxxx.....4....xx
-xxllllllllxxxx.......xxxxxxxxlxx
+xxxxxxx.x............xxxxxxxxxxx
+xxxxxxxsx............xxxxxxxxxxx
+xxyyyyyyy.....xxxyxx.xxxxxxxxxxx
+xx...........xxxx.xxyyyyyyyyyyxx
+xx...........xxxx.xx........2.xx
+xx...........xxxxyxxyyyyyyyyyyxx
+xx......3....xxxx.xx........2.xx
+xxxxxxxxxxxxyxxxx.xxxxxxxxxxxxxx
+xx...........xxxxyxxxxxxxxxxxxxx
+xx...........xxxx.xxxxxxxxxxxxxx
+xx...........xxxx.xxxxxxxxxxxxxx
+xx...........yyyyyxxx.........xx
+xx1...........................xx
+xxx..xx...xxxxxxxxxxx.........xx
+xxllllllllxxxxxxxxxxx....3....xx
+xxllllllllxxxxxxxxxxxxxxxxxxxlxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
@@ -27,10 +27,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		t: { kind: 'treasureSpawn' },
 		x: { kind: 'wall' },
 		y: { kind: 'thinFloor' },
-		1: { kind: 'shooterMan', health: 3, facing: 1 },
-		2: { kind: 'shooterMan', health: 3, facing: -1 },
-		3: { kind: 'runnerMan', health: 3 },
-		4: { kind: 'runnerMan', health: 5, speed: 45 },
+		1: { kind: 'shooterMan', health: 5, facing: 1 },
+		2: { kind: 'shooterMan', health: 5, facing: -1 },
+		3: { kind: 'runnerMan', health: 5, speed: 35 },
 		a: { kind: 'turret' },
 		l: { kind: 'lava' },
 	},

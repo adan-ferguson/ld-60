@@ -86,7 +86,7 @@ export class WorldCollision {
 	}
 
 	getGround(entityRect: CoolRect) {
-		const feetRect = entityRect.getEdge('bottom').pad({ y: 0.001 })
+		const feetRect = entityRect.getEdge('bottom').pad({ x: -0.001, y: 0.001 })
 		return this.movementBlockers.filter((solid) => feetRect.intersects(solid.rect.getEdge('top')))
 	}
 

@@ -168,7 +168,7 @@ export abstract class GameEntity {
 		if (!this.diesToHazards) {
 			return
 		}
-		const hazardHurtbox = this.worldBounds.pad(-1)
+		const hazardHurtbox = this.worldBounds.pad(-2)
 		if (this.level.worldCollision.hazards.some((h) => h.intersects(hazardHurtbox))) {
 			this.takeDamage(this.maxHealth)
 		}
