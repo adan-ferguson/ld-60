@@ -8,6 +8,8 @@ AssetUtils.requestPreload({
 	alias: `spike`,
 })
 
+const THIN_FLOOR_PX = 2
+
 export class TerrainLayer extends Graphics {
 	setLevel(level: LevelInstance) {
 		const { TILE_SIZE_PX } = Consts
@@ -18,6 +20,8 @@ export class TerrainLayer extends Graphics {
 			const { kind } = tile.contents
 			if (kind === 'wall') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('#DDD')
+			} else if (kind === 'thinFloor') {
+				this.rect(x, y, TILE_SIZE_PX, THIN_FLOOR_PX).fill('#DDD')
 			} else if (kind === 'lava') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('red')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')

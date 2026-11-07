@@ -243,15 +243,18 @@ export class Player extends GameEntity {
 
 	#tryDropThroughFloor() {
 		if (this.controlsManager.y > 0 && this.aerialState.kind === 'grounded') {
-			// TODO: and if we're on a thin floor
+			const ground = this.level.worldCollision.getGround(this.worldBounds)
+			if (!ground.length || ground.some((g) => !g.thinFloor)) {
+				return false
+			}
 			this.#dropThroughTime = 0.15
 			this.aerialState = {
 				kind: 'aerial',
 				doubleJumpUsed: false,
 				time: 0,
 			}
-			// this.velY = 20
 			return true
 		}
+		return false
 	}
 }

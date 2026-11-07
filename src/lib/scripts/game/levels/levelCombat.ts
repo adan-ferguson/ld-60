@@ -4,14 +4,14 @@ export const LevelCombat: LevelDef = {
 	displayName: 'Combat Level',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.............................xx
-xs............................xx
-xx............xx..xx..........xx
+xx....x.x.....................xx
+xx....xsx.....................xx
+xx.....y......xx..xx..........xx
 xx...........xxx..xxx.........xx
 xx...........xxx..xxx.........xx
 x............xxx.xxxx.........xx
 x1......3....xxx.xxxx3......3.xx
-xx.xxxxxxxxx.xxx..xxxxxxxxxxx.xx
+xxxxxxxxxxxx.xxx..xxxxxxxxxxx.xx
 xx...........xxx..xxx.........xx
 xx...........xxxx.xxx.........xx
 xx...........xxxx.xxx.........xx
@@ -26,6 +26,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn' },
 		x: { kind: 'wall' },
+		y: { kind: 'thinFloor' },
 		1: { kind: 'shooterMan', health: 3, facing: 1 },
 		2: { kind: 'shooterMan', health: 3, facing: -1 },
 		3: { kind: 'runnerMan', health: 3 },
