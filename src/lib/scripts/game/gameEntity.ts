@@ -203,7 +203,6 @@ export abstract class GameEntity {
 		if (!this.squishable) {
 			return false
 		}
-		const solids = this.level.worldCollision.movementBlockers.map((s) => s.rect)
-		return isSquished(this.worldBounds, solids)
+		return isSquished(this.worldBounds, this.level.worldCollision.movementBlockers)
 	}
 }

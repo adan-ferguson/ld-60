@@ -90,9 +90,14 @@ export class WorldCollision {
 		return this.movementBlockers.filter((solid) => feetRect.intersects(solid.rect.getEdge('top')))
 	}
 
-	isGrounded(entityRect: CoolRect): boolean {
+	isGrounded(entityRect: CoolRect, ignoreThinFloors = false): boolean {
 		const feetRect = entityRect.getEdge('bottom').pad({ y: 0.001 })
-		return this.movementBlockers.some((solid) => feetRect.intersects(solid.rect.getEdge('top')))
+		return this.movementBlockers.some((solid) => {
+			if (ignoreThinFloors && solid.thinFloor) {
+				return false
+			}
+			return feetRect.intersects(solid.rect.getEdge('top'))
+		})
 	}
 
 	resolveMovement(
@@ -122,6 +127,9 @@ export class WorldCollision {
 		return this.movementBlockers.some((solid) => {
 			if (exclude !== undefined && solid.entity === exclude) {
 				return false
+			}
+			if (solid.thinFloor) {
+				return false // Not strictly correct but...for what we use it for it's fine
 			}
 			return rect.intersects(solid.rect, true)
 		})
@@ -239,7 +247,7 @@ export class WorldCollision {
 
 		for (const solid of this.movementBlockers) {
 			if (solid.thinFloor) {
-				if (axis !== 'y' || delta > 0 || ignoreThinFloors) {
+				if (axis !== 'y' || delta < 0 || ignoreThinFloors) {
 					continue
 				}
 			}

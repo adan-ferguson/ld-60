@@ -4,11 +4,11 @@ export const LevelTight: LevelDef = {
 	displayName: 'Cramped Spaces',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...xxxxxxxx..................1x
-x.s...........................xx
-xxxx.xxxxxxxx.....y...y...y...xx
-xxxx....xxxxx...xxxxxxxxxxxxxxxx
-x1......xxxxx.................3x
+x..x...xxxxx..................1x
+xs.x..........................xx
+xx.xyxx.xxxxx.....y...y...y...xx
+xxyx.xx.xxxxx...xxxxxxxxxxxxxxxx
+xx...xx.xxxxx.................3x
 xxxxxxx.xxxxx..................x
 xxxxxxx.x..........xx.......xx.x
 xxxxxxx.x.......axxxx...x...xx.x
@@ -28,7 +28,7 @@ xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 		u: { kind: 'treasureSpawn', loop: 2 },
 		v: { kind: 'treasureSpawn', loop: 3 },
 		x: { kind: 'wall' },
-		y: { kind: 'wall' },
+		y: { kind: 'thinFloor' },
 		l: { kind: 'lava' },
 		1: { kind: 'turret' },
 		2: { kind: 'turret', loop: [2, 3] },

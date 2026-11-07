@@ -148,7 +148,9 @@ export class Player extends GameEntity {
 		return true
 	}
 	onGround() {
-		return this.level.worldCollision.isGrounded(this.worldBounds) ?? false
+		return (
+			this.level.worldCollision.isGrounded(this.worldBounds, this.#dropThroughTime > 0) ?? false
+		)
 	}
 	private calcShotInfo() {
 		if (this.crouching) {
@@ -248,6 +250,7 @@ export class Player extends GameEntity {
 				return false
 			}
 			this.#dropThroughTime = 0.15
+			this.velY = 1
 			this.aerialState = {
 				kind: 'aerial',
 				doubleJumpUsed: false,
