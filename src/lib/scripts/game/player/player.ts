@@ -37,6 +37,7 @@ const CEILING_SNAP_DISTANCE = 1.5
 
 export class Player extends GameEntity {
 	static COYOTE_TIME = 0.07
+	#dropThroughTime = 0
 	aerialState: AerialState = { kind: 'grounded', time: 0 }
 	private controlsManager: ControlsManager
 	public jumped =
@@ -67,6 +68,9 @@ export class Player extends GameEntity {
 	public override get squishable() {
 		return true
 	}
+	get ignoringThinFloors() {
+		return this.#dropThroughTime > 0
+	}
 	tryCrouch() {
 		if (this.crouching) {
 			return false
@@ -90,6 +94,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	update2(delta: number) {
+		this.#dropThroughTime = Math.max(0, this.#dropThroughTime - delta)
 		this.pushOutOfSolids()
 		this.aerialState.time += delta
 		if (!this.onGround()) {
@@ -121,6 +126,9 @@ export class Player extends GameEntity {
 	}
 	jump() {
 		const stateBefore = this.aerialState
+		if (this.#tryDropThroughFloor()) {
+			return true
+		}
 		if (
 			stateBefore.kind === 'grounded' ||
 			(stateBefore.kind === 'aerial' && stateBefore.time <= Player.COYOTE_TIME)
@@ -182,6 +190,7 @@ export class Player extends GameEntity {
 			this.worldBounds,
 			this.velX * delta,
 			this.velY * delta,
+			this.#dropThroughTime > 0,
 		)
 		this.x += result.x - this.worldBounds.x
 		this.y += result.y - this.worldBounds.y
@@ -230,5 +239,19 @@ export class Player extends GameEntity {
 			}
 		}
 		return false
+	}
+
+	#tryDropThroughFloor() {
+		if (this.controlsManager.y > 0 && this.aerialState.kind === 'grounded') {
+			// TODO: and if we're on a thin floor
+			this.#dropThroughTime = 0.15
+			this.aerialState = {
+				kind: 'aerial',
+				doubleJumpUsed: false,
+				time: 0,
+			}
+			// this.velY = 20
+			return true
+		}
 	}
 }

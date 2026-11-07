@@ -3,7 +3,6 @@ import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
-import type { ColorSource } from 'pixi.js'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
@@ -16,9 +15,6 @@ export class ShooterMan extends Man {
 	public constructor(level: LevelInstance, props: Partial<ManProps>) {
 		super(level, props)
 		this.#state = new IdleState(false)
-	}
-	get color(): ColorSource {
-		return 'red'
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'stand'

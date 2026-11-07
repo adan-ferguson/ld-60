@@ -16,9 +16,6 @@ export class RunnerMan extends Man {
 		this.#speed = props.speed ?? 25
 		this.#sprintBonus = props.sprintBonus ?? 15
 	}
-	get color(): ColorSource {
-		return 'red'
-	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'
 	}

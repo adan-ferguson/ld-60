@@ -6,7 +6,7 @@ import { clamp } from '#lib/scripts/utils/clamp.ts'
 import { formatHex, interpolate } from 'culori'
 
 const ONE_HEALTH_COLOR = 'magenta'
-const MULTI_HEALTH_COLOR = 'purple'
+const MULTI_HEALTH_COLOR = '#600060'
 const ptm = interpolate([ONE_HEALTH_COLOR, MULTI_HEALTH_COLOR])
 
 export abstract class Enemy extends GameEntity {

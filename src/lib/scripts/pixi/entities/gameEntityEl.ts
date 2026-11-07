@@ -4,7 +4,7 @@ import type { GameController } from '#lib/scripts/gameController.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import type CoolRect from '#lib/scripts/utils/coolRect.ts'
 
-const DEBUG = true
+const DEBUG = false
 
 export abstract class GameEntityEl extends Container {
 	private debugGfx: Graphics
@@ -28,12 +28,12 @@ export abstract class GameEntityEl extends Container {
 				.clear()
 				.rect(...this.entity.localBounds.asXywh())
 				.stroke({ color: 0x00ff00, width: 0.25 })
-			this.debugRects.forEach((r) => {
-				this.debugGfx
-					.rect(...r.asXywh())
-					.stroke({ color: 0x0000ff, width: 0.25 })
-					.fill('yellow')
-			})
+			// this.debugRects.forEach((r) => {
+			// 	this.debugGfx
+			// 		.rect(...r.asXywh())
+			// 		.stroke({ color: 0x0000ff, width: 0.25 })
+			// 		.fill('yellow')
+			// })
 		}
 		this.update2(delta)
 	}

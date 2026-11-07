@@ -47,6 +47,10 @@ type BossManTile = {
 	kind: 'bossMan'
 }
 
+type ThinFloor = {
+	kind: 'thinFloor'
+}
+
 export type MovingBlockDef = {
 	kind: 'movingBlock'
 	isX: boolean
@@ -69,6 +73,7 @@ export type TileContents =
 	| PrincessTile
 	| BossManTile
 	| ConditionalBlockDef
+	| ThinFloor
 
 export type VariableContents = TileContents & {
 	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]

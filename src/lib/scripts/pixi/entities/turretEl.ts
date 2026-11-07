@@ -17,7 +17,7 @@ export class TurretEl extends GameEntityEl {
 		this.gfx = new Graphics()
 		this.addChild(this.gfx)
 		turret.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, 'magenta'))
+			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, turret.color))
 		})
 		turret.damageTaken.listen(() => {
 			this.#flashTime = DAMAGE_FLASH_TIME
@@ -32,7 +32,7 @@ export class TurretEl extends GameEntityEl {
 				this.turret.baseWidth,
 				this.turret.baseHeight,
 			)
-			.fill(this.#flashTime > 0 ? 'white' : 'magenta')
+			.fill(this.#flashTime > 0 ? 'white' : this.turret.color)
 		let color = 'black'
 		if (this.turret.fireTimeout) {
 			color = this.turret.fireTimeout % 0.16 < 0.08 ? 'red' : 'black'

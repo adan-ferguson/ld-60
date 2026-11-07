@@ -31,7 +31,6 @@ export abstract class Man extends Enemy {
 	}
 	readonly #maxHealth: number
 	abstract get defaultAnimation(): ManAnimationType
-	abstract get color(): ColorSource
 	override get baseHeight(): number {
 		return 12
 	}

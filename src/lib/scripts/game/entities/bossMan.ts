@@ -10,14 +10,11 @@ export class BossMan extends Man {
 	#state: State
 	constructor(level: LevelInstance) {
 		super(level, {
-			health: 8 + 8 * level.loops,
+			health: 16 * level.loops,
 			scale: 2,
 			facing: -1,
 		})
 		this.#state = new RunningState()
-	}
-	get color(): ColorSource {
-		return 'red'
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'

@@ -11,6 +11,7 @@ export type MovementBlocker = {
 	rect: CoolRect
 	velocityX: number
 	velocityY: number
+	thinFloor?: boolean
 }
 
 type PushCandidate = {
@@ -42,6 +43,12 @@ export class WorldCollision {
 				rect: new CoolRect(TileDef.toWorldRect(t.tileXY)),
 				velocityX: 0,
 				velocityY: 0,
+			})),
+			...this.tilesOfType('thinFloor').map((t) => ({
+				rect: TileDef.toWorldRect(t.tileXY),
+				velocityX: 0,
+				velocityY: 0,
+				thinFloor: true,
 			})),
 			...this.level.entitiesManager.activeEntities
 				.filter((t) => t.blocksMovement)
@@ -88,7 +95,12 @@ export class WorldCollision {
 		return this.movementBlockers.some((solid) => feetRect.intersects(solid.rect.getEdge('top')))
 	}
 
-	resolveMovement(rect: CoolRect, deltaX: number, deltaY: number): MovementResult {
+	resolveMovement(
+		rect: CoolRect,
+		deltaX: number,
+		deltaY: number,
+		ignoreThinFloors = false,
+	): MovementResult {
 		const horizontal = this.resolveAxis(rect, 'x', deltaX)
 
 		const movedRect = rect.shift({
@@ -96,7 +108,7 @@ export class WorldCollision {
 			y: 0,
 		})
 
-		const vertical = this.resolveAxis(movedRect, 'y', deltaY)
+		const vertical = this.resolveAxis(movedRect, 'y', deltaY, ignoreThinFloors)
 
 		return {
 			x: horizontal.position,
@@ -120,6 +132,7 @@ export class WorldCollision {
 		for (let i = 0; i < MAX_PUSHES; i++) {
 			const rect = entity.worldBounds
 			const overlaps = this.movementBlockers
+				.filter((solid) => !solid.thinFloor)
 				.filter((solid) => rect.intersects(solid.rect, true))
 				.flatMap((solid) => this.getPushCandidates(entity, solid))
 			if (overlaps.length === 0) {
@@ -200,7 +213,12 @@ export class WorldCollision {
 		}
 	}
 
-	private resolveAxis(rect: CoolRect, axis: Axis, delta: number): AxisCollisionResult {
+	private resolveAxis(
+		rect: CoolRect,
+		axis: Axis,
+		delta: number,
+		ignoreThinFloors = false,
+	): AxisCollisionResult {
 		if (delta === 0) {
 			return {
 				position: rect[axis],
@@ -220,6 +238,12 @@ export class WorldCollision {
 		const hitSolids: MovementBlocker[] = []
 
 		for (const solid of this.movementBlockers) {
+			if (solid.thinFloor) {
+				if (axis !== 'y' || delta > 0 || ignoreThinFloors) {
+					continue
+				}
+			}
+
 			if (!this.overlapsOnAdjacentAxis(rect, solid.rect, cardinal)) {
 				continue
 			}
