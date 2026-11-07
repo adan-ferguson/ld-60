@@ -7,6 +7,7 @@ import { Consts } from '#lib/scripts/consts.ts'
 import { MovingBlockEl } from '#lib/scripts/pixi/entities/movingBlockEl.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { TileDef } from '#lib/scripts/game/tileDef.ts'
 
 const DEFAULT_SPEED = 20
 
@@ -46,6 +47,7 @@ export class MovingBlock extends GameEntity {
 		private def: MovingBlockDef,
 	) {
 		super(level)
+		this.#dir = def.initialDir ?? 1
 	}
 	private get current() {
 		return this[this.axis]
@@ -130,5 +132,19 @@ export class MovingBlock extends GameEntity {
 			min: negativeWall + 1,
 			max: positiveWall - 1,
 		}
+	}
+
+	override setTileXY(tileXY: XY) {
+		super.setTileXY(tileXY)
+		const toWorld = (value: number) => TileDef.toWorld(value) + Consts.TILE_SIZE_PX / 2
+		if (this.def.range) {
+			this.#min = toWorld(tileXY[this.axis] + this.def.range[0])
+			this.#max = toWorld(tileXY[this.axis] + this.def.range[1])
+		} else {
+			const { min, max } = this.autoCalcRange(tileXY)
+			this.#min = toWorld(min)
+			this.#max = toWorld(max)
+		}
+		this.#dir = this.def.initialDir ?? 1
 	}
 }
