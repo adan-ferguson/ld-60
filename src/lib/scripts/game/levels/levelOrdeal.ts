@@ -14,13 +14,13 @@ xllxx.x...................xx...x
 xxxxx.x....................x...x
 x.....x.D..................x...x
 x.....x...................mx...x
-x.....x............xxxxxxxxx...x
+x.....x...........xxxxxxxxxx...x
 x.xlllx....................x...x
-x.xxxxx........................x
-x.....a.......a.......a........x
-x.........a.......a............x
+x.xxxxx........t...............x
+x..............a...............x
+x.........a.........a..........x
 xx...................A....xx.B.x
-xllllllllllllllllllllllllllllllx
+xllllllllllllllllllllllllllxxxxx
 `,
 	contents: {
 		s: { kind: 'playerSpawn' },
@@ -30,7 +30,7 @@ xllllllllllllllllllllllllllllllx
 		a: { kind: 'spikes' },
 		b: { kind: 'spikes', loop: 3 },
 		1: { kind: 'turret' },
-		A: { kind: 'movingBlock', isX: true, speed: 28, initialDir: -1 },
+		A: { kind: 'movingBlock', isX: true, speed: 32, initialDir: -1 },
 		B: { kind: 'movingBlock', isX: false, speed: 14, initialDir: -1 },
 		C: { kind: 'movingBlock', isX: false, range: [-4, 0], speed: 12 },
 		D: { kind: 'movingBlock', isX: false, range: [0, 2] },

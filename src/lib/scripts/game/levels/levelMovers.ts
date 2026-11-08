@@ -1,45 +1,56 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelMovers: LevelDef = {
-	displayName: 'Moving Blocks 2',
+	displayName: 'Shifty Shenanigans',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x1x3...........................x
-x.xx...........s...............x
-x.x1................xd......c..x
-x.xx................xxxxxxxxxx1x
-x.x............v.............xxx
-x..............................x
-xxg.....................c......x
-x......g...............xu......x
-x.....................xxx......x
-x....................xxxxx.....x
-xmmmmmmmmmmmm.......xx...xx....x
-xxxxxxxxxxxxx......xxx...xxx...x
-x1xt..............xxxx.x.xxxx..x
-x................xxxxx.a.xxxxxbx
-x......................x.xxxxx.x
-x....u.....x.........e.x....1x1x
+x...........x..................x
+x...........x..................x
+x...........x......x.c.d...x...x
+x...........x......xxxxxxxxx...x
+xc..........x..............x...x
+xx.....g....x..s...........x...x
+x..................x...a...x...x
+x...............h..x...a...x...x
+x..............v...xxxxxxx1x...x
+x..........ii......xxxxxxxxx...x
+xmmmmmmmmmmmm.....xxx..1xxxx...x
+xxxxxxxxxxxxx.....xxx.xxxxx....x
+x1xt..............xxxyxxxxx....x
+x.................xxx..axxxxvvvx
+x.....................xxxxxx...x
+x....u.....x....e.....xxxxx1...x
 xllllllllllxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn', loop: 1 },
 		x: { kind: 'wall' },
+		y: { kind: 'thinFloor' },
 		1: { kind: 'turret' },
-		3: { kind: 'turret', loop: 3 },
+		3: [
+			{
+				kind: 'wall',
+				loop: [1, 2],
+			},
+			{
+				kind: 'turret',
+				loop: 3,
+			},
+		],
 		u: { kind: 'movingBlock', isX: true },
 		v: { kind: 'movingBlock', isX: false },
-		w: { kind: 'movingBlock', isX: true, range: [-8, 0] },
 		l: { kind: 'lava' },
 		m: { kind: 'lava', loop: [2, 3] },
 		o: { kind: 'movingBlock', isX: true, speed: 30 },
 		a: { kind: 'movingBlock', isX: true, type: 'spike' },
 		b: { kind: 'spikes' },
-		c: { kind: 'shooterMan', facing: -1, health: 5 },
+		c: { kind: 'shooterMan', facing: 1, health: 1 },
 		d: { kind: 'movingBlock', isX: true, type: 'spike', speed: 50 },
 		e: { kind: 'runnerMan', facing: -1 },
 		f: { kind: 'movingBlock', isX: true, range: [-5, 0] },
-		g: { kind: 'movingBlock', isX: true, range: [0, 5] },
+		g: { kind: 'movingBlock', isX: true, range: [-4, 4] },
+		h: { kind: 'movingBlock', isX: false, initialDir: -1 },
+		i: { kind: 'thinFloor' },
 	},
 }

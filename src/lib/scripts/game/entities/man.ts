@@ -37,8 +37,8 @@ export abstract class Man extends Enemy {
 	override get baseWidth(): number {
 		return 8
 	}
-	override get diesToHazards() {
-		return true
+	override get hazardHurtbox() {
+		return this.localBounds
 	}
 	override get canStandOnMovingBlocks() {
 		return true

@@ -34,7 +34,7 @@ export abstract class GameEntity {
 	/**
 	 * @virtual
 	 */
-	public get diesToHazards() {
+	public get hazardHurtbox(): false | CoolRect {
 		return false
 	}
 
@@ -165,11 +165,12 @@ export abstract class GameEntity {
 	}
 
 	private checkHazards() {
-		if (!this.diesToHazards) {
+		const { hazardHurtbox } = this
+		if (!hazardHurtbox) {
 			return
 		}
-		const hazardHurtbox = this.worldBounds.pad(-2)
-		if (this.level.worldCollision.hazards.some((h) => h.intersects(hazardHurtbox))) {
+		const hazardHurtboxWorld = this.toWorldBounds(hazardHurtbox)
+		if (this.level.worldCollision.hazards.some((h) => h.intersects(hazardHurtboxWorld))) {
 			this.takeDamage(this.maxHealth)
 		}
 	}

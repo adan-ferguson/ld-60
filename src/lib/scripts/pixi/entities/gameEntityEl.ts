@@ -28,6 +28,12 @@ export abstract class GameEntityEl extends Container {
 				.clear()
 				.rect(...this.entity.localBounds.asXywh())
 				.stroke({ color: 0x00ff00, width: 0.25 })
+			if (this.entity.hazardHurtbox) {
+				this.debugGfx
+					.clear()
+					.rect(...this.entity.hazardHurtbox.asXywh())
+					.stroke({ color: 0xffff00, width: 0.25 })
+			}
 			// this.debugRects.forEach((r) => {
 			// 	this.debugGfx
 			// 		.rect(...r.asXywh())

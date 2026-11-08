@@ -1,4 +1,3 @@
-import Game from '#lib/scripts/game/game.ts'
 import { ControlsManager } from '#lib/scripts/game/player/controlsManager.ts'
 import { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import { PlayerEl } from '#lib/scripts/pixi/entities/playerEl.ts'
@@ -7,7 +6,6 @@ import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
-import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/trySnapToCeilingGap.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
@@ -62,8 +60,8 @@ export class Player extends GameEntity {
 	public override get canStandOnMovingBlocks() {
 		return true
 	}
-	public override get diesToHazards() {
-		return true
+	public override get hazardHurtbox() {
+		return this.localBounds.pad({ x: -1, y: -3 })
 	}
 	public override get squishable() {
 		return true
@@ -95,7 +93,7 @@ export class Player extends GameEntity {
 	}
 	update2(delta: number) {
 		this.#dropThroughTime = Math.max(0, this.#dropThroughTime - delta)
-		this.pushOutOfSolids()
+		this.level.worldCollision.pushOutOfSolids(this)
 		this.aerialState.time += delta
 		if (!this.onGround()) {
 			this.tryUncrouch()
@@ -110,6 +108,9 @@ export class Player extends GameEntity {
 				this.tryCrouch()
 			} else {
 				this.tryUncrouch()
+			}
+			if (this.aerialState.kind !== 'grounded') {
+				this.aerialState = { kind: 'grounded', time: 0 }
 			}
 		}
 		this.controlsManager.update()
@@ -210,14 +211,6 @@ export class Player extends GameEntity {
 		}
 	}
 
-	resetState() {
-		this.velX = 0
-		this.velY = 0
-		this.aerialState = { kind: 'grounded', time: 0 }
-		this.facing = 1
-		this.controlsManager.reset()
-	}
-
 	private roomToUncrouch() {
 		const worldBounds = this.worldBounds
 		return !this.level.worldCollision.overlapsSolid(
@@ -230,15 +223,10 @@ export class Player extends GameEntity {
 		)
 	}
 
-	private pushOutOfSolids() {
-		this.level.worldCollision.pushOutOfSolids(this)
-	}
-
 	protected override isSquished() {
 		if (super.isSquished()) {
-			if (this.tryCrouch()) {
-				return super.isSquished()
-			}
+			this.tryCrouch()
+			return super.isSquished()
 		}
 		return false
 	}

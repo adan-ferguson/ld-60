@@ -10,7 +10,7 @@ export class BossMan extends Man {
 	#state: State
 	constructor(level: LevelInstance) {
 		super(level, {
-			health: 16 * level.loops,
+			health: [16, 32, 64][level.loops - 1],
 			scale: 2,
 			facing: -1,
 		})
