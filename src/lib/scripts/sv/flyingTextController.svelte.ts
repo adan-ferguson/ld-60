@@ -21,11 +21,10 @@ export class FlyingTextController {
 	get instances(): FlyingTextInstance[] {
 		const time = this.time
 		return [...this.texts].map((def) => {
-			const t = (time - def.startTime) / def.duration
-
+			const delta = time - def.startTime
 			return {
 				def,
-				currentPosition: XY.sum(def.origin, XY.scale(def.velocity, t)),
+				currentPosition: XY.sum(def.origin, XY.scale(def.velocity, delta)),
 			}
 		})
 	}
@@ -35,8 +34,8 @@ export class FlyingTextController {
 			text: amount.toString(),
 			origin,
 			startTime: this.time,
-			duration: 1,
-			velocity: { x: 0, y: -50 },
+			duration: 111,
+			velocity: { x: 0, y: -1 },
 		})
 	}
 	update(delta: number) {
