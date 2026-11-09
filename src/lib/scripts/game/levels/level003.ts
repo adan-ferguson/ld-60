@@ -17,9 +17,9 @@ x..........x.....1...x........xx
 x....................x........xx
 x.......x.....x.....xx.xx.....xx
 x.......x............x.xx.....xx
-x....x..x........x...x.xx.....xx
+x...x...x........x...x.xx.....xx
 x.......x..............xx.....xx
-x.s.....x..............xxxxxxxxx
+xs......x..............xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {

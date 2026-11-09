@@ -1,7 +1,7 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelBoss: LevelDef = {
-	displayName: 'Boss',
+	displayName: 'Boss Fight!',
 	phantaSpawnTime: 0,
 	treasureSpawnTime: [6, 12, 16],
 	tiles: `

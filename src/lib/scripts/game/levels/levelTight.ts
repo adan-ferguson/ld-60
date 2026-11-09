@@ -1,7 +1,7 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelTight: LevelDef = {
-	displayName: 'Cramped Spaces',
+	displayName: 'Cramped Chimney',
 	treasureSpawnTime: [10, 5, 5],
 	phantaSpawnTime: [60, 50, 40],
 	tiles: `

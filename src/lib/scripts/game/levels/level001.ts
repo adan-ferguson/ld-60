@@ -1,7 +1,7 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level001: LevelDef = {
-	displayName: 'Level 1',
+	displayName: 'Turret Tantrum',
 	treasureSpawnTime: 5,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -9,14 +9,14 @@ x3.............3..............3x
 x..............................x
 x..............................x
 x..............................x
-x.............................tx
-x.............................xx
+xs............................tx
+xx............................xx
 x.............................2x
-xs.......................xx....x
-xx...........xx1xx.......xx....x
-x2...........xxxxx...b.........x
-x........xx..xx1xx..xxx........x
-x.....b..xx.........xxx........x
+x....xx..................xx....x
+x....xx.......x11x.......xx....x
+x2............xxxx...b.........x
+x........xxx..xxxx..xxx........x
+x.....b..x1x........x1x........x
 x....xx..................xx....x
 x....xx..................xx....x
 xxx..........................xxx

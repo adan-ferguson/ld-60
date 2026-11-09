@@ -6,6 +6,7 @@ import { addHighScore, isHighScore } from '#lib/scripts/game/highScores.ts'
 import { MainContainer } from '#lib/scripts/pixi/mainContainer.ts'
 import type { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelte.ts'
+import { Cutscene } from '#lib/scripts/cutscene.ts'
 
 export type PreWavePhase = {
 	kind: 'prewave'
@@ -40,6 +41,11 @@ export type AttractPhase = {
 	kind: 'attract'
 }
 
+export type CutscenePhase = {
+	kind: 'cutscene'
+	cutscene: Cutscene
+}
+
 export type ScreenPhase =
 	| PreWavePhase
 	| WavePhase
@@ -48,19 +54,23 @@ export type ScreenPhase =
 	| TitlePhase
 	| HighScoresPhase
 	| AttractPhase
+	| CutscenePhase
+
 export class GameController {
 	public game: Game | undefined
 	public updated = CoolEvents.createHandler()
 	public phaseChanged = CoolEvents.createHandler()
+	public cutsceneStarted = CoolEvents.createHandler<(cutscene: Cutscene) => void>()
 	public phase: ScreenPhase = { kind: 'title' }
 	public flyingTextController = new FlyingTextController()
 	private waveCleared = false
 	private mainContainer: MainContainer
+	#cutscene: Cutscene | undefined
 	static setup(app: Application, testWave?: number) {
 		return new GameController(app, testWave)
 	}
 	constructor(
-		app: Application,
+		private app: Application,
 		private testWave?: number,
 	) {
 		this.mainContainer = new MainContainer(this)
@@ -87,6 +97,7 @@ export class GameController {
 			}
 			this.game.update(delta)
 			this.updated.emit(delta)
+			this.#cutscene?.update(delta)
 		})
 	}
 	startGame() {
@@ -123,16 +134,15 @@ export class GameController {
 				bonuses,
 			})
 			setTimeout(() => {
-				if (this.isTestMode) {
-					// game.nextWave()
+				if (0 && this.isTestMode) {
 					this.preWave()
 				} else if (game.wave % 10 === 0) {
-					// this.cutscene
+					this.#showCutscene(1)
 				} else {
 					game.nextWave()
 					this.preWave()
 				}
-			}, 2500)
+			}, 4000)
 		})
 		this.preWave()
 	}
@@ -181,5 +191,22 @@ export class GameController {
 
 	addAnimation(vfxAnimation: VfxAnimation) {
 		this.mainContainer.vfxLayer.addAnimation(vfxAnimation)
+	}
+
+	#showCutscene(index: number) {
+		this.#cutscene = new Cutscene(index)
+		const { container } = this.#cutscene
+		this.app.stage.addChild(container)
+		this.setScreenPhase({
+			kind: 'cutscene',
+			cutscene: this.#cutscene,
+		})
+		this.#cutscene.finished.listen(() => {
+			this.app.stage.removeChild(container)
+			this.#cutscene = undefined
+			this.gameOver()
+			// this.nextWave()
+			// this.preWave()
+		})
 	}
 }

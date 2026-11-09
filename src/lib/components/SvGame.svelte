@@ -10,6 +10,7 @@
   import AttractModeScreen from '#lib/components/AttractModeScreen.svelte'
   import {initGame} from '#lib/scripts/initGame.ts'
   import FlyingTextOverlay from '#lib/components/FlyingTextOverlay.svelte'
+  import CutsceneScreen from '#lib/components/CutsceneScreen.svelte'
 
   const { wave }: { wave?: number | undefined } = $props()
 
@@ -45,6 +46,8 @@
       <HighScoresScreen></HighScoresScreen>
     {:else if gc.phase.kind === 'attract'}
       <AttractModeScreen></AttractModeScreen>
+    {:else if gc.phase.kind === 'cutscene'}
+      <CutsceneScreen phase={gc.phase}></CutsceneScreen>
     {/if}
   {/if}
 {:else}

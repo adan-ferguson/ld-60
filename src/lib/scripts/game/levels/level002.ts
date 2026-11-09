@@ -1,7 +1,7 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level002: LevelDef = {
-	displayName: 'Level 2',
+	displayName: 'Runners',
 	treasureSpawnTime: 5,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -1,7 +1,7 @@
 import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelBlades: LevelDef = {
-	displayName: 'Blades',
+	displayName: 'Blade Bonanza',
 	treasureSpawnTime: 10,
 	turretShotTime: [6, 4, 2],
 	tiles: `
