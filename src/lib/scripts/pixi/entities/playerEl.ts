@@ -1,6 +1,6 @@
 import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
-import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
+import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Graphics } from 'pixi.js'
@@ -56,7 +56,7 @@ export class PlayerEl extends WithManSprite {
 			}
 		})
 		player.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(player.worldBounds, 'cyan', 2, 3, 6))
+			gc.addAnimation(particlesAnimation(player.worldBounds, 'cyan', 3, 24))
 		})
 		player.shotFired.listen(() => {
 			this.setAnimationType(this.player.crouching ? 'crouchAttack' : 'attack')

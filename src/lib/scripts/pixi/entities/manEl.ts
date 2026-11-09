@@ -1,6 +1,6 @@
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { type Man } from '#lib/scripts/game/entities/man.ts'
-import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
+import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
 
 export type ManAnimationType = 'run' | 'attack' | 'attackWindup' | 'stand'
@@ -34,7 +34,7 @@ export class ManEl extends WithManSprite {
 		this.setAnimation(defs[man.defaultAnimation])
 		this.sprite.tint = man.color
 		man.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(man.worldBounds, man.color, 2, 3))
+			gc.addAnimation(particlesAnimation(man.worldBounds, man.color, 2, 3))
 		})
 		man.animationChanged.listen((type) => {
 			this.setAnimation(defs[type])

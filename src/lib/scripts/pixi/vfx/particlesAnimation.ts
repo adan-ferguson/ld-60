@@ -1,4 +1,4 @@
-import { type ColorSource, Graphics, type Rectangle } from 'pixi.js'
+import { type ColorSource, Graphics } from 'pixi.js'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import type CoolRect from '#lib/scripts/utils/coolRect.ts'
@@ -8,32 +8,26 @@ type FlyingSquare = {
 	velocity: XY
 }
 
-export function destroyIntoSquaresAnimation(
+export function particlesAnimation(
 	worldBounds: CoolRect,
 	color: ColorSource,
-	x = 2,
-	y = 2,
-	amount = 1,
+	size: number,
+	count: number,
 ) {
 	const gfx = new Graphics()
 	gfx.x = worldBounds.x - worldBounds.width / 2
 	gfx.y = worldBounds.y - worldBounds.height / 2
-	const size = { x: worldBounds.width / x, y: worldBounds.height / y }
 	const INITIAL_SPEED = 100
 	const GRAVITY = 250
 	const squares: FlyingSquare[] = []
-	for (let i = 0; i < amount; i++) {
-		for (let row = 0; row < y; row++) {
-			for (let column = 0; column < x; column++) {
-				squares.push({
-					initialPosition: {
-						x: column * size.x,
-						y: row * size.y,
-					},
-					velocity: random(),
-				})
-			}
-		}
+	for (let i = 0; i < count; i++) {
+		squares.push({
+			initialPosition: {
+				x: Math.random() * (worldBounds.width - size),
+				y: Math.random() * (worldBounds.height - size),
+			},
+			velocity: randomVel(),
+		})
 	}
 
 	return new VfxAnimation(gfx, {
@@ -46,12 +40,12 @@ export function destroyIntoSquaresAnimation(
 					x: 0,
 					y: 0.5 * GRAVITY * t * t,
 				})
-				gfx.rect(pos.x, pos.y, size.x, size.y).fill(color)
+				gfx.rect(pos.x, pos.y, size, size).fill(color)
 			}
 		},
 	})
 
-	function random() {
+	function randomVel() {
 		const angle = -Math.random() * Math.PI
 		const speed = INITIAL_SPEED * (0.5 + Math.random() * 0.5)
 		return {

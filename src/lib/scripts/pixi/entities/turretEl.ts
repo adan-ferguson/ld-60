@@ -2,7 +2,7 @@ import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { Turret } from '#lib/scripts/game/entities/turret.ts'
 import { Graphics } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
-import { destroyIntoSquaresAnimation } from '#lib/scripts/pixi/vfx/destroyIntoSquaresAnimation.ts'
+import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
 
 const DAMAGE_FLASH_TIME = 0.1
 
@@ -17,7 +17,7 @@ export class TurretEl extends GameEntityEl {
 		this.gfx = new Graphics()
 		this.addChild(this.gfx)
 		turret.destroyed.listen(() => {
-			gc.addAnimation(destroyIntoSquaresAnimation(turret.worldBounds, turret.color))
+			gc.addAnimation(particlesAnimation(turret.worldBounds, turret.color, 3, 6))
 		})
 		turret.damageTaken.listen(() => {
 			this.#flashTime = DAMAGE_FLASH_TIME

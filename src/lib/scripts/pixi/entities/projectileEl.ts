@@ -3,6 +3,7 @@ import type { Projectile, ProjectileStyle } from '#lib/scripts/game/projectile.t
 import { AnimatedSprite, Assets, Graphics, type Spritesheet, Texture, TextureSource } from 'pixi.js'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
+import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
 
 rp('small')
 rp('large')
@@ -27,6 +28,9 @@ export class ProjectileEl extends GameEntityEl {
 		} else {
 			this.spritey()
 		}
+		proj.destroyed.listen(() => {
+			gc.addAnimation(particlesAnimation(proj.worldBounds, proj.options.tint, 1, 3))
+		})
 	}
 	gfxy() {
 		const gfx = new Graphics()

@@ -20,3 +20,9 @@
     </div>
   {/each}
 </div>
+
+<style>
+  .flying-text {
+    position: absolute;
+  }
+</style>
