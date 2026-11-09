@@ -2,6 +2,8 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelCombat: LevelDef = {
 	displayName: 'Tough Mans',
+	treasureSpawnTime: 20,
+	phantaSpawnTime: 40,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.x............xxxxxxxxxxx
@@ -18,7 +20,7 @@ xx...........xxxx.xxxxxxxxxxxxxx
 xx...........yyyyyxxx.........xx
 xx1...........................xx
 xxx..xx...xxxxxxxxxxx.........xx
-xxllllllllxxxxxxxxxxx....3....xx
+xxllllllllxxxxxxxxxxxt...3....xx
 xxllllllllxxxxxxxxxxxxxxxxxxxlxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,

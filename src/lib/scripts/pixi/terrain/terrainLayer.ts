@@ -14,6 +14,7 @@ export class TerrainLayer extends Graphics {
 	setLevel(level: LevelInstance) {
 		const { TILE_SIZE_PX } = Consts
 		this.clear()
+		this.removeChildren()
 		for (const tile of level.tiles.values) {
 			const x = tile.tileXY.x * TILE_SIZE_PX
 			const y = tile.tileXY.y * TILE_SIZE_PX

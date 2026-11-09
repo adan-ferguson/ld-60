@@ -2,11 +2,12 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const Level001: LevelDef = {
 	displayName: 'Level 1',
+	treasureSpawnTime: 5,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x3.............3..............3x
 x..............................x
-xt.............................x
+x..............................x
 x..............................x
 x.............................tx
 x.............................xx
@@ -19,7 +20,7 @@ x.....b..xx.........xxx........x
 x....xx..................xx....x
 x....xx..................xx....x
 xxx..........................xxx
-xx1b...........t............b1xx
+xx1b........................b1xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {

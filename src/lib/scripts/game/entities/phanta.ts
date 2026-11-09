@@ -11,7 +11,7 @@ const SPAWN_TIME = 1.5
 
 const INITIAL_SPEED = 1
 const ACCEL = 0.8
-const ACCEL_ACCEL = 0.1
+const ACCEL_ACCEL = 0.05
 const HIT_SPEED_REDUCTION = 0.7
 
 const FLY_AWAY_BASE_SPEED = 10

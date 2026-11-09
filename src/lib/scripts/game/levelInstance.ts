@@ -37,7 +37,7 @@ export class LevelInstance {
 		this.entitiesManager = new EntitiesManager(this)
 		this.worldCollision = new WorldCollision(this)
 
-		this.roundTimer.addThreshold(TREASURE_SPAWN_TIME, () => this.#spawnTreasure())
+		this.roundTimer.addThreshold(this.#treasureSpawnTime, () => this.#spawnTreasure())
 		if (this.#phantaSpawnTime) {
 			this.roundTimer.addThreshold(this.#phantaSpawnTime, () => this.#spawnPhanta())
 		}
@@ -45,11 +45,14 @@ export class LevelInstance {
 			this.entitiesManager.fireRandomTurret(),
 		)
 	}
+	get #treasureSpawnTime() {
+		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)
+	}
 	get #phantaSpawnTime() {
-		return this.levelDef.phantaSpawnTime ? this.levelDef.phantaSpawnTime[this.loops] : undefined
+		return getLoopedVal(this.levelDef.phantaSpawnTime ?? [30, 25, 20], this.loops)
 	}
 	get #turretShotInterval() {
-		return (this.levelDef.turretShotTime ?? [4, 3.5, 3])[this.loops] ?? 4
+		return getLoopedVal(this.levelDef.turretShotTime ?? [4, 3.5, 3], this.loops)
 	}
 	begin() {
 		this.running = true
@@ -96,4 +99,11 @@ export class LevelInstance {
 			this.waveCleared.emit()
 		}
 	}
+}
+
+function getLoopedVal(param: [number, number, number] | number, loop: number) {
+	if (typeof param === 'number') {
+		return param
+	}
+	return param[loop - 1] ?? param[0] ?? 0
 }

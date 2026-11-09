@@ -2,11 +2,12 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelOrdeal: LevelDef = {
 	displayName: 'Ordeal',
+	phantaSpawnTime: 60,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.....x....F.......F.........1.x
 x.....x........................x
-x..xx.x....................x...x
+x..xx.x...................xx...x
 x..ax.x....................x...x
 x...x.x........C.......C...x...x
 x..sx.x.xaaaaaaaaaaaaaaaaaax...x
@@ -19,7 +20,7 @@ x.xlllx....................x...x
 x.xxxxx........t...............x
 x..............a...............x
 x.........a.........a..........x
-xx...................A....xx.B.x
+xx.......................Axx.B.x
 xllllllllllllllllllllllllllxxxxx
 `,
 	contents: {

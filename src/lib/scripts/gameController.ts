@@ -124,11 +124,13 @@ export class GameController {
 			})
 			setTimeout(() => {
 				if (this.isTestMode) {
+					// game.nextWave()
 					this.preWave()
 				} else if (game.wave % 10 === 0) {
 					// this.cutscene
 				} else {
 					game.nextWave()
+					this.preWave()
 				}
 			}, 2500)
 		})

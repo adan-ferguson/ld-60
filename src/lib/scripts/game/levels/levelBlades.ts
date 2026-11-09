@@ -2,17 +2,19 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelBlades: LevelDef = {
 	displayName: 'Blades',
+	treasureSpawnTime: 10,
+	turretShotTime: [6, 4, 2],
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...x.......a.....a.....a......x
 x...x..........................x
 x...a..........................x
-x........a.....a.....a.........x
+x.s......a.....a.....a.........x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
 xc...d.........xx1.............x
 xc...d.........xt1.............x
-xc...d.........xx1..........xxxx
-xc.a.d.cbaaaa.sxx1.........aaxxx
+xc...d.........xx1...........xxx
+xc.a.d.cbaaaa..xx1.........aaxxx
 xc.a...cbaaaa.xxx1.......xxxxxxx
 xc.xxxxxxxxxx.aax1.....aaxxxxxxx
 xc.aaaaaxxxxx........xxxxxxxxxxx

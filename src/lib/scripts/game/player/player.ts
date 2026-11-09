@@ -21,15 +21,15 @@ export type AerialState =
 			time: number
 	  }
 
-const JUMP_VELOCITY = 65
-const X_VELOCITY = 32
-const GRAVITY = 125
+const JUMP_VELOCITY = 68
+const X_VELOCITY = 34
+const GRAVITY = 135
 const MAX_FALL_SPEED = 200
 const WIDTH = 7
 const HEIGHT = 12
 const CROUCH_DIFF = 4
 const SHOT_COOLDOWN = 0.21
-const AIR_CONTROL = 0.04
+const AIR_CONTROL = 0.06
 const MAX_X_VELOCITY_FOR_CEILING_SNAP = 2.5
 const CEILING_SNAP_DISTANCE = 1.5
 
@@ -122,6 +122,7 @@ export class Player extends GameEntity {
 			}
 		} else if (this.aerialState.kind === 'aerial') {
 			this.velX += this.controlsManager.x * AIR_CONTROL
+			this.velX = Math.max(-X_VELOCITY, Math.min(X_VELOCITY, this.velX))
 		}
 		this.facing = this.controlsManager.x > 0 ? 1 : this.controlsManager.x < 0 ? -1 : this.facing
 	}

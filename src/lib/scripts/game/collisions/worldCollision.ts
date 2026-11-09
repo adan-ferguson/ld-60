@@ -72,7 +72,8 @@ export class WorldCollision {
 
 	get hazards(): CoolRect[] {
 		return [
-			...this.tilesOfType('lava', 'spikes').map((t) => TileDef.toWorldRect(t.tileXY)),
+			...this.tilesOfType('lava').map((t) => TileDef.toWorldRect(t.tileXY).getEdge('bottom', 0.5)),
+			...this.tilesOfType('spikes').map((t) => TileDef.toWorldRect(t.tileXY)),
 			...this.level.entitiesManager.activeEntities
 				.filter((t) => t.isHazard)
 				.map((t) => t.worldBounds),

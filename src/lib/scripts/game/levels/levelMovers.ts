@@ -2,11 +2,12 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelMovers: LevelDef = {
 	displayName: 'Shifty Shenanigans',
+	phantaSpawnTime: 60,
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...........x..................x
-x...........x..................x
-x...........x......x.c.d...x...x
+xc..........x..................x
+xx..........x......x.c.d...x...x
 x...........x......xxxxxxxxx...x
 xc..........x..............x...x
 xx.....g....x..s...........x...x
