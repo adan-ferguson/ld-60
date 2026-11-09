@@ -90,48 +90,48 @@ export class GameController {
 		})
 	}
 	startGame() {
-		this.game = new Game(this.testWave)
-		this.game.scoreAdded.listen((amount, pos) => {
+		const game = new Game(this.testWave, this.isTestMode)
+		this.game = game
+		game.scoreAdded.listen((amount, pos) => {
 			if (pos) {
 				this.flyingTextController.addScore(amount, pos)
 			}
 		})
-		this.game.playerDied.listen(() => {
+		game.playerDied.listen(() => {
 			setTimeout(() => {
-				if (this.waveCleared || !this.game) {
+				if (this.waveCleared) {
 					return
 				}
 				if (!this.isTestMode) {
-					this.game.lives--
+					game.lives--
 				}
-				if (!this.game.lives) {
+				if (!game.lives) {
 					this.gameOver()
 				} else {
 					this.preWave()
 				}
 			}, 2400)
 		})
-		this.game.waveCleared.listen((bonuses) => {
+		game.waveCleared.listen((bonuses) => {
 			this.waveCleared = true
+			if (!this.game) {
+				return
+			}
+			this.setScreenPhase({
+				kind: 'postwave',
+				wave: this.game.wave,
+				bonuses,
+			})
 			setTimeout(() => {
-				if (!this.game) {
-					return
-				}
-				this.setScreenPhase({
-					kind: 'postwave',
-					wave: this.game.wave,
-					bonuses,
-				})
-				this.game.addScore(bonuses.timeBonus + bonuses.waveBonus)
-				if (!this.isTestMode) {
-					this.game.nextWave()
-				}
-				setTimeout(() => {
+				if (this.isTestMode) {
 					this.preWave()
-				}, 2500)
-			}, 2000)
+				} else if (game.wave % 10 === 0) {
+					// this.cutscene
+				} else {
+					game.nextWave()
+				}
+			}, 2500)
 		})
-		// this.started.emit()
 		this.preWave()
 	}
 	gameOver() {
@@ -169,6 +169,7 @@ export class GameController {
 			throw 'No game'
 		}
 		this.setScreenPhase({ kind: 'wave' })
+		this.waveCleared = false
 		// this.soundManager.setMusic('spawn')
 		this.mainContainer.showPlayerSpawnAnimation(game.level).then(() => {
 			game.beginLevel()

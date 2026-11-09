@@ -13,6 +13,7 @@ type FlyingTextDef = {
 type FlyingTextInstance = {
 	def: FlyingTextDef
 	currentPosition: XY
+	t: number
 }
 
 export class FlyingTextController {
@@ -25,6 +26,7 @@ export class FlyingTextController {
 			return {
 				def,
 				currentPosition: XY.sum(def.origin, XY.scale(def.velocity, delta)),
+				t: delta / def.duration,
 			}
 		})
 	}
@@ -34,8 +36,8 @@ export class FlyingTextController {
 			text: amount.toString(),
 			origin,
 			startTime: this.time,
-			duration: 111,
-			velocity: { x: 0, y: -1 },
+			duration: 1,
+			velocity: { x: 0, y: -5 },
 		})
 	}
 	update(delta: number) {

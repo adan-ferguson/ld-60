@@ -37,6 +37,7 @@
         class="flying-text"
         style:left={`${instance.currentPosition.x}px`}
         style:top={`${instance.currentPosition.y}px`}
+        style:opacity={1 - instance.t * instance.t}
       >
         {instance.def.text}
       </div>
@@ -56,6 +57,8 @@
     transform: translate(-50%, -50%);
     /*white-space: nowrap;*/
     pointer-events: none;
-    font-size: 3px;
+    font-size: 4px;
+    color: lime;
+    letter-spacing: 0;
   }
 </style>

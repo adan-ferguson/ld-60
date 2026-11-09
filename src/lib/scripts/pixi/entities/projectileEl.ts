@@ -28,8 +28,11 @@ export class ProjectileEl extends GameEntityEl {
 		} else {
 			this.spritey()
 		}
-		proj.destroyed.listen(() => {
-			gc.addAnimation(particlesAnimation(proj.worldBounds, proj.options.tint, 1, 3))
+		proj.destroyed.listen((reason) => {
+			if (reason !== 'hit') {
+				return
+			}
+			gc.addAnimation(particlesAnimation(proj.worldBounds, proj.options.tint, 1, 2))
 		})
 	}
 	gfxy() {

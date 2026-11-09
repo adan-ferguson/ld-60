@@ -44,7 +44,7 @@ export abstract class Man extends Enemy {
 		return true
 	}
 	override get score(): number {
-		return 500 + 500 * this.#maxHealth
+		return 750 + 250 * this.#maxHealth
 	}
 	override get squishable() {
 		return true

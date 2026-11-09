@@ -31,7 +31,7 @@ export class Treasure extends GameEntity {
 		}
 		if (this.level.player.worldBounds.intersects(this.worldBounds)) {
 			this.destroy('collected')
-			this.game.addScore(750 + 250 * this.game.wave)
+			this.level.collectedTreasure = true
 		}
 	}
 

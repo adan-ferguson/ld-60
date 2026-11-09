@@ -21,7 +21,10 @@ export class RunnerMan extends Man {
 	}
 	update2(_delta: number): void {
 		const { player } = this.level
-		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
+		if (
+			player &&
+			this.worldBounds.pad({ y: -3 }).intersects(player.toWorldBounds(player.hazardHurtbox))
+		) {
 			player.takeDamage(1)
 		}
 		if (!this.hasGroundAhead()) {

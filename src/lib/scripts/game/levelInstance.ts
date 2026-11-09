@@ -24,6 +24,7 @@ export class LevelInstance {
 	#cleared = false
 	#playerSpawnPosition: XY
 	waveCleared = CoolEvents.createHandler()
+	collectedTreasure = false
 	constructor(
 		public game: Game,
 		public levelDef: LevelDef,

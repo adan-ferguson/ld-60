@@ -25,7 +25,10 @@ export class BossMan extends Man {
 	update2(delta: number) {
 		this.#state.update(this, delta)
 		const { player } = this.level
-		if (player && this.worldBounds.pad({ y: -3 }).intersects(player.worldBounds)) {
+		if (
+			player &&
+			this.worldBounds.pad({ y: -3 }).intersects(player.toWorldBounds(player.hazardHurtbox))
+		) {
 			player.takeDamage(1)
 		}
 	}
