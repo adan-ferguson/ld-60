@@ -38,6 +38,7 @@
         style:left={`${instance.currentPosition.x}px`}
         style:top={`${instance.currentPosition.y}px`}
         style:opacity={1 - instance.t * instance.t}
+        style:color={instance.def.color}
       >
         {instance.def.text}
       </div>
@@ -58,7 +59,6 @@
     /*white-space: nowrap;*/
     pointer-events: none;
     font-size: 4px;
-    color: lime;
     letter-spacing: 0;
   }
 </style>

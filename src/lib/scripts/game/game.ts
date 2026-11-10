@@ -5,15 +5,17 @@ import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { TreasureManager } from '#lib/scripts/game/treasureManager.ts'
+import { CoolCountdown } from '#lib/scripts/utils/coolCountdown.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 2000
-const WAVE_CLEAR_DELAY = 3
 
 export type Bonuses = {
 	treasureBonus: number
 	waveBonus: number
 }
+
+export type RoundOutcome = 'inProgress' | 'playerDied' | 'waveCleared'
 
 class Game {
 	public level: LevelInstance | undefined
@@ -25,8 +27,8 @@ class Game {
 	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	public treasures = new TreasureManager()
-	#isWaveCleared = false
-	#waveClearTimer = 0
+	#screenFadeCountdown: CoolCountdown | undefined
+	roundOutcome: RoundOutcome = 'inProgress'
 	get activeEntities(): GameEntity[] {
 		return this.level?.entitiesManager.activeEntities ?? []
 	}
@@ -50,9 +52,11 @@ class Game {
 		return this.level?.loops ?? 1
 	}
 	nextWave() {
+		console.log('nextWave')
 		this.wave++
 	}
 	setWave(wave: number) {
+		console.log('setWave', wave)
 		this.wave = wave
 	}
 	update(delta: number) {
@@ -61,20 +65,34 @@ class Game {
 		}
 		this.updateScore(delta)
 		this.level.update(delta)
-		this.#waveClearTimer = Math.max(0, this.#waveClearTimer - delta)
-		if (this.#isWaveCleared && this.#waveClearTimer <= 0) {
-			this.#finishWaveAndGrantBonuses()
+		if (this.#screenFadeCountdown?.countdown(delta).finished) {
+			this.#screenFadeCountdown = undefined
 		}
 	}
 	prepareLevel() {
 		const lvl = LevelsManager.getWave(this.wave)
+		this.roundOutcome = 'inProgress'
 		this.level = new LevelInstance(this, lvl.def, lvl.loops)
 		this.level.player.destroyed.listen(() => {
-			this.playerDied.emit(this.lives)
+			if (this.roundOutcome !== 'inProgress') {
+				return
+			}
+			this.roundOutcome = 'playerDied'
+			this.#screenFadeCountdown = new CoolCountdown(2, () => {
+				if (!this.isTestMode) {
+					this.lives--
+				}
+				this.playerDied.emit()
+			})
 		})
 		this.level.waveCleared.listen(() => {
-			this.#isWaveCleared = true
-			this.#waveClearTimer = WAVE_CLEAR_DELAY
+			if (this.roundOutcome !== 'inProgress') {
+				return
+			}
+			this.roundOutcome = 'waveCleared'
+			this.#screenFadeCountdown = new CoolCountdown(3, () => {
+				this.#finishWaveAndGrantBonuses()
+			})
 		})
 		return this.level
 	}
@@ -109,16 +127,14 @@ class Game {
 		if (!this.level) {
 			throw 'No level'
 		}
-		const treasureBonus = this.treasures.collectedCount * 1000
-		const waveBonus = 500 * this.wave
 		this.treasures.set(this.wave, this.level.collectedTreasure)
+		const treasureBonus = this.level.collectedTreasure ? this.treasures.collectedCount * 1000 : 0
+		const waveBonus = 500 * this.wave
 		this.waveCleared.emit({
 			treasureBonus,
 			waveBonus,
 		})
 		this.targetScore += treasureBonus + waveBonus
-		this.#isWaveCleared = false
-		this.#waveClearTimer = 0
 	}
 }
 

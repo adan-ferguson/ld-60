@@ -8,12 +8,21 @@ type FlyingTextDef = {
 	startTime: number
 	duration: number
 	uuid: string
+	color: string
 }
 
 type FlyingTextInstance = {
 	def: FlyingTextDef
 	currentPosition: XY
 	t: number
+}
+
+type AddParams = {
+	text: string
+	origin: XY
+	velocity?: XY
+	duration?: number
+	color?: string
 }
 
 export class FlyingTextController {
@@ -30,14 +39,22 @@ export class FlyingTextController {
 			}
 		})
 	}
-	addScore(amount: number, origin: { x: number; y: number }) {
+	addText(options: AddParams) {
 		this.texts.add({
 			uuid: crypto.randomUUID(),
+			startTime: this.time,
+			duration: options.duration ?? 1,
+			origin: options.origin,
+			text: options.text,
+			velocity: options.velocity ?? { x: 0, y: -5 },
+			color: options.color ?? 'white',
+		})
+	}
+	addScore(amount: number, origin: XY) {
+		this.addText({
 			text: amount.toString(),
 			origin,
-			startTime: this.time,
-			duration: 1,
-			velocity: { x: 0, y: -5 },
+			color: 'lime',
 		})
 	}
 	update(delta: number) {

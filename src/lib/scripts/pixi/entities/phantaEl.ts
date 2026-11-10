@@ -39,6 +39,12 @@ export class PhantaEl extends GameEntityEl {
 			if (phanta.flyingAway) {
 				return
 			}
+			gc.flyingTextController.addText({
+				text: 'Hurry!',
+				origin: phanta.xy,
+				color: 'red',
+				duration: 2,
+			})
 			this.#create()
 		})
 	}

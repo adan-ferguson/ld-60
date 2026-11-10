@@ -18,15 +18,14 @@ export class PrincessEl extends WithManSprite {
 				spiralSpawnAnimation({
 					targetPosition: princess.xy,
 					color: 'hotpink',
+					waveDuration: 2.5,
 				}),
 			)
 			gc.addAnimation(
 				spiralSpawnAnimation({
-					targetPosition: {
-						x: princess.x - 5,
-						y: princess.y - 2,
-					},
+					targetPosition: gc.game?.level?.player.xy ?? princess.xy,
 					color: 'cyan',
+					waveDuration: 2.5,
 				}),
 			)
 		})

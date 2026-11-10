@@ -43,6 +43,7 @@ export class Player extends GameEntity {
 	lastShotTime = 0
 	crouching: boolean = false
 	public shotFired = CoolEvents.createHandler()
+	stopped = false
 	constructor(level: LevelInstance, spawnPosition: XY) {
 		super(level)
 		this.setTileXY(spawnPosition)

@@ -109,28 +109,16 @@ export class GameController {
 			}
 		})
 		game.playerDied.listen(() => {
-			setTimeout(() => {
-				if (this.waveCleared) {
-					return
-				}
-				if (!this.isTestMode) {
-					game.lives--
-				}
-				if (!game.lives) {
-					this.gameOver()
-				} else {
-					this.preWave()
-				}
-			}, 2400)
+			if (!game.lives) {
+				this.gameOver()
+			} else {
+				this.preWave()
+			}
 		})
 		game.waveCleared.listen((bonuses) => {
-			this.waveCleared = true
-			if (!this.game) {
-				return
-			}
 			this.setScreenPhase({
 				kind: 'postwave',
-				wave: this.game.wave,
+				wave: game.wave,
 				bonuses,
 			})
 			setTimeout(() => {

@@ -65,6 +65,9 @@ export class PlayerEl extends WithManSprite {
 	}
 
 	update2(delta: number) {
+		if (this.player.stopped) {
+			this.setAnimationType('idle')
+		}
 		this.shotAnimationTime = Math.max(0, this.shotAnimationTime - delta)
 		const nextAnimation = this.getAnimation()
 		if (nextAnimation && nextAnimation !== this.currentAnimation) {

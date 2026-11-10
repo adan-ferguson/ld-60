@@ -17,5 +17,14 @@ export class TreasureEl extends GameEntityEl {
 			anchor: { x: 0.5, y: 0.5 },
 		})
 		this.addChild(sprite)
+		treasure.destroyed.listen((reason) => {
+			if (reason === 'collected') {
+				this.gc.flyingTextController.addText({
+					text: 'Lemon Get!',
+					origin: treasure.xy,
+					color: 'yellow',
+				})
+			}
+		})
 	}
 }
