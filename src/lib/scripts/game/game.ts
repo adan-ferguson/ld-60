@@ -109,12 +109,14 @@ class Game {
 		if (!this.level) {
 			throw 'No level'
 		}
+		const treasureBonus = this.treasures.collectedCount * 1000
+		const waveBonus = 500 * this.wave
 		this.treasures.set(this.wave, this.level.collectedTreasure)
 		this.waveCleared.emit({
-			treasureBonus: this.treasures.collectedCount * 1000,
-			waveBonus: 750 + 250 * this.wave,
+			treasureBonus,
+			waveBonus,
 		})
-		this.targetScore += this.treasures.collectedCount * 1000 + 750 + 250 * this.wave
+		this.targetScore += treasureBonus + waveBonus
 		this.#isWaveCleared = false
 		this.#waveClearTimer = 0
 	}
