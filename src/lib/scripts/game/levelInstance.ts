@@ -12,8 +12,6 @@ import { Player } from '#lib/scripts/game/player/player.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 
-const TREASURE_SPAWN_TIME = 10
-
 export class LevelInstance {
 	entitiesManager: EntitiesManager
 	tiles: XYMap<TileDef>
@@ -25,6 +23,7 @@ export class LevelInstance {
 	#playerSpawnPosition: XY
 	waveCleared = CoolEvents.createHandler()
 	collectedTreasure = false
+	#stopped = false
 	constructor(
 		public game: Game,
 		public levelDef: LevelDef,
@@ -63,7 +62,7 @@ export class LevelInstance {
 		// other stuff?
 	}
 	update(delta: number) {
-		if (!this.running) {
+		if (!this.running || this.#stopped) {
 			return
 		}
 		this.entitiesManager.update(delta)
@@ -96,6 +95,7 @@ export class LevelInstance {
 	princessRescued() {
 		if (!this.#cleared) {
 			this.#cleared = true
+			this.#stopped = true
 			this.waveCleared.emit()
 		}
 	}
