@@ -11,6 +11,7 @@
   import {initGame} from '#lib/scripts/initGame.ts'
   import FlyingTextOverlay from '#lib/components/FlyingTextOverlay.svelte'
   import CutsceneScreen from '#lib/components/CutsceneScreen.svelte'
+  import PreWaveScreen from '#lib/components/PreWaveScreen.svelte'
 
   const { wave }: { wave?: number | undefined } = $props()
 
@@ -33,9 +34,7 @@
     {#if phase.kind === 'title'}
       <TitleScreen></TitleScreen>
     {:else if gc.phase.kind === 'prewave'}
-      <div class="mid-wave-overlay">
-        Get Ready
-      </div>
+      <PreWaveScreen {gc}/>
     {:else if gc.phase.kind === 'wave'}
       <WaveScreen></WaveScreen>
     {:else if gc.phase.kind === 'postwave'}
