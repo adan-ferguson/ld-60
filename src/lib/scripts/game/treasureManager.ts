@@ -13,18 +13,14 @@ export class TreasureManager {
 		for (let r = 0; r < 3; r++) {
 			const row: LevelInfo[] = []
 			rows.push(row)
-			let anyInRow = false
 			for (let c = 1; c <= 10; c++) {
 				const val = this.#treasures.get(c + r * 10)
 				row.push({
 					treasureFound: val ?? false,
 					wave: c + r * 10,
 				})
-				if (val !== undefined) {
-					anyInRow = true
-				}
 			}
-			if (!anyInRow) {
+			if (this.#treasures.get(r * 10 + 10) === undefined) {
 				break
 			}
 		}
