@@ -7,7 +7,7 @@ import { MainContainer } from '#lib/scripts/pixi/mainContainer.ts'
 import type { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelte.ts'
 import { Cutscene } from '#lib/scripts/cutscene.ts'
-import { AudioPlayer } from '#lib/scripts/audioPlayer.ts'
+import { MusicPlayer } from '#lib/scripts/musicPlayer.ts'
 
 export type PreWavePhase = {
 	kind: 'prewave'
@@ -175,7 +175,7 @@ export class GameController {
 		// this.soundManager.setMusic('spawn')
 		this.mainContainer.showPlayerSpawnAnimation(level).then(() => {
 			game.beginLevel()
-			AudioPlayer.play(level.song)
+			MusicPlayer.play(level.song)
 		})
 	}
 

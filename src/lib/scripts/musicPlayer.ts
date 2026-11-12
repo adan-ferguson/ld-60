@@ -25,9 +25,9 @@ const songMap: Record<SongName, SongDef | undefined> = {
 	none: undefined,
 }
 
-export const AudioPlayer = {
+export const MusicPlayer = {
 	play(song: SongName) {
-		AudioPlayer.stop()
+		MusicPlayer.stop()
 		const songDef = songMap[song]
 		if (!songDef) {
 			return
