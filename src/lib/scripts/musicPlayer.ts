@@ -6,8 +6,8 @@ type SongDef = {
 }
 
 type PreloadedSong = {
-	leadin?: HTMLAudioElement
-	main: HTMLAudioElement
+	leadin?: AudioBuffer
+	main: AudioBuffer
 }
 
 const songDefs: Record<SongName, SongDef> = {
@@ -18,64 +18,70 @@ const songDefs: Record<SongName, SongDef> = {
 }
 
 const songCache = new Map<SongName, PreloadedSong>()
+let currentAudio: AudioContext | undefined
 
-let currentSong: PreloadedSong
-let currentAudio: HTMLAudioElement | undefined
+function getAudioContext() {
+	return (currentAudio ??= new AudioContext())
+}
+
+async function loadBuffer(filename: string): Promise<AudioBuffer> {
+	const response = await fetch(`/assets/music/${filename}`)
+	if (!response.ok) {
+		throw new Error(`Failed to load music: ${filename}`)
+	}
+
+	return getAudioContext().decodeAudioData(await response.arrayBuffer())
+}
+
+let currentSources: AudioBufferSourceNode[] = []
 
 export const MusicPlayer = {
-	play(songName: SongName) {
-		MusicPlayer.stop()
+	async play(songName: SongName) {
+		stop()
 		const song = songCache.get(songName)
 		if (!song) {
 			throw new Error(`Music was not preloaded: ${songName}`)
 		}
-		currentSong = song
-		song.main.loop = true
-		song.main.currentTime = 0
+		const ctx = getAudioContext()
+		await ctx.resume()
+		const startTime = ctx.currentTime + 0.05
+		const main = ctx.createBufferSource()
+		main.buffer = song.main
+		main.loop = true
+		main.connect(ctx.destination)
 		if (song.leadin) {
-			song.leadin.currentTime = 0
-			song.leadin.addEventListener(
-				'ended',
-				() => {
-					if (currentSong === song) {
-						play(song.main)
-					}
-				},
-				{ once: true },
-			)
-			play(song.leadin)
+			const leadin = ctx.createBufferSource()
+			leadin.buffer = song.leadin
+			leadin.connect(ctx.destination)
+			leadin.start(startTime)
+			main.start(startTime + song.leadin.duration)
+			currentSources = [leadin, main]
 		} else {
-			play(song.main)
+			main.start(startTime)
+			currentSources = [main]
 		}
 	},
 	async preload() {
 		await Promise.all(
 			Object.entries(songDefs).map(async ([name, definition]) => {
-				const audio: PreloadedSong = {
-					leadin: definition.leadin ? await preloadAudio(definition.leadin) : undefined,
-					main: await preloadAudio(definition.main),
-				}
-				songCache.set(name as SongName, audio)
+				const [leadin, main] = await Promise.all([
+					definition.leadin ? loadBuffer(definition.leadin) : undefined,
+					loadBuffer(definition.main),
+				])
+				songCache.set(name as SongName, {
+					leadin,
+					main,
+				})
 			}),
 		)
 	},
-	stop() {
-		currentAudio?.pause()
-		currentAudio = undefined
-	},
+	stop,
 }
 
-function preloadAudio(src: string): Promise<HTMLAudioElement> {
-	const audio = new Audio(`/assets/music/${src}`)
-	audio.preload = 'auto'
-	return new Promise((resolve, reject) => {
-		audio.addEventListener('canplaythrough', () => resolve(audio), { once: true })
-		audio.addEventListener('error', () => reject(audio.error), { once: true })
-		audio.load()
-	})
-}
-
-function play(audio: HTMLAudioElement) {
-	currentAudio = audio
-	void audio.play()
+function stop() {
+	for (const source of currentSources) {
+		source.stop()
+		source.disconnect()
+	}
+	currentSources = []
 }
