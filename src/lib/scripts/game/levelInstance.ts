@@ -44,6 +44,9 @@ export class LevelInstance {
 			this.entitiesManager.fireRandomTurret(),
 		)
 	}
+	get song() {
+		return this.levelDef.song ?? 'none'
+	}
 	get #treasureSpawnTime() {
 		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)
 	}
