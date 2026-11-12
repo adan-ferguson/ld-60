@@ -4,6 +4,7 @@ export const LevelBoss: LevelDef = {
 	displayName: 'Boss Fight!',
 	phantaSpawnTime: 0,
 	treasureSpawnTime: [6, 12, 16],
+	song: 'bossfight',
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..............................x

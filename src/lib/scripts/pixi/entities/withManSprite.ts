@@ -1,6 +1,6 @@
 import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
-import { AnimatedSprite, Assets, type Spritesheet, type Texture, type TextureSource } from 'pixi.js'
+import { AnimatedSprite, Assets, type Spritesheet, type Texture } from 'pixi.js'
 
 AssetUtils.requestPreload({
 	alias: 'man-spritesheet',

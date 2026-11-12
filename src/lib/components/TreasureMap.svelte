@@ -4,7 +4,6 @@
     treasureManager: TreasureManager,
     currentWave: number
   } = $props()
-  console.log(currentWave, treasureManager.rows)
 </script>
 
 <div>

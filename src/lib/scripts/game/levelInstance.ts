@@ -45,7 +45,7 @@ export class LevelInstance {
 		)
 	}
 	get song() {
-		return this.levelDef.song ?? 'none'
+		return this.levelDef.song ?? false
 	}
 	get #treasureSpawnTime() {
 		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)

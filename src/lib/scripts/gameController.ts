@@ -175,7 +175,11 @@ export class GameController {
 		// this.soundManager.setMusic('spawn')
 		this.mainContainer.showPlayerSpawnAnimation(level).then(() => {
 			game.beginLevel()
-			MusicPlayer.play(level.song)
+			if (level.song) {
+				MusicPlayer.play(level.song)
+			} else {
+				MusicPlayer.stop()
+			}
 		})
 	}
 
