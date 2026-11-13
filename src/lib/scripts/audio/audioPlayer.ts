@@ -1,15 +1,16 @@
-let currentAudio: AudioContext | undefined
+let audioContext: AudioContext | undefined
 
 function getAudioContext() {
-	return (currentAudio ??= new AudioContext())
+	return (audioContext ??= new AudioContext())
 }
 
 let currentSources: AudioBufferSourceNode[] = []
 
+type Channel = 'song' | 'sfx'
+
 type PlayOptions = {
 	loop?: boolean
-	channel?: 'song' | 'sfx'
-	overlap?: boolean
+	channel?: Channel
 }
 
 export const AudioPlayer = {
@@ -38,6 +39,8 @@ export const AudioPlayer = {
 			currentSources.push(source)
 		})
 	},
+	mute(channel: Channel) {},
+	unmute(channel: Channel) {},
 	stop,
 }
 

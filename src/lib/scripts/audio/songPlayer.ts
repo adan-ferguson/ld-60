@@ -39,18 +39,23 @@ const dittyCache = new Map<DittyName, Ditty>()
 
 export const SongPlayer = {
 	async preload() {
-		await Promise.all(
-			Object.entries(songDefs).map(async ([name, definition]) => {
-				const [leadin, main] = await Promise.all([
-					definition.leadin ? AudioPlayer.loadBuffer(definition.leadin) : undefined,
-					AudioPlayer.loadBuffer(definition.main),
-				])
-				songCache.set(name as SongName, {
-					leadin,
-					main,
-				})
-			}),
-		)
+		const songLoaders = Object.entries(songDefs).map(async ([name, definition]) => {
+			const [leadin, main] = await Promise.all([
+				definition.leadin ? AudioPlayer.loadBuffer(definition.leadin) : undefined,
+				AudioPlayer.loadBuffer(definition.main),
+			])
+			songCache.set(name as SongName, {
+				leadin,
+				main,
+			})
+		})
+		const dittyLoaders = Object.entries(dittyDefs).map(async ([name, definition]) => {
+			const buffer = await AudioPlayer.loadBuffer(definition.name)
+			dittyCache.set(name as DittyName, {
+				buffer,
+			})
+		})
+		await Promise.all([...songLoaders, ...dittyLoaders])
 	},
 	async playSong(songName: SongName) {
 		const song = songCache.get(songName)
@@ -74,9 +79,9 @@ export const SongPlayer = {
 		if (!ditty) {
 			throw new Error(`Ditty was not preloaded: ${dittyName}`)
 		}
-		void AudioPlayer.play(ditty.buffer, {
-			channel: 'song',
-			overlap: true,
+		AudioPlayer.mute('song')
+		AudioPlayer.play(ditty.buffer).then(() => {
+			AudioPlayer.unmute('song')
 		})
 	},
 	stop() {
