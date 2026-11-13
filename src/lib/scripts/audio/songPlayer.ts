@@ -1,0 +1,85 @@
+import { AudioPlayer } from '#lib/scripts/audio/audioPlayer.ts'
+
+type Song = {
+	leadin?: AudioBuffer
+	main: AudioBuffer
+}
+
+type Ditty = {
+	buffer: AudioBuffer
+}
+
+type SongDef = {
+	leadin?: string
+	main: string
+}
+
+type DittyDef = {
+	name: string
+}
+
+const songDefs: Record<string, SongDef> = {
+	bossfight: {
+		leadin: 'bossfightleadin.ogg',
+		main: 'bossfight.ogg',
+	},
+} as const
+
+const dittyDefs: Record<string, DittyDef> = {
+	treasure: {
+		name: 'treasure.ogg',
+	},
+} as const
+
+export type SongName = keyof typeof songDefs
+export type DittyName = keyof typeof dittyDefs
+
+const songCache = new Map<SongName, Song>()
+const dittyCache = new Map<DittyName, Ditty>()
+
+export const SongPlayer = {
+	async preload() {
+		await Promise.all(
+			Object.entries(songDefs).map(async ([name, definition]) => {
+				const [leadin, main] = await Promise.all([
+					definition.leadin ? AudioPlayer.loadBuffer(definition.leadin) : undefined,
+					AudioPlayer.loadBuffer(definition.main),
+				])
+				songCache.set(name as SongName, {
+					leadin,
+					main,
+				})
+			}),
+		)
+	},
+	async playSong(songName: SongName) {
+		const song = songCache.get(songName)
+		if (!song) {
+			throw new Error(`Music was not preloaded: ${songName}`)
+		}
+		if (song.leadin) {
+			void AudioPlayer.play([song.leadin, song.main], {
+				loop: true,
+				channel: 'song',
+			})
+		} else {
+			void AudioPlayer.play(song.main, {
+				loop: true,
+				channel: 'song',
+			})
+		}
+	},
+	async playDitty(dittyName: DittyName) {
+		const ditty = dittyCache.get(dittyName)
+		if (!ditty) {
+			throw new Error(`Ditty was not preloaded: ${dittyName}`)
+		}
+		void AudioPlayer.play(ditty.buffer, {
+			channel: 'song',
+			overlap: true,
+		})
+	},
+	stop() {
+		AudioPlayer.stop()
+	},
+}

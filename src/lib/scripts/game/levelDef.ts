@@ -1,7 +1,7 @@
 import type { TurretProps } from '#lib/scripts/game/entities/turret.ts'
 import { type ShooterManProps } from '#lib/scripts/game/entities/shooterMan.ts'
 import { type RunnerManProps } from '#lib/scripts/game/entities/runnerMan.ts'
-import type { SongName } from '#lib/scripts/audio/musicPlayer.ts'
+import type { SongName } from '#lib/scripts/audio/songPlayer.ts'
 
 export type ShooterDef = {
 	kind: 'shooterMan'
