@@ -63,14 +63,12 @@ export const SongPlayer = {
 			throw new Error(`Music was not preloaded: ${songName}`)
 		}
 		if (song.leadin) {
-			void AudioPlayer.play([song.leadin, song.main], {
+			void AudioPlayer.play([song.leadin, song.main], 'song', {
 				loop: true,
-				channelName: 'song',
 			})
 		} else {
-			void AudioPlayer.play(song.main, {
+			void AudioPlayer.play(song.main, 'song', {
 				loop: true,
-				channelName: 'song',
 			})
 		}
 	},
@@ -80,8 +78,7 @@ export const SongPlayer = {
 			throw new Error(`Ditty was not preloaded: ${dittyName}`)
 		}
 		AudioPlayer.mute('song')
-		AudioPlayer.play(ditty.buffer, {
-			channelName: 'ditty',
+		AudioPlayer.play(ditty.buffer, 'ditty', {
 			finished() {
 				AudioPlayer.unmute('song')
 			},

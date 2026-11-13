@@ -9,7 +9,6 @@ const channels = new Map<ChannelName, Channel>()
 
 type PlayOptions = {
 	loop?: boolean
-	channelName?: ChannelName
 	finished?: () => void
 }
 
@@ -41,8 +40,12 @@ export const AudioPlayer = {
 
 		return getAudioContext().decodeAudioData(await response.arrayBuffer())
 	},
-	play(coolAudio: AudioBuffer | AudioBuffer[], options: PlayOptions = {}) {
-		const channel = options.channelName ? getChannel(options.channelName) : undefined
+	play(
+		coolAudio: AudioBuffer | AudioBuffer[],
+		channelName: ChannelName,
+		options: PlayOptions = {},
+	) {
+		const channel = getChannel(channelName)
 		if (channel) {
 			channel.stop()
 		}
