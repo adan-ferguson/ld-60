@@ -3,7 +3,7 @@ import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import type { Treasure } from '#lib/scripts/game/treasure.ts'
 import { Assets, Sprite } from 'pixi.js'
-import { SongPlayer } from '#lib/scripts/audio/songPlayer.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 AssetUtils.requestPreload({
 	src: `/assets/sprites/treasure.png`,
@@ -25,7 +25,7 @@ export class TreasureEl extends GameEntityEl {
 					origin: treasure.xy,
 					color: 'yellow',
 				})
-				SongPlayer.playDitty('treasure')
+				SfxPlayer.play('treasure')
 			}
 		})
 	}

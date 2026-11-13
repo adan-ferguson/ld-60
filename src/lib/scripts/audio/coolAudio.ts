@@ -4,13 +4,14 @@ function getAudioContext() {
 	return (audioContext ??= new AudioContext())
 }
 
-type ChannelName = 'song' | 'ditty'
+type ChannelName = 'song' | 'sfx'
 const channels = new Map<ChannelName, Channel>()
 
 type PlayOptions = {
 	loop?: boolean
 	finished?: () => void
 	duration?: number
+	replace?: boolean
 }
 
 const VOLUME = 0.8
@@ -48,11 +49,11 @@ function getChannel(channelName: ChannelName) {
 	return channels.get(channelName)!
 }
 
-export const AudioPlayer = {
-	async loadBuffer(filename: string): Promise<AudioBuffer> {
-		const response = await fetch(`/assets/music/${filename}`)
+export const CoolAudio = {
+	async loadBuffer(url: string): Promise<AudioBuffer> {
+		const response = await fetch(url)
 		if (!response.ok) {
-			throw new Error(`Failed to load music: ${filename}`)
+			throw new Error(`Failed to load music: ${url}`)
 		}
 
 		return getAudioContext().decodeAudioData(await response.arrayBuffer())
@@ -65,33 +66,32 @@ export const AudioPlayer = {
 		const channel = getChannel(channelName)
 		const generation = channel.nextPlayback()
 		const ctx = getAudioContext()
-		return ctx.resume().then(() => {
-			if (!channel.isCurrent(generation)) {
-				return
+		await ctx.resume()
+		if (!channel.isCurrent(generation)) {
+			return
+		}
+		const startTime = ctx.currentTime + 0.01
+		const stopTime = options.duration === undefined ? undefined : startTime + options.duration
+		let nextStartTime = startTime
+		const b = Array.isArray(buffers) ? buffers : [buffers]
+		b.forEach((buffer, i) => {
+			const isLast = i === b.length - 1
+			const source = ctx.createBufferSource()
+			source.buffer = buffer
+			source.loop = isLast && !!options.loop
+			source.connect(channel?.gainNode ?? ctx.destination)
+			source.start(nextStartTime)
+			if (stopTime !== undefined) {
+				source.stop(stopTime)
 			}
-			const startTime = ctx.currentTime + 0.01
-			const stopTime = options.duration === undefined ? undefined : startTime + options.duration
-			let nextStartTime = startTime
-			const b = Array.isArray(buffers) ? buffers : [buffers]
-			b.forEach((buffer, i) => {
-				const isLast = i === b.length - 1
-				const source = ctx.createBufferSource()
-				source.buffer = buffer
-				source.loop = isLast && !!options.loop
-				source.connect(channel?.gainNode ?? ctx.destination)
-				source.start(nextStartTime)
-				if (stopTime !== undefined) {
-					source.stop(stopTime)
+			source.onended = () => {
+				channel.sources.delete(source)
+				if (isLast && channel.isCurrent(generation)) {
+					options.finished?.()
 				}
-				source.onended = () => {
-					channel.sources.delete(source)
-					if (isLast && channel.isCurrent(generation)) {
-						options.finished?.()
-					}
-				}
-				nextStartTime += buffer.duration
-				channel?.sources.add(source)
-			})
+			}
+			nextStartTime += buffer.duration
+			channel?.sources.add(source)
 		})
 	},
 	mute(channel: ChannelName) {

@@ -11,7 +11,7 @@ import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
-import type { SongName } from '#lib/scripts/audio/songPlayer.ts'
+import type { SongName } from '#lib/scripts/audio/musicPlayer.ts'
 
 export class LevelInstance {
 	entitiesManager: EntitiesManager
