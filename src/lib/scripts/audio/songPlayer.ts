@@ -25,12 +25,21 @@ const songDefs: Record<string, SongDef> = {
 		leadin: 'bossfightleadin.ogg',
 		main: 'bossfight.ogg',
 	},
+	level1: {
+		main: 'stage2.ogg',
+	},
+	level2: {
+		main: 'stage2.ogg',
+	},
+	level3: {
+		main: 'stage2.ogg',
+	},
 } as const
 
 const dittyDefs: Record<string, DittyDef> = {
 	treasure: {
 		name: 'treasure.ogg',
-		duration: 0.25,
+		duration: 0.4,
 	},
 } as const
 
@@ -83,6 +92,7 @@ export const SongPlayer = {
 		}
 		AudioPlayer.mute('song')
 		void AudioPlayer.play(ditty.buffer, 'ditty', {
+			duration: ditty.duration,
 			finished() {
 				AudioPlayer.unmute('song')
 			},

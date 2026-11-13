@@ -13,6 +13,8 @@ type PlayOptions = {
 	duration?: number
 }
 
+const VOLUME = 0.8
+
 class Channel {
 	sources = new Set<AudioBufferSourceNode>()
 	gainNode = getAudioContext().createGain()
@@ -27,7 +29,7 @@ class Channel {
 			source.disconnect()
 		}
 		this.sources.clear()
-		this.gainNode.gain.value = 1
+		this.gainNode.gain.value = VOLUME
 		return this
 	}
 	nextPlayback() {
@@ -70,7 +72,6 @@ export const AudioPlayer = {
 			const startTime = ctx.currentTime + 0.01
 			const stopTime = options.duration === undefined ? undefined : startTime + options.duration
 			let nextStartTime = startTime
-			let lastSource: AudioBufferSourceNode | undefined
 			const b = Array.isArray(buffers) ? buffers : [buffers]
 			b.forEach((buffer, i) => {
 				const isLast = i === b.length - 1
@@ -90,10 +91,6 @@ export const AudioPlayer = {
 				}
 				nextStartTime += buffer.duration
 				channel?.sources.add(source)
-				lastSource = source
-			})
-			lastSource?.addEventListener('ended', () => {
-				options.finished?.()
 			})
 		})
 	},

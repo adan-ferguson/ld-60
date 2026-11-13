@@ -44,8 +44,14 @@ export class LevelInstance {
 			this.entitiesManager.fireRandomTurret(),
 		)
 	}
+	get hasPrincess() {
+		return this.levelDef.hasPrincess
+	}
 	get song() {
-		return this.levelDef.song ?? false
+		if (this.hasPrincess) {
+			return `bossfight`
+		}
+		return `level${this.loops}`
 	}
 	get #treasureSpawnTime() {
 		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)
@@ -72,7 +78,7 @@ export class LevelInstance {
 		this.player.update(delta)
 		this.roundTimer.value += delta
 		if (!this.#cleared) {
-			if (this.entitiesManager.hasPrincess) {
+			if (this.hasPrincess) {
 				return
 			} else if (!this.entitiesManager.hasEnemy) {
 				this.#cleared = true

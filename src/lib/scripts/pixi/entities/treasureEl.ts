@@ -25,8 +25,8 @@ export class TreasureEl extends GameEntityEl {
 					origin: treasure.xy,
 					color: 'yellow',
 				})
+				SongPlayer.playDitty('treasure')
 			}
-			void SongPlayer.playDitty('treasure')
 		})
 	}
 }
