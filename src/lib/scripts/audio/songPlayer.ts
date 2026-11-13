@@ -7,6 +7,7 @@ type Song = {
 
 type Ditty = {
 	buffer: AudioBuffer
+	duration?: number
 }
 
 type SongDef = {
@@ -16,6 +17,7 @@ type SongDef = {
 
 type DittyDef = {
 	name: string
+	duration?: number
 }
 
 const songDefs: Record<string, SongDef> = {
@@ -28,6 +30,7 @@ const songDefs: Record<string, SongDef> = {
 const dittyDefs: Record<string, DittyDef> = {
 	treasure: {
 		name: 'treasure.ogg',
+		duration: 0.25,
 	},
 } as const
 
@@ -53,6 +56,7 @@ export const SongPlayer = {
 			const buffer = await AudioPlayer.loadBuffer(definition.name)
 			dittyCache.set(name as DittyName, {
 				buffer,
+				duration: definition.duration,
 			})
 		})
 		await Promise.all([...songLoaders, ...dittyLoaders])

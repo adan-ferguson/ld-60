@@ -10,6 +10,7 @@ const channels = new Map<ChannelName, Channel>()
 type PlayOptions = {
 	loop?: boolean
 	finished?: () => void
+	duration?: number
 }
 
 class Channel {
@@ -55,7 +56,7 @@ export const AudioPlayer = {
 		return getAudioContext().decodeAudioData(await response.arrayBuffer())
 	},
 	async play(
-		coolAudio: AudioBuffer | AudioBuffer[],
+		buffers: AudioBuffer | AudioBuffer[],
 		channelName: ChannelName,
 		options: PlayOptions = {},
 	) {
@@ -63,23 +64,36 @@ export const AudioPlayer = {
 		const generation = channel.nextPlayback()
 		const ctx = getAudioContext()
 		return ctx.resume().then(() => {
-			let startTime = ctx.currentTime + 0.05
-			const buffers = Array.isArray(coolAudio) ? coolAudio : [coolAudio]
-			buffers.forEach((buffer, i) => {
-				const isLast = i === buffers.length - 1
+			if (!channel.isCurrent(generation)) {
+				return
+			}
+			const startTime = ctx.currentTime + 0.01
+			const stopTime = options.duration === undefined ? undefined : startTime + options.duration
+			let nextStartTime = startTime
+			let lastSource: AudioBufferSourceNode | undefined
+			const b = Array.isArray(buffers) ? buffers : [buffers]
+			b.forEach((buffer, i) => {
+				const isLast = i === b.length - 1
 				const source = ctx.createBufferSource()
 				source.buffer = buffer
 				source.loop = isLast && !!options.loop
 				source.connect(channel?.gainNode ?? ctx.destination)
-				source.start(startTime)
+				source.start(nextStartTime)
+				if (stopTime !== undefined) {
+					source.stop(stopTime)
+				}
 				source.onended = () => {
 					channel.sources.delete(source)
 					if (isLast && channel.isCurrent(generation)) {
 						options.finished?.()
 					}
 				}
-				startTime += buffer.duration
+				nextStartTime += buffer.duration
 				channel?.sources.add(source)
+				lastSource = source
+			})
+			lastSource?.addEventListener('ended', () => {
+				options.finished?.()
 			})
 		})
 	},
