@@ -15,16 +15,26 @@ type PlayOptions = {
 class Channel {
 	sources = new Set<AudioBufferSourceNode>()
 	gainNode = getAudioContext().createGain()
+	#playbackGeneration = 0
 	constructor() {
 		this.gainNode.connect(getAudioContext().destination)
 	}
 	stop() {
+		this.#playbackGeneration++
 		for (const source of this.sources) {
 			source.stop()
 			source.disconnect()
 		}
 		this.sources.clear()
 		this.gainNode.gain.value = 1
+		return this
+	}
+	nextPlayback() {
+		this.stop()
+		return this.#playbackGeneration
+	}
+	isCurrent(generation: number) {
+		return generation === this.#playbackGeneration
 	}
 }
 
@@ -50,9 +60,7 @@ export const AudioPlayer = {
 		options: PlayOptions = {},
 	) {
 		const channel = getChannel(channelName)
-		if (channel) {
-			channel.stop()
-		}
+		const generation = channel.nextPlayback()
 		const ctx = getAudioContext()
 		return ctx.resume().then(() => {
 			let startTime = ctx.currentTime + 0.05
@@ -66,7 +74,7 @@ export const AudioPlayer = {
 				source.start(startTime)
 				source.onended = () => {
 					channel.sources.delete(source)
-					if (isLast) {
+					if (isLast && channel.isCurrent(generation)) {
 						options.finished?.()
 					}
 				}
