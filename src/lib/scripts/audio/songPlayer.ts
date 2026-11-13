@@ -57,7 +57,7 @@ export const SongPlayer = {
 		})
 		await Promise.all([...songLoaders, ...dittyLoaders])
 	},
-	async playSong(songName: SongName) {
+	playSong(songName: SongName) {
 		const song = songCache.get(songName)
 		if (!song) {
 			throw new Error(`Music was not preloaded: ${songName}`)
@@ -72,13 +72,13 @@ export const SongPlayer = {
 			})
 		}
 	},
-	async playDitty(dittyName: DittyName) {
+	playDitty(dittyName: DittyName) {
 		const ditty = dittyCache.get(dittyName)
 		if (!ditty) {
 			throw new Error(`Ditty was not preloaded: ${dittyName}`)
 		}
 		AudioPlayer.mute('song')
-		AudioPlayer.play(ditty.buffer, 'ditty', {
+		void AudioPlayer.play(ditty.buffer, 'ditty', {
 			finished() {
 				AudioPlayer.unmute('song')
 			},

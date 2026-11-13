@@ -13,14 +13,18 @@ type PlayOptions = {
 }
 
 class Channel {
-	sources: AudioBufferSourceNode[] = []
+	sources = new Set<AudioBufferSourceNode>()
 	gainNode = getAudioContext().createGain()
+	constructor() {
+		this.gainNode.connect(getAudioContext().destination)
+	}
 	stop() {
 		for (const source of this.sources) {
 			source.stop()
 			source.disconnect()
 		}
-		this.sources = []
+		this.sources.clear()
+		this.gainNode.gain.value = 1
 	}
 }
 
@@ -40,7 +44,7 @@ export const AudioPlayer = {
 
 		return getAudioContext().decodeAudioData(await response.arrayBuffer())
 	},
-	play(
+	async play(
 		coolAudio: AudioBuffer | AudioBuffer[],
 		channelName: ChannelName,
 		options: PlayOptions = {},
@@ -50,7 +54,7 @@ export const AudioPlayer = {
 			channel.stop()
 		}
 		const ctx = getAudioContext()
-		ctx.resume().then(() => {
+		return ctx.resume().then(() => {
 			let startTime = ctx.currentTime + 0.05
 			const buffers = Array.isArray(coolAudio) ? coolAudio : [coolAudio]
 			buffers.forEach((buffer, i) => {
@@ -60,11 +64,14 @@ export const AudioPlayer = {
 				source.loop = isLast && !!options.loop
 				source.connect(channel?.gainNode ?? ctx.destination)
 				source.start(startTime)
-				if (isLast && options.finished) {
-					source.onended = options.finished
+				source.onended = () => {
+					channel.sources.delete(source)
+					if (isLast) {
+						options.finished?.()
+					}
 				}
 				startTime += buffer.duration
-				channel?.sources.push(source)
+				channel?.sources.add(source)
 			})
 		})
 	},
