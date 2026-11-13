@@ -6,6 +6,7 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { TreasureManager } from '#lib/scripts/game/treasureManager.ts'
 import { CoolCountdown } from '#lib/scripts/utils/coolCountdown.ts'
+import { SongPlayer } from '#lib/scripts/audio/songPlayer.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 2000
@@ -44,7 +45,7 @@ class Game {
 	) {
 		this.setWave(wave)
 		this.rollingScore.addInterval(EXTRA_LIFE, () => {
-			// TODO: play extra life sound
+			SongPlayer.playDitty('extraLife')
 			this.lives++
 		})
 	}
@@ -77,6 +78,7 @@ class Game {
 			if (this.roundOutcome !== 'inProgress') {
 				return
 			}
+			SongPlayer.playSong('dead')
 			this.roundOutcome = 'playerDied'
 			this.#screenFadeCountdown = new CoolCountdown(2, () => {
 				if (!this.isTestMode) {
@@ -89,6 +91,7 @@ class Game {
 			if (this.roundOutcome !== 'inProgress') {
 				return
 			}
+			SongPlayer.playSong('win')
 			this.roundOutcome = 'waveCleared'
 			this.#screenFadeCountdown = new CoolCountdown(3, () => {
 				this.#finishWaveAndGrantBonuses()

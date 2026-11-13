@@ -3,6 +3,7 @@ import { AudioPlayer } from '#lib/scripts/audio/audioPlayer.ts'
 type Song = {
 	leadin?: AudioBuffer
 	main: AudioBuffer
+	loop?: boolean
 }
 
 type Ditty = {
@@ -13,6 +14,7 @@ type Ditty = {
 type SongDef = {
 	leadin?: string
 	main: string
+	loop?: boolean
 }
 
 type DittyDef = {
@@ -20,31 +22,47 @@ type DittyDef = {
 	duration?: number
 }
 
-const songDefs: Record<string, SongDef> = {
+const SONG_NAMES = ['bossfight', 'spawn', 'win', 'dead', 'level1', 'level2', 'level3'] as const
+export type SongName = (typeof SONG_NAMES)[number]
+const songDefs: Record<SongName, SongDef> = {
 	bossfight: {
 		leadin: 'bossfightleadin.ogg',
 		main: 'bossfight.ogg',
+		loop: true,
+	},
+	spawn: {
+		main: 'spawn.ogg',
+	},
+	win: {
+		main: 'win.ogg',
+	},
+	dead: {
+		main: 'dead.ogg',
 	},
 	level1: {
 		main: 'stage2.ogg',
+		loop: true,
 	},
 	level2: {
 		main: 'stage2.ogg',
+		loop: true,
 	},
 	level3: {
 		main: 'stage2.ogg',
+		loop: true,
 	},
 } as const
 
-const dittyDefs: Record<string, DittyDef> = {
+const DITTY_NAMES = ['treasure', 'extraLife'] as const
+type DittyName = (typeof DITTY_NAMES)[number]
+const dittyDefs: Record<DittyName, DittyDef> = {
 	treasure: {
 		name: 'treasure.ogg',
-		duration: 0.4,
+	},
+	extraLife: {
+		name: 'extralife.ogg',
 	},
 } as const
-
-export type SongName = keyof typeof songDefs
-export type DittyName = keyof typeof dittyDefs
 
 const songCache = new Map<SongName, Song>()
 const dittyCache = new Map<DittyName, Ditty>()
@@ -59,6 +77,7 @@ export const SongPlayer = {
 			songCache.set(name as SongName, {
 				leadin,
 				main,
+				loop: definition.loop,
 			})
 		})
 		const dittyLoaders = Object.entries(dittyDefs).map(async ([name, definition]) => {
@@ -77,11 +96,11 @@ export const SongPlayer = {
 		}
 		if (song.leadin) {
 			void AudioPlayer.play([song.leadin, song.main], 'song', {
-				loop: true,
+				loop: song.loop,
 			})
 		} else {
 			void AudioPlayer.play(song.main, 'song', {
-				loop: true,
+				loop: song.loop,
 			})
 		}
 	},
@@ -90,11 +109,11 @@ export const SongPlayer = {
 		if (!ditty) {
 			throw new Error(`Ditty was not preloaded: ${dittyName}`)
 		}
-		AudioPlayer.mute('song')
+		// AudioPlayer.mute('song')
 		void AudioPlayer.play(ditty.buffer, 'ditty', {
 			duration: ditty.duration,
 			finished() {
-				AudioPlayer.unmute('song')
+				// AudioPlayer.unmute('song')
 			},
 		})
 	},

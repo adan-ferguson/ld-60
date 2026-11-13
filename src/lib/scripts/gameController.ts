@@ -173,7 +173,7 @@ export class GameController {
 		}
 		this.setScreenPhase({ kind: 'wave' })
 		this.waveCleared = false
-		// this.soundManager.setMusic('spawn')
+		SongPlayer.playSong('spawn')
 		this.mainContainer.showPlayerSpawnAnimation(level).then(() => {
 			game.beginLevel()
 			if (level.song) {

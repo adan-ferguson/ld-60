@@ -11,6 +11,7 @@ import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
+import type { SongName } from '#lib/scripts/audio/songPlayer.ts'
 
 export class LevelInstance {
 	entitiesManager: EntitiesManager
@@ -47,11 +48,17 @@ export class LevelInstance {
 	get hasPrincess() {
 		return this.levelDef.hasPrincess
 	}
-	get song() {
+	get song(): SongName {
 		if (this.hasPrincess) {
 			return `bossfight`
 		}
-		return `level${this.loops}`
+		if (this.loops === 1) {
+			return `level1`
+		}
+		if (this.loops === 2) {
+			return `level2`
+		}
+		return `level3`
 	}
 	get #treasureSpawnTime() {
 		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)
