@@ -7,7 +7,7 @@ import { MainContainer } from '#lib/scripts/pixi/mainContainer.ts'
 import type { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelte.ts'
 import { Cutscene } from '#lib/scripts/cutscene.ts'
-import { MusicPlayer } from '#lib/scripts/musicPlayer.ts'
+import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 
 export type PreWavePhase = {
 	kind: 'prewave'
@@ -123,7 +123,7 @@ export class GameController {
 				bonuses,
 			})
 			setTimeout(() => {
-				if (0 && this.isTestMode) {
+				if (this.isTestMode) {
 					this.preWave()
 				} else if (game.wave % 10 === 0) {
 					this.#showCutscene(1)
