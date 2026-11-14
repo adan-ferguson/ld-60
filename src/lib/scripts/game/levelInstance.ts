@@ -11,7 +11,7 @@ import { WorldCollision } from '#lib/scripts/game/collisions/worldCollision.ts'
 import { Player } from '#lib/scripts/game/player/player.ts'
 import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
-import type { SongName } from '#lib/scripts/audio/musicPlayer.ts'
+import { MusicPlayer, type SongName } from '#lib/scripts/audio/musicPlayer.ts'
 
 export class LevelInstance {
 	entitiesManager: EntitiesManager
@@ -28,7 +28,7 @@ export class LevelInstance {
 	constructor(
 		public game: Game,
 		public levelDef: LevelDef,
-		public loops: number,
+		public wave: number,
 	) {
 		const { spawnPosition, tiles } = TileDef.parseLevelTiles(levelDef, this.loops)
 		this.tiles = tiles
@@ -48,14 +48,18 @@ export class LevelInstance {
 	get hasPrincess() {
 		return this.levelDef.hasPrincess
 	}
+	get loops() {
+		return Math.ceil(this.wave / 10)
+	}
 	get song(): SongName {
-		if (this.hasPrincess) {
-			return `bossfight`
+		if (this.wave % 10 === 0) {
+			return 'bossfight'
 		}
-		if (this.loops === 1) {
+		const index = ((this.wave - 1) % 10) % 3
+		if (index === 0) {
 			return `level1`
 		}
-		if (this.loops === 2) {
+		if (index === 1) {
 			return `level2`
 		}
 		return `level3`
@@ -101,6 +105,10 @@ export class LevelInstance {
 			return
 		}
 		this.entitiesManager.spawn(new Phanta(this, this.#playerSpawnPosition))
+		MusicPlayer.play('hurry')
+		setTimeout(() => {
+			MusicPlayer.play(this.song, true)
+		}, 1000)
 	}
 	#spawnTreasure() {
 		const treasures = this.tiles.values.filter((t) => t.contents.kind === 'treasureSpawn')

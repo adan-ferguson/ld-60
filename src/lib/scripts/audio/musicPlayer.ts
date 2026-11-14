@@ -4,15 +4,26 @@ type Music = {
 	leadin?: AudioBuffer
 	main: AudioBuffer
 	loop?: boolean
+	fast?: AudioBuffer
 }
 
 type MusicDef = {
 	leadin?: string
 	main: string
 	loop?: boolean
+	fast?: string
 }
 
-const SONG_NAMES = ['bossfight', 'spawn', 'win', 'dead', 'level1', 'level2', 'level3'] as const
+const SONG_NAMES = [
+	'bossfight',
+	'spawn',
+	'win',
+	'dead',
+	'level1',
+	'level2',
+	'level3',
+	'hurry',
+] as const
 export type SongName = (typeof SONG_NAMES)[number]
 const songDefs: Record<SongName, MusicDef> = {
 	bossfight: {
@@ -35,11 +46,15 @@ const songDefs: Record<SongName, MusicDef> = {
 	},
 	level2: {
 		main: 'stage2.ogg',
+		fast: 'stage2fast.ogg',
 		loop: true,
 	},
 	level3: {
 		main: 'stage2.ogg',
 		loop: true,
+	},
+	hurry: {
+		main: 'hurry.ogg',
 	},
 } as const
 
@@ -53,6 +68,7 @@ export const MusicPlayer = {
 				const [leadin, main] = await Promise.all([
 					definition.leadin ? CoolAudio.loadBuffer(toUrl(definition.leadin)) : undefined,
 					CoolAudio.loadBuffer(toUrl(definition.main)),
+					definition.fast ? CoolAudio.loadBuffer(toUrl(definition.fast)) : undefined,
 				])
 				songCache.set(name as SongName, {
 					leadin,
@@ -62,7 +78,7 @@ export const MusicPlayer = {
 			}),
 		])
 	},
-	play(songName: SongName) {
+	play(songName: SongName, fastVersion: boolean = false) {
 		const song = songCache.get(songName)
 		if (!song) {
 			throw new Error(`Music was not preloaded: ${songName}`)
@@ -71,7 +87,9 @@ export const MusicPlayer = {
 			loop: song.loop,
 			replace: true,
 		}
-		if (song.leadin) {
+		if (fastVersion && song.fast) {
+			CoolAudio.play(song.fast, 'song', options)
+		} else if (song.leadin) {
 			CoolAudio.play([song.leadin, song.main], 'song', options)
 		} else {
 			CoolAudio.play(song.main, 'song', options)

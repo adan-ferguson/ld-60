@@ -19,12 +19,12 @@ const VOLUME = 0.8
 class Channel {
 	sources = new Set<AudioBufferSourceNode>()
 	gainNode = getAudioContext().createGain()
-	#playbackGeneration = 0
+	currentGeneration = 0
 	constructor() {
 		this.gainNode.connect(getAudioContext().destination)
 	}
 	stop() {
-		this.#playbackGeneration++
+		this.currentGeneration++
 		for (const source of this.sources) {
 			source.stop()
 			source.disconnect()
@@ -35,10 +35,10 @@ class Channel {
 	}
 	nextPlayback() {
 		this.stop()
-		return this.#playbackGeneration
+		return this.currentGeneration
 	}
 	isCurrent(generation: number) {
-		return generation === this.#playbackGeneration
+		return generation === this.currentGeneration
 	}
 }
 
@@ -64,7 +64,7 @@ export const CoolAudio = {
 		options: PlayOptions = {},
 	) {
 		const channel = getChannel(channelName)
-		const generation = channel.nextPlayback()
+		const generation = options.replace ? channel.nextPlayback() : channel.currentGeneration
 		const ctx = getAudioContext()
 		await ctx.resume()
 		if (!channel.isCurrent(generation)) {

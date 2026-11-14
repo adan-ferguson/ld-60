@@ -177,9 +177,9 @@ export class GameController {
 		this.mainContainer.showPlayerSpawnAnimation(level).then(() => {
 			game.beginLevel()
 			if (level.song) {
-				void MusicPlayer.play(level.song)
+				MusicPlayer.play(level.song)
 			} else {
-				void MusicPlayer.stop()
+				MusicPlayer.stop()
 			}
 		})
 	}

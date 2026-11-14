@@ -74,7 +74,7 @@ class Game {
 	prepareLevel() {
 		const lvl = LevelsManager.getWave(this.wave)
 		this.roundOutcome = 'inProgress'
-		this.level = new LevelInstance(this, lvl.def, lvl.loops)
+		this.level = new LevelInstance(this, lvl.def, this.wave)
 		this.level.player.destroyed.listen(() => {
 			if (this.roundOutcome !== 'inProgress') {
 				return
