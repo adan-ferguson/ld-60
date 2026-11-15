@@ -107,6 +107,9 @@ export class LevelInstance {
 		this.entitiesManager.spawn(new Phanta(this, this.#playerSpawnPosition))
 		MusicPlayer.play('hurry')
 		setTimeout(() => {
+			if (!this.running || this.#cleared || this.player.isDestroyed) {
+				return
+			}
 			MusicPlayer.play(this.song, true)
 		}, 1000)
 	}

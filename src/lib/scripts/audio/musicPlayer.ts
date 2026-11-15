@@ -41,7 +41,8 @@ const songDefs: Record<SongName, MusicDef> = {
 		main: 'dead.ogg',
 	},
 	level1: {
-		main: 'stage2.ogg',
+		main: 'stage3.ogg',
+		fast: 'stage3.ogg',
 		loop: true,
 	},
 	level2: {
@@ -50,11 +51,13 @@ const songDefs: Record<SongName, MusicDef> = {
 		loop: true,
 	},
 	level3: {
-		main: 'stage2.ogg',
+		main: 'stage1.ogg',
+		fast: 'stage1fast.ogg',
 		loop: true,
 	},
 	hurry: {
 		main: 'hurry.ogg',
+		loop: true,
 	},
 } as const
 
@@ -65,7 +68,7 @@ export const MusicPlayer = {
 		const toUrl = (filename: string) => `/assets/music/${filename}`
 		await Promise.all([
 			...Object.entries(songDefs).map(async ([name, definition]) => {
-				const [leadin, main] = await Promise.all([
+				const [leadin, main, fast] = await Promise.all([
 					definition.leadin ? CoolAudio.loadBuffer(toUrl(definition.leadin)) : undefined,
 					CoolAudio.loadBuffer(toUrl(definition.main)),
 					definition.fast ? CoolAudio.loadBuffer(toUrl(definition.fast)) : undefined,
@@ -73,6 +76,7 @@ export const MusicPlayer = {
 				songCache.set(name as SongName, {
 					leadin,
 					main,
+					fast,
 					loop: definition.loop,
 				})
 			}),
