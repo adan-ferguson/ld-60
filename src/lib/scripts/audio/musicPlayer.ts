@@ -41,8 +41,8 @@ const songDefs: Record<SongName, MusicDef> = {
 		main: 'dead.ogg',
 	},
 	level1: {
-		main: 'stage3.ogg',
-		fast: 'stage3.ogg',
+		main: 'stage1-v2.ogg',
+		fast: 'stage1-v2-fast.ogg',
 		loop: true,
 	},
 	level2: {
@@ -51,8 +51,8 @@ const songDefs: Record<SongName, MusicDef> = {
 		loop: true,
 	},
 	level3: {
-		main: 'stage1.ogg',
-		fast: 'stage1fast.ogg',
+		main: 'stage3-v2.ogg',
+		fast: 'stage3-v2-fast.ogg',
 		loop: true,
 	},
 	hurry: {

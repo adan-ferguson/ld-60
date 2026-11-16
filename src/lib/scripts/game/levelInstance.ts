@@ -55,7 +55,7 @@ export class LevelInstance {
 		if (this.wave % 10 === 0) {
 			return 'bossfight'
 		}
-		const index = ((this.wave - 1) % 10) % 3
+		const index = Math.ceil(((this.wave - 1) % 10) / 3)
 		if (index === 0) {
 			return `level1`
 		}
