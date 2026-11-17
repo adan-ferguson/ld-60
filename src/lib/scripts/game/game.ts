@@ -79,7 +79,6 @@ class Game {
 			if (this.roundOutcome !== 'inProgress') {
 				return
 			}
-			MusicPlayer.play('dead')
 			this.roundOutcome = 'playerDied'
 			this.#screenFadeCountdown = new CoolCountdown(2, () => {
 				if (!this.isTestMode) {

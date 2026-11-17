@@ -16,16 +16,7 @@ type MusicDef = {
 	volume?: number
 }
 
-const SONG_NAMES = [
-	'bossfight',
-	'spawn',
-	'win',
-	'dead',
-	'level1',
-	'level2',
-	'level3',
-	'hurry',
-] as const
+const SONG_NAMES = ['bossfight', 'spawn', 'win', 'level1', 'level2', 'level3', 'hurry'] as const
 export type SongName = (typeof SONG_NAMES)[number]
 const songDefs: Record<SongName, MusicDef> = {
 	bossfight: {
@@ -38,9 +29,6 @@ const songDefs: Record<SongName, MusicDef> = {
 	},
 	win: {
 		main: 'win.ogg',
-	},
-	dead: {
-		main: 'dead.ogg',
 	},
 	level1: {
 		main: 'stage1-v2.ogg',
@@ -65,6 +53,8 @@ const songDefs: Record<SongName, MusicDef> = {
 
 const songCache = new Map<SongName, Music>()
 
+const BASE_MUSIC_VOLUME = 0.25
+
 export const MusicPlayer = {
 	async preload() {
 		const toUrl = (filename: string) => `/assets/music/${filename}`
@@ -80,7 +70,7 @@ export const MusicPlayer = {
 					main,
 					fast,
 					loop: definition.loop,
-					volume: definition.volume ?? 1,
+					volume: (definition.volume ?? 1) * BASE_MUSIC_VOLUME,
 				})
 			}),
 		])

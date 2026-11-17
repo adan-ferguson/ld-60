@@ -4,6 +4,7 @@ import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
 import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Graphics } from 'pixi.js'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 type PlayerAnimationType =
 	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouchMove' | 'crouchAttack'
@@ -56,6 +57,7 @@ export class PlayerEl extends WithManSprite {
 			}
 		})
 		player.destroyed.listen(() => {
+			SfxPlayer.play('playerDeath')
 			gc.addAnimation(particlesAnimation(player.worldBounds, 'cyan', 3, 24))
 		})
 		player.shotFired.listen(() => {

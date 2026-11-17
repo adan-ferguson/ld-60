@@ -15,6 +15,7 @@ type SfxDef = {
 const SFX_NAMES = [
 	'damage',
 	'enemyDeath',
+	'playerDeath',
 	'enemyShoot',
 	'playerShoot',
 	'jumpGround',
@@ -31,6 +32,9 @@ const sfxDefs: Record<SfxName, SfxDef> = {
 	},
 	enemyDeath: {
 		filename: 'damage.ogg',
+	},
+	playerDeath: {
+		filename: 'dead.ogg',
 	},
 	enemyShoot: {
 		filename: 'enemyshoot.ogg',
@@ -58,6 +62,8 @@ const sfxDefs: Record<SfxName, SfxDef> = {
 	},
 } as const
 
+const BASE_MUSIC_VOLUME = 0.45
+
 const sfxCache = new Map<SfxName, Sfx>()
 
 export const SfxPlayer = {
@@ -68,7 +74,7 @@ export const SfxPlayer = {
 				sfxCache.set(name as SfxName, {
 					buffer,
 					duration: definition.duration,
-					volume: definition.volume ?? 1,
+					volume: BASE_MUSIC_VOLUME * (definition.volume ?? 1),
 				})
 			}),
 		])
