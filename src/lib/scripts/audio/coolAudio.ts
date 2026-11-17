@@ -12,6 +12,7 @@ type PlayOptions = {
 	finished?: () => void
 	duration?: number
 	replace?: boolean
+	volume?: number
 }
 
 const VOLUME = 0.8
@@ -66,10 +67,17 @@ export const CoolAudio = {
 		const channel = getChannel(channelName)
 		const generation = options.replace ? channel.nextPlayback() : channel.currentGeneration
 		const ctx = getAudioContext()
+
 		await ctx.resume()
+
 		if (!channel.isCurrent(generation)) {
 			return
 		}
+
+		const playbackGain = ctx.createGain()
+		playbackGain.gain.value = options.volume ?? 1
+		playbackGain.connect(channel.gainNode)
+
 		const startTime = ctx.currentTime + 0.01
 		const stopTime = options.duration === undefined ? undefined : startTime + options.duration
 		let nextStartTime = startTime
@@ -79,19 +87,22 @@ export const CoolAudio = {
 			const source = ctx.createBufferSource()
 			source.buffer = buffer
 			source.loop = isLast && !!options.loop
-			source.connect(channel?.gainNode ?? ctx.destination)
+			source.connect(playbackGain)
 			source.start(nextStartTime)
 			if (stopTime !== undefined) {
 				source.stop(stopTime)
 			}
 			source.onended = () => {
 				channel.sources.delete(source)
-				if (isLast && channel.isCurrent(generation)) {
-					options.finished?.()
+				if (isLast) {
+					playbackGain.disconnect()
+					if (channel.isCurrent(generation)) {
+						options.finished?.()
+					}
 				}
 			}
 			nextStartTime += buffer.duration
-			channel?.sources.add(source)
+			channel.sources.add(source)
 		})
 	},
 	mute(channel: ChannelName) {

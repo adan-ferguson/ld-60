@@ -3,15 +3,17 @@ import { CoolAudio } from '#lib/scripts/audio/coolAudio.ts'
 type Music = {
 	leadin?: AudioBuffer
 	main: AudioBuffer
-	loop?: boolean
 	fast?: AudioBuffer
+	loop?: boolean
+	volume: number
 }
 
 type MusicDef = {
 	leadin?: string
 	main: string
-	loop?: boolean
 	fast?: string
+	loop?: boolean
+	volume?: number
 }
 
 const SONG_NAMES = [
@@ -78,6 +80,7 @@ export const MusicPlayer = {
 					main,
 					fast,
 					loop: definition.loop,
+					volume: definition.volume ?? 1,
 				})
 			}),
 		])
@@ -90,6 +93,7 @@ export const MusicPlayer = {
 		const options = {
 			loop: song.loop,
 			replace: true,
+			volume: song.volume,
 		}
 		if (fastVersion && song.fast) {
 			CoolAudio.play(song.fast, 'song', options)

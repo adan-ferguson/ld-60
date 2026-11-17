@@ -3,11 +3,13 @@ import { CoolAudio } from '#lib/scripts/audio/coolAudio.ts'
 type Sfx = {
 	buffer: AudioBuffer
 	duration?: number
+	volume: number
 }
 
 type SfxDef = {
 	filename: string
 	duration?: number
+	volume?: number
 }
 
 const SFX_NAMES = [
@@ -66,6 +68,7 @@ export const SfxPlayer = {
 				sfxCache.set(name as SfxName, {
 					buffer,
 					duration: definition.duration,
+					volume: definition.volume ?? 1,
 				})
 			}),
 		])
@@ -77,6 +80,7 @@ export const SfxPlayer = {
 		}
 		CoolAudio.play(sfx.buffer, 'sfx', {
 			duration: sfx.duration,
+			volume: sfx.volume,
 		})
 	},
 }
