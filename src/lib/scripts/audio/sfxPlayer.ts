@@ -10,9 +10,44 @@ type SfxDef = {
 	duration?: number
 }
 
-const SFX_NAMES = ['treasure', 'extraLife'] as const
+const SFX_NAMES = [
+	'damage',
+	'enemyDeath',
+	'enemyShoot',
+	'playerShoot',
+	'jumpGround',
+	'jumpAir',
+	'land',
+	'scoreCounting',
+	'treasure',
+	'extraLife',
+] as const
 type SfxName = (typeof SFX_NAMES)[number]
 const sfxDefs: Record<SfxName, SfxDef> = {
+	damage: {
+		filename: 'damage2.ogg',
+	},
+	enemyDeath: {
+		filename: 'damage.ogg',
+	},
+	enemyShoot: {
+		filename: 'enemyshoot.ogg',
+	},
+	playerShoot: {
+		filename: 'playershoot.ogg',
+	},
+	jumpGround: {
+		filename: 'jump1.ogg',
+	},
+	jumpAir: {
+		filename: 'jump2.ogg',
+	},
+	land: {
+		filename: 'land2.ogg',
+	},
+	scoreCounting: {
+		filename: 'scorecount.ogg',
+	},
 	treasure: {
 		filename: 'treasure.ogg',
 	},

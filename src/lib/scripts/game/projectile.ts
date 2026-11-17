@@ -8,6 +8,8 @@ import { Enemy } from '#lib/scripts/game/entities/enemy.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export type ProjectileStyle = 'small' | 'large' | 'dot'
 
@@ -49,12 +51,14 @@ export class Projectile extends GameEntity {
 			)
 			if (target) {
 				target.takeDamage(1)
+				SfxPlayer.play('damage')
 				this.destroy('hit')
 			}
 		} else if (this.options.source instanceof Enemy) {
 			const { player } = this.level
 			if (player && player.isReady && player.worldBounds.intersects(this.worldBounds)) {
 				player.takeDamage(1)
+				SfxPlayer.play('damage')
 				this.destroy('hit')
 			}
 		}

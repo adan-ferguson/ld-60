@@ -3,6 +3,7 @@ import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
@@ -37,6 +38,7 @@ export class ShooterMan extends Man {
 		this.state.update(this, delta)
 	}
 	fire() {
+		SfxPlayer.play('enemyShoot')
 		this.level.entitiesManager.spawn(
 			new Projectile(this.level, {
 				style: 'small',

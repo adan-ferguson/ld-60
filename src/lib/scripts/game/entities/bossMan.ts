@@ -4,6 +4,7 @@ import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { ColorSource } from 'pixi.js'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export class BossMan extends Man {
 	iterations = 0
@@ -80,6 +81,7 @@ class AttackState extends State {
 	}
 	update2(owner: BossMan) {
 		if (!this.time) {
+			SfxPlayer.play('enemyShoot')
 			owner.level.entitiesManager.spawn(
 				new Projectile(owner.level, {
 					style: 'large',

@@ -4,6 +4,7 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import type { ColorSource } from 'pixi.js'
 import { clamp } from '#lib/scripts/utils/clamp.ts'
 import { formatHex, interpolate } from 'culori'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 const ONE_HEALTH_COLOR = 'magenta'
 const MULTI_HEALTH_COLOR = '#600060'
@@ -14,6 +15,7 @@ export abstract class Enemy extends GameEntity {
 	constructor(level: LevelInstance) {
 		super(level)
 		this.destroyed.listen(() => {
+			SfxPlayer.play('enemyDeath')
 			level.game.addScore(this.score, this)
 		})
 	}

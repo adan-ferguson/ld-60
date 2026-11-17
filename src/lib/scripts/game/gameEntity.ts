@@ -6,6 +6,7 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export abstract class GameEntity {
 	public damageTaken = CoolEvents.createHandler<(amount: number) => void>()

@@ -21,7 +21,7 @@ xc.aaaaaxxxxx........xxxxxxxxxxx
 xc.........cx.e....aaxxxxxxxxxxx
 xc.........cxxxxxxxxxxxxxxxxxxxx
 xc..baxxaadcxxxxxxxxxxxxxxxxxxxx
-xc.caax1...cxxxxxxxxxxxxxxxxxxxx
+xc.cbax1...cxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
 	contents: {

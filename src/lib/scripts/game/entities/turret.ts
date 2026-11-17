@@ -6,6 +6,7 @@ import { TurretEl } from '#lib/scripts/pixi/entities/turretEl.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export type TurretProps = {
 	health: number
@@ -61,6 +62,7 @@ export class Turret extends Enemy {
 		}
 		const angle = this.worldBounds.angleTo(this.level.player.worldBounds.getEdge('bottom', 0.66))
 		const SPEED = 60
+		SfxPlayer.play('enemyShoot')
 		this.level.entitiesManager.spawn(
 			new Projectile(this.level, {
 				style: 'dot',

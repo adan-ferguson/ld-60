@@ -9,6 +9,7 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/trySnapToCeilingGap.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
+import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export type AerialState =
 	| {
@@ -111,6 +112,7 @@ export class Player extends GameEntity {
 				this.tryUncrouch()
 			}
 			if (this.aerialState.kind !== 'grounded') {
+				SfxPlayer.play('land')
 				this.aerialState = { kind: 'grounded', time: 0 }
 			}
 		}
@@ -130,6 +132,7 @@ export class Player extends GameEntity {
 	jump() {
 		const stateBefore = this.aerialState
 		if (this.#tryDropThroughFloor()) {
+			SfxPlayer.play('land')
 			return true
 		}
 		if (
@@ -139,8 +142,10 @@ export class Player extends GameEntity {
 			if (!this.tryUncrouch()) {
 				return false
 			}
+			SfxPlayer.play('jumpGround')
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
 		} else if (stateBefore.kind === 'aerial' && !stateBefore.doubleJumpUsed) {
+			SfxPlayer.play('jumpAir')
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true, time: 0 }
 		} else {
 			return false
@@ -185,6 +190,7 @@ export class Player extends GameEntity {
 				tint: 'cyan',
 			}),
 		)
+		SfxPlayer.play('playerShoot')
 		this.shotFired.emit()
 	}
 	createPixiEl(gc: GameController): GameEntityEl {
