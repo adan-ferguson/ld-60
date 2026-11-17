@@ -19,7 +19,7 @@ const sfxDefs = {
 	enemyDeath: { filename: 'damage.ogg' },
 	playerDeath: { filename: 'dead.ogg' },
 	enemyShoot: { filename: 'playershoot.ogg' },
-	playerShoot: { filename: 'playershoot.ogg' },
+	playerShoot: { filename: 'playershoot.ogg', volume: 0.6 },
 	jumpGround: { filename: 'jump1.ogg' },
 	jumpAir: { filename: 'jump2.ogg' },
 	land: { filename: 'land2.ogg' },

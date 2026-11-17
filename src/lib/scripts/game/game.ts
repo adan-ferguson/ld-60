@@ -56,11 +56,9 @@ class Game {
 		return this.level?.loops ?? 1
 	}
 	nextWave() {
-		console.log('nextWave')
 		this.wave++
 	}
 	setWave(wave: number) {
-		console.log('setWave', wave)
 		this.wave = wave
 	}
 	update(delta: number) {
@@ -117,6 +115,7 @@ class Game {
 	updateScore(delta: number) {
 		if (this.targetScore <= this.rollingScore.value) {
 			this.#scoreCountingSfx?.stop()
+			this.#scoreCountingSfx = undefined
 			this.rollingScore.value = this.targetScore
 			return
 		}

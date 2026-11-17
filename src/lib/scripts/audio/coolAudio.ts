@@ -1,4 +1,5 @@
 import { CoolChannel } from '#lib/scripts/audio/coolChannel.ts'
+import { CoolSound } from '#lib/scripts/audio/coolSound.ts'
 
 let audioContext: AudioContext | undefined
 
@@ -9,7 +10,7 @@ function getAudioContext() {
 type ChannelName = 'song' | 'sfx'
 const channels = new Map<ChannelName, CoolChannel>()
 
-type PlayOptions = {
+export type PlayOptions = {
 	loop?: boolean
 	finished?: () => void
 	duration?: number
@@ -42,72 +43,12 @@ export const CoolAudio = {
 		buffers: AudioBuffer | AudioBuffer[],
 		channelName: ChannelName,
 		options: PlayOptions = {},
-	): PlaybackHandle {
+	): CoolSound {
 		const channel = getChannel(channelName)
-		const generation = options.replace ? channel.nextPlayback() : channel.currentGeneration
 		const ctx = getAudioContext()
-		const sources = new Set<AudioBufferSourceNode>()
-		let stopped = false
-
-		const handle = {
-			stop() {
-				if (stopped) {
-					return
-				}
-				stopped = true
-				for (const source of sources) {
-					source.stop()
-					source.disconnect()
-					channel.sources.delete(source)
-				}
-				sources.clear()
-			},
-		}
-
-		ctx.resume().then(() => {
-			if (stopped || !channel.isCurrent(generation)) {
-				return
-			}
-
-			const playbackGain = ctx.createGain()
-			playbackGain.gain.value = options.volume ?? 1
-
-			const stereoPanner = ctx.createStereoPanner()
-			stereoPanner.pan.value = Math.max(-1, Math.min(1, options.pan ?? 0))
-
-			playbackGain.connect(stereoPanner)
-			stereoPanner.connect(channel.gainNode)
-
-			const startTime = ctx.currentTime + 0.01
-			const stopTime = options.duration === undefined ? undefined : startTime + options.duration
-			let nextStartTime = startTime
-			const b = Array.isArray(buffers) ? buffers : [buffers]
-			b.forEach((buffer, i) => {
-				const isLast = i === b.length - 1
-				const source = ctx.createBufferSource()
-				source.buffer = buffer
-				source.loop = isLast && !!options.loop
-				source.connect(playbackGain)
-				source.start(nextStartTime)
-				sources.add(source)
-				if (stopTime !== undefined) {
-					source.stop(stopTime)
-				}
-				source.onended = () => {
-					channel.sources.delete(source)
-					if (isLast) {
-						playbackGain.disconnect()
-						if (channel.isCurrent(generation)) {
-							options.finished?.()
-						}
-					}
-				}
-				nextStartTime += buffer.duration
-				channel.sources.add(source)
-			})
-		})
-
-		return handle
+		const sound = new CoolSound(ctx, channel, Array.isArray(buffers) ? buffers : [buffers], options)
+		sound.start()
+		return sound
 	},
 	mute(channel: ChannelName) {
 		getChannel(channel).gainNode.gain.value = 0
