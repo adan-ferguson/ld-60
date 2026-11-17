@@ -4,7 +4,7 @@ export const LevelBoss: LevelDef = {
 	displayName: 'Boss Fight!',
 	phantaSpawnTime: 0,
 	hasPrincess: true,
-	treasureSpawnTime: [6, 12, 16],
+	treasureSpawnTime: [4, 12, 37],
 	tiles: `
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..............................x

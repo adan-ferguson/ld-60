@@ -3,7 +3,7 @@ import { Man } from '#lib/scripts/game/entities/man.ts'
 import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
-import type { ColorSource } from 'pixi.js'
+import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export class BossMan extends Man {
@@ -16,6 +16,10 @@ export class BossMan extends Man {
 			facing: -1,
 		})
 		this.#state = new RunningState()
+		this.destroyed.listen(() => {
+			MusicPlayer.stop()
+			SfxPlayer.play('bossKill')
+		})
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'
@@ -81,7 +85,7 @@ class AttackState extends State {
 	}
 	update2(owner: BossMan) {
 		if (!this.time) {
-			owner.playSfx('enemyShoot')
+			owner.playSfx('bossAttack')
 			owner.level.entitiesManager.spawn(
 				new Projectile(owner.level, {
 					style: 'large',

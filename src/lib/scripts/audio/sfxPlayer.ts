@@ -15,24 +15,26 @@ type SfxDef = {
 }
 
 const sfxDefs = {
+	bossAttack: { filename: 'bossattack.ogg' },
+	bossKill: { filename: 'bosskill.ogg' },
 	damage: { filename: 'damage2.ogg' },
-	enemyDeath: { filename: 'damage.ogg' },
+	enemyDeath: { filename: 'damage.ogg', volume: 0.7 },
 	playerDeath: { filename: 'dead.ogg' },
 	enemyShoot: { filename: 'playershoot.ogg' },
-	playerShoot: { filename: 'playershoot.ogg', volume: 0.6 },
-	jumpGround: { filename: 'jump1.ogg' },
-	jumpAir: { filename: 'jump2.ogg' },
-	land: { filename: 'land2.ogg' },
+	playerShoot: { filename: 'playershoot.ogg', volume: 0.7 },
+	jumpGround: { filename: 'jump1.ogg', volume: 0.5 },
+	jumpAir: { filename: 'jump2.ogg', volume: 0.5 },
+	land: { filename: 'land2.ogg', volume: 0.4 },
 	win: { filename: 'win.ogg' },
 	scoreCounting: { filename: 'scorecount.ogg', loop: true },
 	treasure: { filename: 'treasure.ogg' },
-	extraLife: { filename: 'extralife.ogg' },
+	extraLife: { filename: 'extralife.ogg', volume: 0.5 },
 	projhit: { filename: 'enemyshoot.ogg' },
 } satisfies Record<string, SfxDef>
 
 type SfxName = keyof typeof sfxDefs
 
-const BASE_SFX_VOLUME = 0.45
+const BASE_SFX_VOLUME = 0.35
 
 const sfxCache = new Map<SfxName, Sfx>()
 

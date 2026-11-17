@@ -47,7 +47,7 @@ export const CoolAudio = {
 		const channel = getChannel(channelName)
 		const ctx = getAudioContext()
 		const sound = new CoolSound(ctx, channel, Array.isArray(buffers) ? buffers : [buffers], options)
-		sound.start()
+		void sound.start()
 		return sound
 	},
 	mute(channel: ChannelName) {

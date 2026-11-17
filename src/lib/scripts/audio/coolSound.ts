@@ -7,6 +7,7 @@ export class CoolSound {
 	private playbackGain: GainNode
 	private panner: StereoPannerNode
 	private generation: number
+	private cleanedUp = false
 
 	constructor(
 		private ctx: AudioContext,
@@ -20,16 +21,21 @@ export class CoolSound {
 		this.playbackGain.gain.value = options.volume ?? 1
 
 		this.panner = ctx.createStereoPanner()
-		this.panner.pan.value = options.pan ?? 0
+		this.panner.pan.value = Math.max(-1, Math.min(1, options.pan ?? 0))
 
 		this.playbackGain.connect(this.panner)
 		this.panner.connect(channel.gainNode)
 	}
-	start() {
+	async start() {
 		if (this.stopped) {
 			return
 		}
+		await this.ctx.resume()
+		if (this.stopped || !this.channel.isCurrent(this.generation)) {
+			return
+		}
 
+		// schedule sources
 		const startTime = this.ctx.currentTime + 0.01
 		let nextStartTime = startTime
 		const stopTime =
@@ -85,6 +91,10 @@ export class CoolSound {
 	}
 
 	private cleanup() {
+		if (this.cleanedUp) {
+			return
+		}
+		this.cleanedUp = true
 		this.playbackGain.disconnect()
 		this.panner.disconnect()
 	}
