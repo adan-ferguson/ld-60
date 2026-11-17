@@ -6,62 +6,67 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { isSquished } from '#lib/scripts/game/collisions/isSquished.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { Consts } from '#lib/scripts/consts.ts'
 import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export abstract class GameEntity {
-	public damageTaken = CoolEvents.createHandler<(amount: number) => void>()
-	public isDestroyed = false
-	public isReady = true
-	public x = 0
-	public y = 0
-	public velX = 0
-	public velY = 0
-	public facing = 1
-	public time = 0
-	public scale = 1
+	damageTaken = CoolEvents.createHandler<(amount: number) => void>()
+	isDestroyed = false
+	isReady = true
+	x = 0
+	y = 0
+	velX = 0
+	velY = 0
+	facing = 1
+	time = 0
+	scale = 1
 	#damageTaken = 0
 	constructor(public level: LevelInstance) {}
-	public get game() {
+	get game() {
 		return this.level.game
 	}
-	public get health() {
+	get health() {
 		return this.maxHealth - this.#damageTaken
 	}
-	public abstract update2(delta: number): void
-	public abstract createPixiEl(gc: GameController): GameEntityEl
-	public abstract get baseWidth(): number
-	public abstract get baseHeight(): number
+	get panPosition() {
+		const halfWidth = Consts.GAME_WIDTH / 2
+		return Math.max(-1, Math.min(1, (this.x - halfWidth) / halfWidth))
+	}
+	abstract update2(delta: number): void
+	abstract createPixiEl(gc: GameController): GameEntityEl
+	abstract get baseWidth(): number
+	abstract get baseHeight(): number
 
 	/**
 	 * @virtual
 	 */
-	public get hazardHurtbox(): false | CoolRect {
+	get hazardHurtbox(): false | CoolRect {
 		return false
 	}
 
 	/**
 	 * @virtual
 	 */
-	public get canBeHitByPlayer() {
+	get canBeHitByPlayer() {
 		return false
 	}
 
 	/**
 	 * @virtual
 	 */
-	public async animateSpawn() {}
+	async animateSpawn() {}
 
 	/**
 	 * @virtual
 	 */
-	public get squishable() {
+	get squishable() {
 		return false
 	}
 
 	/**
 	 * @virtual
 	 */
-	public get canStandOnMovingBlocks() {
+	get canStandOnMovingBlocks() {
 		return false
 	}
 
@@ -69,7 +74,7 @@ export abstract class GameEntity {
 	 * Set our XY with the tileXY so the have the same X midpoint and Y bottom
 	 * @param tileXY
 	 */
-	public setTileXY(tileXY: XY) {
+	setTileXY(tileXY: XY) {
 		const worldXY = TileDef.toWorldRect(tileXY)
 		this.x = worldXY.midpoint.x
 		this.y = worldXY.bottom - this.height / 2
@@ -78,44 +83,44 @@ export abstract class GameEntity {
 	/**
 	 * @virtual
 	 */
-	public get blocksMovement() {
+	get blocksMovement() {
 		return false
 	}
 
 	/**
 	 * @virtual
 	 */
-	public get blocksProjectiles() {
+	get blocksProjectiles() {
 		return false
 	}
 
 	/**
 	 * @virtual
 	 */
-	public get isHazard() {
+	get isHazard() {
 		return false
 	}
 
-	public destroyed = CoolEvents.createHandler<(reason: string) => void>()
-	public get isActive() {
+	destroyed = CoolEvents.createHandler<(reason: string) => void>()
+	get isActive() {
 		return this.isReady && !this.isDestroyed
 	}
-	public get maxHealth(): number {
+	get maxHealth(): number {
 		return 1
 	}
 
-	public get localBounds(): CoolRect {
+	get localBounds(): CoolRect {
 		return new CoolRect().pad({
 			x: this.baseWidth / 2,
 			y: this.baseHeight / 2,
 		})
 	}
 
-	public get worldBounds(): CoolRect {
+	get worldBounds(): CoolRect {
 		return this.toWorldBounds(this.localBounds)
 	}
 
-	public toWorldBounds(localBounds: CoolRect): CoolRect {
+	toWorldBounds(localBounds: CoolRect): CoolRect {
 		return new CoolRect({
 			x: this.x + localBounds.x * this.scale,
 			y: this.y + localBounds.y * this.scale,
@@ -124,32 +129,32 @@ export abstract class GameEntity {
 		})
 	}
 
-	public get xy() {
+	get xy() {
 		return { x: this.x, y: this.y }
 	}
 
-	public set xy(val: XY) {
+	set xy(val: XY) {
 		this.x = val.x
 		this.y = val.y
 	}
 
-	public get height() {
+	get height() {
 		return this.baseHeight * this.scale
 	}
 
-	public get width() {
+	get width() {
 		return this.baseWidth * this.scale
 	}
 
-	public set left(val: number) {
+	set left(val: number) {
 		this.x = val + this.width / 2
 	}
 
-	public set right(val: number) {
+	set right(val: number) {
 		this.x = val - this.width / 2
 	}
 
-	public update(delta: number) {
+	update(delta: number) {
 		this.time += delta
 		if (this.isDestroyed) {
 			return
@@ -181,7 +186,7 @@ export abstract class GameEntity {
 		this.y += this.velY * delta
 	}
 
-	public takeDamage(amount: number) {
+	takeDamage(amount: number) {
 		if (this.isDestroyed || !this.isReady) {
 			return
 		}
@@ -193,9 +198,13 @@ export abstract class GameEntity {
 		}
 	}
 
-	public destroy(reason: string = '') {
+	destroy(reason: string = '') {
 		this.destroyed.emit(reason)
 		this.isDestroyed = true
+	}
+
+	playSfx(sfxName: Parameters<typeof SfxPlayer.play>[0]) {
+		SfxPlayer.play(sfxName, this.panPosition)
 	}
 
 	/**

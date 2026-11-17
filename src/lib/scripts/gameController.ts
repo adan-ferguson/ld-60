@@ -149,6 +149,7 @@ export class GameController {
 		if (!this.game) {
 			throw 'No game'
 		}
+		MusicPlayer.stop()
 		this.setScreenPhase({ kind: 'prewave', wave: this.game.wave ?? 1 })
 		this.game.prepareLevel()
 		setTimeout(() => {

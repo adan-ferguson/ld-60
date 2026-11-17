@@ -9,7 +9,6 @@ import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { trySnapToCeilingGap } from '#lib/scripts/game/collisions/trySnapToCeilingGap.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import type { XY } from '#lib/scripts/utils/XY.ts'
-import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export type AerialState =
 	| {
@@ -112,7 +111,7 @@ export class Player extends GameEntity {
 				this.tryUncrouch()
 			}
 			if (this.aerialState.kind !== 'grounded') {
-				SfxPlayer.play('land')
+				this.playSfx('land')
 				this.aerialState = { kind: 'grounded', time: 0 }
 			}
 		}
@@ -132,7 +131,7 @@ export class Player extends GameEntity {
 	jump() {
 		const stateBefore = this.aerialState
 		if (this.#tryDropThroughFloor()) {
-			SfxPlayer.play('land')
+			this.playSfx('land')
 			return true
 		}
 		if (
@@ -142,10 +141,10 @@ export class Player extends GameEntity {
 			if (!this.tryUncrouch()) {
 				return false
 			}
-			SfxPlayer.play('jumpGround')
+			this.playSfx('jumpGround')
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
 		} else if (stateBefore.kind === 'aerial' && !stateBefore.doubleJumpUsed) {
-			SfxPlayer.play('jumpAir')
+			this.playSfx('jumpAir')
 			this.aerialState = { kind: 'aerial', doubleJumpUsed: true, time: 0 }
 		} else {
 			return false
@@ -190,7 +189,7 @@ export class Player extends GameEntity {
 				tint: 'cyan',
 			}),
 		)
-		SfxPlayer.play('playerShoot')
+		this.playSfx('playerShoot')
 		this.shotFired.emit()
 	}
 	createPixiEl(gc: GameController): GameEntityEl {
@@ -207,6 +206,7 @@ export class Player extends GameEntity {
 		this.y += result.y - this.worldBounds.y
 		if (result.verticalSolids.length > 0) {
 			if (this.velY > 0) {
+				this.playSfx('land')
 				this.aerialState = { kind: 'grounded', time: 0 }
 				this.velY = 0
 			} else if (Math.abs(this.velX) < MAX_X_VELOCITY_FOR_CEILING_SNAP) {

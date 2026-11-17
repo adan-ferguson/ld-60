@@ -16,19 +16,17 @@ type MusicDef = {
 	volume?: number
 }
 
-const SONG_NAMES = ['bossfight', 'spawn', 'win', 'level1', 'level2', 'level3', 'hurry'] as const
+const SONG_NAMES = ['bossfight', 'spawn', 'level1', 'level2', 'level3', 'hurry'] as const
 export type SongName = (typeof SONG_NAMES)[number]
 const songDefs: Record<SongName, MusicDef> = {
 	bossfight: {
 		leadin: 'bossfightleadin.ogg',
 		main: 'bossfight.ogg',
 		loop: true,
+		volume: 1.2,
 	},
 	spawn: {
 		main: 'spawn.ogg',
-	},
-	win: {
-		main: 'win.ogg',
 	},
 	level1: {
 		main: 'stage1-v2.ogg',

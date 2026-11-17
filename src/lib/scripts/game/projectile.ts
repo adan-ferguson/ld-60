@@ -51,18 +51,21 @@ export class Projectile extends GameEntity {
 			)
 			if (target) {
 				target.takeDamage(1)
-				SfxPlayer.play('damage')
+				this.playSfx('projhit')
+				this.playSfx('damage')
 				this.destroy('hit')
 			}
 		} else if (this.options.source instanceof Enemy) {
 			const { player } = this.level
 			if (player && player.isReady && player.worldBounds.intersects(this.worldBounds)) {
 				player.takeDamage(1)
-				SfxPlayer.play('damage')
+				this.playSfx('projhit')
+				this.playSfx('damage')
 				this.destroy('hit')
 			}
 		}
 		if (this.level.worldCollision.projectileBlockers.some((pb) => pb.intersects(this.wallHitbox))) {
+			this.playSfx('projhit')
 			this.destroy('hit')
 		}
 	}

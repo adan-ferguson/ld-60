@@ -62,7 +62,7 @@ export class Turret extends Enemy {
 		}
 		const angle = this.worldBounds.angleTo(this.level.player.worldBounds.getEdge('bottom', 0.66))
 		const SPEED = 60
-		SfxPlayer.play('enemyShoot')
+		this.playSfx('enemyShoot')
 		this.level.entitiesManager.spawn(
 			new Projectile(this.level, {
 				style: 'dot',

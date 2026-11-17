@@ -38,7 +38,7 @@ export class ShooterMan extends Man {
 		this.state.update(this, delta)
 	}
 	fire() {
-		SfxPlayer.play('enemyShoot')
+		this.playSfx('enemyShoot')
 		this.level.entitiesManager.spawn(
 			new Projectile(this.level, {
 				style: 'small',

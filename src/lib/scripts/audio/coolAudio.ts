@@ -13,6 +13,7 @@ type PlayOptions = {
 	duration?: number
 	replace?: boolean
 	volume?: number
+	pan?: number
 }
 
 const VOLUME = 0.8
@@ -76,7 +77,12 @@ export const CoolAudio = {
 
 		const playbackGain = ctx.createGain()
 		playbackGain.gain.value = options.volume ?? 1
-		playbackGain.connect(channel.gainNode)
+
+		const stereoPanner = ctx.createStereoPanner()
+		stereoPanner.pan.value = Math.max(-1, Math.min(1, options.pan ?? 0))
+
+		playbackGain.connect(stereoPanner)
+		stereoPanner.connect(channel.gainNode)
 
 		const startTime = ctx.currentTime + 0.01
 		const stopTime = options.duration === undefined ? undefined : startTime + options.duration

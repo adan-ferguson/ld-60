@@ -88,11 +88,13 @@ class Game {
 			})
 		})
 		this.level.waveCleared.listen(() => {
-			if (this.roundOutcome !== 'inProgress') {
-				return
-			}
-			MusicPlayer.play('win')
+			SfxPlayer.play('win')
+			MusicPlayer.stop()
 			this.roundOutcome = 'waveCleared'
+			if (this.#screenFadeCountdown) {
+				// If player died but then wave got cleared, tie goes to the player.
+				// This countdown won't finish because it'll be overwritten, and it won't be ticked anymore.
+			}
 			this.#screenFadeCountdown = new CoolCountdown(3, () => {
 				this.#finishWaveAndGrantBonuses()
 			})
@@ -112,11 +114,13 @@ class Game {
 	}
 	updateScore(delta: number) {
 		if (this.targetScore <= this.rollingScore.value) {
-			// TODO: stop rolling score sound
+			this.#scoreCountingSfx?.stop()
 			this.rollingScore.value = this.targetScore
 			return
 		}
-		// TODO: maintain rolling score sound
+		if (!this.#scoreCountingSfx) {
+			this.#scoreCountingSfx = SfxPlayer.play('scoreCounting')
+		}
 		const change = Math.round(
 			Math.min(this.targetScore - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
 		)

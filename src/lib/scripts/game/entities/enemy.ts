@@ -15,7 +15,7 @@ export abstract class Enemy extends GameEntity {
 	constructor(level: LevelInstance) {
 		super(level)
 		this.destroyed.listen(() => {
-			SfxPlayer.play('enemyDeath')
+			this.playSfx('enemyDeath')
 			level.game.addScore(this.score, this)
 		})
 	}

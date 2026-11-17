@@ -81,7 +81,7 @@ class AttackState extends State {
 	}
 	update2(owner: BossMan) {
 		if (!this.time) {
-			SfxPlayer.play('enemyShoot')
+			owner.playSfx('enemyShoot')
 			owner.level.entitiesManager.spawn(
 				new Projectile(owner.level, {
 					style: 'large',
