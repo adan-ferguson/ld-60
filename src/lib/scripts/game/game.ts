@@ -8,6 +8,7 @@ import { TreasureManager } from '#lib/scripts/game/treasureManager.ts'
 import { CoolCountdown } from '#lib/scripts/utils/coolCountdown.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
+import type { PlaybackHandle } from '#lib/scripts/audio/coolAudio.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 2000
@@ -31,6 +32,7 @@ class Game {
 	public treasures = new TreasureManager()
 	#screenFadeCountdown: CoolCountdown | undefined
 	roundOutcome: RoundOutcome = 'inProgress'
+	#scoreCountingSfx: PlaybackHandle | undefined
 	get activeEntities(): GameEntity[] {
 		return this.level?.entitiesManager.activeEntities ?? []
 	}
