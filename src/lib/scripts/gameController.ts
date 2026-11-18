@@ -88,8 +88,6 @@ export class GameController {
 	private setupTicker(app: Application) {
 		app.ticker.add((ticker) => {
 			const delta = ticker.deltaMS / 1000
-			this.flyingTextController.update(delta)
-			this.mainContainer.update(delta)
 			if (!this.game) {
 				const { button1, button2 } = getInputState()
 				if (button1 || button2) {
@@ -98,6 +96,11 @@ export class GameController {
 				return
 			}
 			this.game.update(delta)
+			if (this.game.paused) {
+				return
+			}
+			this.flyingTextController.update(delta)
+			this.mainContainer.update(delta)
 			this.updated.emit(delta)
 			this.#cutscene?.update(delta)
 		})
@@ -133,6 +136,14 @@ export class GameController {
 					this.preWave()
 				}
 			}, 4000)
+		})
+		game.extraLifeGained.listen(() => {
+			this.flyingTextController.addText({
+				text: '1UP',
+				origin: { x: 14, y: 136 },
+				color: 'cyan',
+				duration: 2,
+			})
 		})
 		this.preWave()
 	}

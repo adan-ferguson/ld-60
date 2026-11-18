@@ -9,9 +9,9 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 
 const SPAWN_TIME = 1.5
 
-const INITIAL_SPEED = 1
+const INITIAL_SPEED = 2
 const ACCEL = 0.8
-const ACCEL_ACCEL = 0.05
+const ACCEL_ACCEL = 0.08
 const HIT_SPEED_REDUCTION = 0.7
 
 const FLY_AWAY_BASE_SPEED = 10
@@ -40,7 +40,7 @@ export class Phanta extends GameEntity {
 	}
 
 	override get canBeHitByPlayer() {
-		return true
+		return false
 	}
 
 	get isHazard() {

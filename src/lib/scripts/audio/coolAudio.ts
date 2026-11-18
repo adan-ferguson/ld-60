@@ -59,5 +59,11 @@ export const CoolAudio = {
 	stop(channel: ChannelName) {
 		getChannel(channel).stop()
 	},
+	pause() {
+		void getAudioContext().suspend()
+	},
+	resume() {
+		void getAudioContext().resume()
+	},
 	getAudioContext,
 }

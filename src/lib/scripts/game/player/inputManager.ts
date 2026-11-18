@@ -5,6 +5,7 @@ export type InputState = {
 	moveY: number
 	button1: boolean
 	button2: boolean
+	pause: boolean
 }
 
 const keysDown = new Set<string>()
@@ -54,11 +55,13 @@ export function getInputState(): InputState {
 		keysDown.has('KeyZ') || keysDown.has('KeyJ') || gamepad?.buttons[2]?.pressed || false
 	const button2 =
 		keysDown.has('KeyX') || keysDown.has('KeyK') || gamepad?.buttons[0]?.pressed || false
+	const pause = keysDown.has('Escape') || gamepad?.buttons[9]?.pressed || false
 	return {
 		moveX: (moveRight ? 1 : 0) - (moveLeft ? 1 : 0),
 		moveY: (moveDown ? 1 : 0) - (moveUp ? 1 : 0),
 		button1,
 		button2,
+		pause,
 	}
 }
 

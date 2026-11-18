@@ -28,13 +28,13 @@ const sfxDefs = {
 	win: { filename: 'win.ogg' },
 	scoreCounting: { filename: 'scorecount.ogg', loop: true },
 	treasure: { filename: 'treasure.ogg' },
-	extraLife: { filename: 'extralife.ogg', volume: 0.5 },
+	extraLife: { filename: 'extralife.ogg', volume: 0.8 },
 	projhit: { filename: 'enemyshoot.ogg' },
 } satisfies Record<string, SfxDef>
 
 type SfxName = keyof typeof sfxDefs
 
-const BASE_SFX_VOLUME = 0.35
+const BASE_SFX_VOLUME = 0.6
 
 const sfxCache = new Map<SfxName, Sfx>()
 

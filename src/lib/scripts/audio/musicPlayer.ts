@@ -16,9 +16,7 @@ type MusicDef = {
 	volume?: number
 }
 
-const SONG_NAMES = ['bossfight', 'spawn', 'level1', 'level2', 'level3', 'hurry'] as const
-export type SongName = (typeof SONG_NAMES)[number]
-const songDefs: Record<SongName, MusicDef> = {
+const songDefs = {
 	bossfight: {
 		leadin: 'bossfightleadin.ogg',
 		main: 'bossfight.ogg',
@@ -37,6 +35,7 @@ const songDefs: Record<SongName, MusicDef> = {
 		main: 'stage2.ogg',
 		fast: 'stage2fast.ogg',
 		loop: true,
+		volume: 1.25,
 	},
 	level3: {
 		main: 'stage3-v2.ogg',
@@ -47,28 +46,32 @@ const songDefs: Record<SongName, MusicDef> = {
 		main: 'hurry.ogg',
 		loop: true,
 	},
-} as const
+} satisfies Record<string, MusicDef>
+
+export type SongName = keyof typeof songDefs
 
 const songCache = new Map<SongName, Music>()
 
-const BASE_MUSIC_VOLUME = 0.25
+const BASE_MUSIC_VOLUME = 0.4
 
 export const MusicPlayer = {
 	async preload() {
 		const toUrl = (filename: string) => `/assets/music/${filename}`
 		await Promise.all([
-			...Object.entries(songDefs).map(async ([name, definition]) => {
+			...Object.keys(songDefs).map(async (key) => {
+				const name = key as SongName
+				const def = songDefs[name] as MusicDef
 				const [leadin, main, fast] = await Promise.all([
-					definition.leadin ? CoolAudio.loadBuffer(toUrl(definition.leadin)) : undefined,
-					CoolAudio.loadBuffer(toUrl(definition.main)),
-					definition.fast ? CoolAudio.loadBuffer(toUrl(definition.fast)) : undefined,
+					def.leadin ? CoolAudio.loadBuffer(toUrl(def.leadin)) : undefined,
+					CoolAudio.loadBuffer(toUrl(def.main)),
+					def.fast ? CoolAudio.loadBuffer(toUrl(def.fast)) : undefined,
 				])
 				songCache.set(name as SongName, {
 					leadin,
 					main,
 					fast,
-					loop: definition.loop,
-					volume: (definition.volume ?? 1) * BASE_MUSIC_VOLUME,
+					loop: def.loop,
+					volume: (def.volume ?? 1) * BASE_MUSIC_VOLUME,
 				})
 			}),
 		])

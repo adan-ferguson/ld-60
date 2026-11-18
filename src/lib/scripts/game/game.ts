@@ -8,7 +8,8 @@ import { TreasureManager } from '#lib/scripts/game/treasureManager.ts'
 import { CoolCountdown } from '#lib/scripts/utils/coolCountdown.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
-import type { PlaybackHandle } from '#lib/scripts/audio/coolAudio.ts'
+import { CoolAudio, type PlaybackHandle } from '#lib/scripts/audio/coolAudio.ts'
+import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 2000
@@ -21,18 +22,21 @@ export type Bonuses = {
 export type RoundOutcome = 'inProgress' | 'playerDied' | 'waveCleared'
 
 class Game {
-	public level: LevelInstance | undefined
+	level: LevelInstance | undefined
 	private rollingScore = new CoolCounter()
 	private targetScore = 0
 	lives = 5
 	wave = 1
-	public playerDied = CoolEvents.createHandler()
-	public waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
-	public scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
-	public treasures = new TreasureManager()
-	#screenFadeCountdown: CoolCountdown | undefined
-	roundOutcome: RoundOutcome = 'inProgress'
-	#scoreCountingSfx: PlaybackHandle | undefined
+	playerDied = CoolEvents.createHandler()
+	waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
+	scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
+	extraLifeGained = CoolEvents.createHandler()
+	private treasures = new TreasureManager()
+	private screenFadeCountdown: CoolCountdown | undefined
+	private roundOutcome: RoundOutcome = 'inProgress'
+	private scoreCountingSfx: PlaybackHandle | undefined
+	private pauseWasDown = false
+	paused = false
 	get activeEntities(): GameEntity[] {
 		return this.level?.entitiesManager.activeEntities ?? []
 	}
@@ -50,6 +54,7 @@ class Game {
 		this.rollingScore.addInterval(EXTRA_LIFE, () => {
 			SfxPlayer.play('extraLife')
 			this.lives++
+			this.extraLifeGained.emit()
 		})
 	}
 	get loops() {
@@ -62,13 +67,26 @@ class Game {
 		this.wave = wave
 	}
 	update(delta: number) {
-		if (!this.level) {
+		if (!this.level?.running) {
+			return
+		}
+		const pauseDown = getInputState().pause
+		if (pauseDown && !this.pauseWasDown) {
+			this.paused = !this.paused
+			if (this.paused) {
+				CoolAudio.pause()
+			} else {
+				CoolAudio.resume()
+			}
+		}
+		this.pauseWasDown = pauseDown
+		if (this.paused) {
 			return
 		}
 		this.updateScore(delta)
 		this.level.update(delta)
-		if (this.#screenFadeCountdown?.countdown(delta).finished) {
-			this.#screenFadeCountdown = undefined
+		if (this.screenFadeCountdown?.countdown(delta).finished) {
+			this.screenFadeCountdown = undefined
 		}
 	}
 	prepareLevel() {
@@ -80,7 +98,7 @@ class Game {
 				return
 			}
 			this.roundOutcome = 'playerDied'
-			this.#screenFadeCountdown = new CoolCountdown(2, () => {
+			this.screenFadeCountdown = new CoolCountdown(2, () => {
 				if (!this.isTestMode) {
 					this.lives--
 				}
@@ -91,11 +109,11 @@ class Game {
 			SfxPlayer.play('win')
 			MusicPlayer.stop()
 			this.roundOutcome = 'waveCleared'
-			if (this.#screenFadeCountdown) {
+			if (this.screenFadeCountdown) {
 				// If player died but then wave got cleared, tie goes to the player.
 				// This countdown won't finish because it'll be overwritten, and it won't be ticked anymore.
 			}
-			this.#screenFadeCountdown = new CoolCountdown(3, () => {
+			this.screenFadeCountdown = new CoolCountdown(3, () => {
 				this.#finishWaveAndGrantBonuses()
 			})
 		})
@@ -114,13 +132,13 @@ class Game {
 	}
 	updateScore(delta: number) {
 		if (this.targetScore <= this.rollingScore.value) {
-			this.#scoreCountingSfx?.stop()
-			this.#scoreCountingSfx = undefined
+			this.scoreCountingSfx?.stop()
+			this.scoreCountingSfx = undefined
 			this.rollingScore.value = this.targetScore
 			return
 		}
-		if (!this.#scoreCountingSfx) {
-			this.#scoreCountingSfx = SfxPlayer.play('scoreCounting')
+		if (!this.scoreCountingSfx) {
+			this.scoreCountingSfx = SfxPlayer.play('scoreCounting')
 		}
 		const change = Math.round(
 			Math.min(this.targetScore - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
