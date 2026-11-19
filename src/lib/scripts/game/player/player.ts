@@ -22,7 +22,7 @@ export type AerialState =
 	  }
 
 const JUMP_VELOCITY = 68
-const X_VELOCITY = 32
+const X_VELOCITY = 33.3
 const GRAVITY = 204
 const MAX_FALL_SPEED = 100
 const WIDTH = 7
@@ -35,7 +35,7 @@ const CEILING_SNAP_DISTANCE = 1.5
 const GRAVITY_DELAY_AFTER_JUMP = 0.1
 
 export class Player extends GameEntity {
-	static COYOTE_TIME = 0.07
+	static COYOTE_TIME = 0.09
 	#dropThroughTime = 0
 	aerialState: AerialState = { kind: 'grounded', time: 0 }
 	private controlsManager: ControlsManager

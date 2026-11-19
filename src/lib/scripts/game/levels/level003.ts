@@ -74,5 +74,6 @@ xxllllllxllllllllllllllxxlllllxx
 		1: { kind: 'turret' },
 		a: { kind: 'runnerMan' },
 		b: { kind: 'spikes' },
+		c: { kind: 'shooterMan' },
 	},
 }
