@@ -9,7 +9,11 @@ AssetUtils.requestPreload({
 	alias: `spike`,
 })
 
+const ROTATION_SPEED = 2.5
+const ROTATION_STEP = Math.PI / 4
+
 export class MovingBlockEl extends GameEntityEl {
+	private rotationCounter = 0
 	constructor(
 		gc: GameController,
 		private block: MovingBlock,
@@ -34,6 +38,13 @@ export class MovingBlockEl extends GameEntityEl {
 					1,
 				)
 				.fill(block.type === 'block' ? 'white' : 'red')
+		}
+	}
+	override update2(delta: number): void {
+		super.update2(delta)
+		if (this.block.type === 'spike') {
+			this.rotationCounter += delta * ROTATION_SPEED
+			this.rotation = Math.round(this.rotationCounter / ROTATION_STEP) * ROTATION_STEP
 		}
 	}
 }
