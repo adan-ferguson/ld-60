@@ -76,17 +76,13 @@ export type TileContents =
 	| ConditionalBlockDef
 	| ThinFloorDef
 
-export type VariableContents = TileContents & {
-	loop?: 1 | 2 | 3 | (1 | 2 | 3)[]
-}
-
-type TileDefs = Record<string, VariableContents | VariableContents[]>
+type TileDefs = Record<string, TileContents>
 
 export type LevelDef = {
 	displayName: string
-	tiles: string
 	contents: TileDefs
 	hasPrincess?: boolean
+	tiles: [string, string, string]
 	treasureSpawnTime?: [number, number, number] | number
 	phantaSpawnTime?: [number, number, number] | number
 	turretShotTime?: [number, number, number] | number

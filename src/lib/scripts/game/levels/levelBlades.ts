@@ -4,7 +4,8 @@ export const LevelBlades: LevelDef = {
 	displayName: 'Blade Bonanza',
 	treasureSpawnTime: 10,
 	turretShotTime: [6, 4, 2],
-	tiles: `
+	tiles: [
+		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...x.......a.....a.....a......x
 x...x..........................x
@@ -24,6 +25,47 @@ xc..baxxaadcxxxxxxxxxxxxxxxxxxxx
 xc.cbax1...cxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,
+		`
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...x.......a.....a.....a......x
+x...x..........................x
+x...a..........................x
+x.s......a.....a.....a.........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+xc...d.........xx1.............x
+xc...d.........xt1.............x
+xc...d.........xx1...........xxx
+xc.a.d.cbaaaa..xx1.........aaxxx
+xc.a...cbaaaa.xxx1.......xxxxxxx
+xc.xxxxxxxxxx.aax1.....aaxxxxxxx
+xc.aaaaaxxxxx........xxxxxxxxxxx
+xc.........cx.e....aaxxxxxxxxxxx
+xc.........cxxxxxxxxxxxxxxxxxxxx
+xc..baxxaadcxxxxxxxxxxxxxxxxxxxx
+xc.cbax1...cxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+`,
+		`
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...x.......a.....a.....a......x
+x...x..........................x
+x...a..........................x
+x.s......a.....a.....a.........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+xc...d.........xx1.............x
+xc...d.........xt1.............x
+xc...d.........xx1...........xxx
+xc.a.d.cbaaaa..xx1.........aaxxx
+xc.a...cbaaaa.xxx1.......xxxxxxx
+xc.xxxxxxxxxx.aax1.....aaxxxxxxx
+xc.aaaaaxxxxx........xxxxxxxxxxx
+xc.........cx.e....aaxxxxxxxxxxx
+xc.........cxxxxxxxxxxxxxxxxxxxx
+xc..baxxaadcxxxxxxxxxxxxxxxxxxxx
+xc.cbax1...cxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+`,
+	],
 	contents: {
 		s: { kind: 'playerSpawn' },
 		t: { kind: 'treasureSpawn', loop: 1 },

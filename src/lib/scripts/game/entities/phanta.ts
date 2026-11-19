@@ -10,8 +10,8 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 const SPAWN_TIME = 1.5
 
 const INITIAL_SPEED = 2
-const ACCEL = 0.8
-const ACCEL_ACCEL = 0.08
+const ACCEL = 0.7
+const ACCEL_ACCEL = 0.06
 const HIT_SPEED_REDUCTION = 0.7
 
 const FLY_AWAY_BASE_SPEED = 10

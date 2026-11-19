@@ -70,7 +70,7 @@ export class LevelInstance {
 		return getLoopedVal(this.levelDef.phantaSpawnTime ?? [30, 25, 20], this.loops)
 	}
 	get #turretShotInterval() {
-		return getLoopedVal(this.levelDef.turretShotTime ?? [4, 3.5, 3], this.loops)
+		return getLoopedVal(this.levelDef.turretShotTime ?? [4, 3.3, 2.6], this.loops)
 	}
 	begin() {
 		this.running = true

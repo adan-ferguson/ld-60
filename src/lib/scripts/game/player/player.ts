@@ -21,10 +21,10 @@ export type AerialState =
 			time: number
 	  }
 
-const JUMP_VELOCITY = 68
-const X_VELOCITY = 34
-const GRAVITY = 135
-const MAX_FALL_SPEED = 200
+const JUMP_VELOCITY = 67
+const X_VELOCITY = 32
+const GRAVITY = 204
+const MAX_FALL_SPEED = 100
 const WIDTH = 7
 const HEIGHT = 12
 const CROUCH_DIFF = 4
@@ -32,6 +32,7 @@ const SHOT_COOLDOWN = 0.21
 const AIR_CONTROL = 0.08
 const MAX_X_VELOCITY_FOR_CEILING_SNAP = 2.5
 const CEILING_SNAP_DISTANCE = 1.5
+const GRAVITY_DELAY_AFTER_JUMP = 0.1
 
 export class Player extends GameEntity {
 	static COYOTE_TIME = 0.07
@@ -98,11 +99,12 @@ export class Player extends GameEntity {
 		this.aerialState.time += delta
 		if (!this.onGround()) {
 			this.tryUncrouch()
-			this.velY += GRAVITY * delta
-			this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			if (this.aerialState.kind === 'grounded') {
 				this.aerialState = { kind: 'aerial', doubleJumpUsed: false, time: 0 }
 				this.velX = 0
+			} else if (this.aerialState.time > GRAVITY_DELAY_AFTER_JUMP) {
+				this.velY += GRAVITY * delta
+				this.velY = Math.min(this.velY, MAX_FALL_SPEED)
 			}
 		} else {
 			if (this.controlsManager.y > delta) {
