@@ -2,13 +2,12 @@ import { Assets, type ColorSource, Graphics, Sprite } from 'pixi.js'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { Consts } from '#lib/scripts/consts.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
+import { ThinFloor } from '#lib/scripts/game/thinFloor.ts'
 
 AssetUtils.requestPreload({
 	src: `/assets/sprites/spike.png`,
 	alias: `spike`,
 })
-
-const THIN_FLOOR_PX = 2
 
 export class TerrainLayer extends Graphics {
 	setLevel(level: LevelInstance) {
@@ -18,16 +17,16 @@ export class TerrainLayer extends Graphics {
 		for (const tile of level.tiles.values) {
 			const x = tile.tileXY.x * TILE_SIZE_PX
 			const y = tile.tileXY.y * TILE_SIZE_PX
-			const { kind } = tile.contents
-			if (kind === 'wall') {
+			const { contents } = tile
+			if (contents.kind === 'wall') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('#DDD')
-			} else if (kind === 'thinFloor') {
-				this.rect(x, y, TILE_SIZE_PX, THIN_FLOOR_PX).fill('#DDD')
-			} else if (kind === 'lava') {
+			} else if (contents.kind === 'thinFloor') {
+				this.rect(...ThinFloor.toRect(contents.position).shift({ x, y }).asXywh()).fill('#DDD')
+			} else if (contents.kind === 'lava') {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('red')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
-			} else if (kind === 'spikes') {
+			} else if (contents.kind === 'spikes') {
 				this.addChild(
 					new Sprite({
 						texture: Assets.get('spike'),

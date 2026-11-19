@@ -12,7 +12,7 @@ import { CoolAudio, type PlaybackHandle } from '#lib/scripts/audio/coolAudio.ts'
 import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 
 const EXTRA_LIFE = 25000
-const SCORE_ROLLING_SPEED = 2000
+const SCORE_ROLLING_SPEED = 4000
 
 export type Bonuses = {
 	treasureBonus: number
@@ -67,6 +67,7 @@ class Game {
 		this.wave = wave
 	}
 	update(delta: number) {
+		this.updateScore(delta)
 		if (!this.level?.running) {
 			return
 		}
@@ -83,7 +84,6 @@ class Game {
 		if (this.paused) {
 			return
 		}
-		this.updateScore(delta)
 		this.level.update(delta)
 		if (this.screenFadeCountdown?.countdown(delta).finished) {
 			this.screenFadeCountdown = undefined
@@ -126,9 +126,7 @@ class Game {
 		this.level.begin()
 	}
 	endLevel() {
-		if (this.level) {
-			this.level.end()
-		}
+		this.level?.end()
 	}
 	updateScore(delta: number) {
 		if (this.targetScore <= this.rollingScore.value) {
@@ -155,7 +153,7 @@ class Game {
 		}
 		this.treasures.set(this.wave, this.level.collectedTreasure)
 		const treasureBonus = this.level.collectedTreasure ? this.treasures.collectedCount * 1000 : 0
-		const waveBonus = 500 * this.wave
+		const waveBonus = 1000 * this.wave
 		this.waveCleared.emit({
 			treasureBonus,
 			waveBonus,

@@ -1,10 +1,11 @@
-import type { TileContents } from '#lib/scripts/game/levelDef.ts'
+import type { ThinFloorDef, TileContents } from '#lib/scripts/game/levelDef.ts'
 import type { GameEntity } from '#lib/scripts/game/gameEntity.ts'
 import CoolRect from '#lib/scripts/utils/coolRect.ts'
 import { TileDef } from '#lib/scripts/game/tileDef.ts'
 import { Cardinal } from '#lib/scripts/utils/cardinal.ts'
 import { XY } from '#lib/scripts/utils/XY.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
+import { ThinFloor } from '#lib/scripts/game/thinFloor.ts'
 
 export type MovementBlocker = {
 	entity?: GameEntity
@@ -44,8 +45,8 @@ export class WorldCollision {
 				velocityX: 0,
 				velocityY: 0,
 			})),
-			...this.tilesOfType('thinFloor').map((t) => ({
-				rect: TileDef.toWorldRect(t.tileXY),
+			...this.thinFloors().map((t) => ({
+				rect: ThinFloor.toWorldRect(t.tileXY, t.contents.position),
 				velocityX: 0,
 				velocityY: 0,
 				thinFloor: true,
@@ -289,5 +290,9 @@ export class WorldCollision {
 
 	private tilesOfType(...type: TileContents['kind'][]): TileDef[] {
 		return this.tiles.values.filter((t) => type.includes(t.contents.kind))
+	}
+
+	private thinFloors() {
+		return this.tilesOfType('thinFloor') as (TileDef & { contents: ThinFloorDef })[]
 	}
 }
