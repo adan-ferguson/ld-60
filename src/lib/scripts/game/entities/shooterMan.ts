@@ -3,18 +3,21 @@ import type { ManAnimationType } from '#lib/scripts/pixi/entities/manEl.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { GenericState } from '#lib/scripts/game/genericState.ts'
 import { Projectile } from '#lib/scripts/game/projectile.ts'
-import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 const ATTACK_COOLDOWN = 0.8
 const ATTACK_WINDUP = 0.72
 const ATTACK_DURATION = 1.4
 
-export type ShooterManProps = ManProps
+export type ShooterManProps = ManProps & {
+	speed: number
+}
 
 export class ShooterMan extends Man {
 	#state: State
-	public constructor(level: LevelInstance, props: Partial<ManProps>) {
+	speed = 0
+	public constructor(level: LevelInstance, props: Partial<ShooterManProps>) {
 		super(level, props)
+		this.speed = props.speed ?? 1
 		this.#state = new IdleState(false)
 	}
 	get defaultAnimation(): ManAnimationType {
@@ -69,7 +72,7 @@ class IdleState extends State {
 		return 'stand'
 	}
 	update2(man: ShooterMan, _delta: number): void {
-		if (this.attackOnCooldown && this.time < ATTACK_COOLDOWN) {
+		if (this.attackOnCooldown && this.time < ATTACK_COOLDOWN * man.speed) {
 			return
 		}
 		if (man.seesPlayer()) {
@@ -83,7 +86,7 @@ class AttackWindupState extends State {
 		return 'attackWindup'
 	}
 	update2(man: ShooterMan, _delta: number): void {
-		if (this.time >= ATTACK_WINDUP) {
+		if (this.time >= ATTACK_WINDUP * man.speed) {
 			man.fire()
 			man.state = new AttackState()
 		}
@@ -95,7 +98,7 @@ class AttackState extends State {
 		return 'attack'
 	}
 	update2(man: ShooterMan, _delta: number): void {
-		if (this.time >= ATTACK_DURATION) {
+		if (this.time >= ATTACK_DURATION * man.speed) {
 			man.state = new IdleState()
 		}
 	}

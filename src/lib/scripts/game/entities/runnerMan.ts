@@ -14,7 +14,7 @@ export class RunnerMan extends Man {
 	public constructor(level: LevelInstance, props: Partial<RunnerManProps>) {
 		super(level, props)
 		this.#speed = props.speed ?? 25
-		this.#sprintBonus = props.sprintBonus ?? 15
+		this.#sprintBonus = 0 // props.sprintBonus ?? 15
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'

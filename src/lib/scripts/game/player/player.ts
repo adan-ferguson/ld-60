@@ -63,7 +63,7 @@ export class Player extends GameEntity {
 		return true
 	}
 	public override get hazardHurtbox() {
-		return this.localBounds.pad({ x: -1, y: -3 })
+		return this.localBounds.pad({ x: -2, y: -3 })
 	}
 	public override get squishable() {
 		return true

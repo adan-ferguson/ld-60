@@ -49,12 +49,12 @@ xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..x....xxxx.................22x
-xs.x.........................22x
+x..x.........................22x
 xx.x....xxxxx................22x
 xxyxyxx.xxxxx...xxxxxxxxxxxxxxxx
-xx...xx.xxxxxx.........ggg.....x
-xx...xx.x......................x
-xxyxxxx.x..........xx.......xx.x
+xx...xx.xxxxxx.................x
+xx...xx.x...........s..........x
+xxyxxxx.x..........xx.f...f.xx.x
 xx.xxxx.x.........dxx...x...xx.x
 x..xtxx.x.xxxxxxxxxxxlllllllxx.x
 x..x.xx.xyxxxxxxxxxxxxxxxxxxxx.x
