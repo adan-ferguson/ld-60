@@ -2,67 +2,67 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 
 export const LevelTight: LevelDef = {
 	displayName: 'Cramped Chimney',
-	treasureSpawnTime: [10, 12, 25],
-	phantaSpawnTime: [90, 60, 40],
-	turretShotTime: [4, 3.2, 2],
+	treasureSpawnTime: [10, 12, 16],
+	phantaSpawnTime: [90, 60, 60],
+	turretShotTime: [4, 3, 2],
 	tiles: [
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..x....xxxx.....xxxxxxxxxxxxxxx
 xs.x.............xxxxxxxxxxxxxxx
-xx.xyxx.xxxxx....xxxxxxxxxxxxxxx
-xxyx.xx.x...x...xxxxxxxxxxxxxxxx
-xx...xx.x.c.x..................x
-xxxxxxx.xyxyx..................x
-xxxxxxx.x.x........xx.......xx.x
-xxxxxxx.x.x....axxxxx...x...xx.x
-xxxxxxxyxyxxxxxxxxxxx.......xx.x
-xxxxxxx.x.xxxxxxxxxxx.......xx.x
-xxxxxxx.x......x............xx.x
-xxxx1xx.x....c.x.......c....xx.x
-xxxxzxx.xxxxxx...xyxxxxxxxxxxx.x
-xxx.....xxxxxxxxxx.xxxxxxxxxxx.x
-x11................xt..........x
+xx.x....xxxxx....xxxxxxxxxxxxxxx
+xxyxyxx.xxxxx...xxxxxxxxxxxxxxxx
+xx...xx.xxxxxx.................x
+xxxxxxx.x......................x
+xxxxxxx.x..........xx.......xx.x
+xxxxxxx.x.........cxx...x...xx.x
+x1...xx.x.xxxxxxxxxxx.......xx.x
+xxxx.xx.xyxxxxxxxxxxx.......xx.x
+xxxx1xx.x.xx................xx.x
+xxxxyxx.x.xx.b..............xx.x
+xxxx.xx.x....xxxxyyxxxxxxxxxxx.x
+xxx.....xxxxxxxxx..xxxxxxxxxxx.x
+x1.................xt..........x
 xxxxxxxxxxx.................a..x
 xxxxxxxxxxxxxllxxxxxxxxxxxxxxxxx
 `,
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..x....xxxx.....xxxxxxxxxxxxxxx
-xs.x.............xxxxxxxxxxxxxxx
-xx.xyxx.xxxxx....xxxxxxxxxxxxxxx
-xxyx.xx.x...x...xxxxxxxxxxxxxxxx
-xx...xx.x.d.x..................x
-xxxxxxx.xyxyx..................x
-xxxx1xx.x.x........xx.......xx.x
-xxxx.xx.x.x....exxxxx...x...xx.x
-xxxx.xxyxyxxxxxxxxxxxlllllllxx.x
-xxxx.xx.x.xxxxxxxxxxxxxxxxxxxx.x
-xxxx.xx.x......x............xx.x
-xxxx.xx.x....d.x.......d....xx.x
-xxxx.xx.xxxxxx...xyxxxxxxxxxxx.x
-xxx.....xxxxxxxxxx.xxxxxxxxxxx.x
-x11................x...........x
+x..x....xxxx..................2x
+xs.x..........................2x
+xx.x....xxxxx.................2x
+xxyxyxx.xxxxx...xxxxxxxxxxxxxxxx
+xx...xx.xxxxxx.................x
+xxxxxxx.x......................x
+xxxx1xx.x..........xx...f...xx.x
+xxxxyxx.x.........dxx...x...xx.x
+xxxx.xx.x.xxxxxxxxxxxlllllllxx.x
+xxxx.xx.xyxxxxxxxxxxxxxxxxxxxx.x
+xxxx1xx.x.xx...........xxxxxxx.x
+xxxxyxx.x.xx.b........axxxxxxx.x
+xxxx.xx.x....xxxxyyxxxxxxxxxxx.x
+xxx.....xxxxxxxxx..xxxxxxxxxxx.x
+x1.................x...........x
 xxxxxxxxxxx.................a.tx
 xxxxxxxxxxxxxlllxxxxxxxxxxxxxxxx
 `,
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..x....xxxx.................2xx
-xs.x.........................2xx
-xx.xyxx.xxxxx................2xx
-xxyx.xx.x...x...xxxxxxxxxxxxxxxx
-xt...xx.x.d.xx.................x
-xxxxxxx.xyxyxx.................x
-xxxx2xxyx.x........xx...f...xx.x
-xxxx.xx.x.x.......exx...x...xx.x
-xxxx.xx.xyxxxxxxxxxxxlllllllxx.x
-xxxx.xx.x.xxxxxxxxxxxxxxxxxxxx.x
-xxxx.xxzx.1........xxxxxxxxxxx.x
-xxxx.xx.x.1........xxxxxxxxxxx.x
-xxxx.xx.xxxxxxxxxyyxxxxxxxxxxx.x
-xxx.....xxxxxxxxx..xxxxxxxxxxx.x
-x11................x...........x
+x..x....xxxx.................22x
+xs.x.........................22x
+xx.x....xxxxx................22x
+xxyxyxx.xxxxx...xxxxxxxxxxxxxxxx
+xx...xx.xxxxxx.........ggg.....x
+xx...xx.x......................x
+xxyxxxx.x..........xx.......xx.x
+xx.xxxx.x.........dxx...x...xx.x
+x..xtxx.x.xxxxxxxxxxxlllllllxx.x
+x..x.xx.xyxxxxxxxxxxxxxxxxxxxx.x
+xyxx.xx.x.xx...........xxxxxxx.x
+x.xx.xx.x.xx.bbb....aaaxxxxxxx.x
+x1111x1.x....xxxxyyxxxxxxxxxxx.x
+x11x111.xxxxxxxxx..xxxxxxxxxxx.x
+x111111............x...........x
 xxxxxxxxxxx...................ex
 xxxxxxxxxxxllxlllxxxxxxxxxxxxxxx
 `,
@@ -75,7 +75,7 @@ xxxxxxxxxxxllxlllxxxxxxxxxxxxxxx
 		z: { kind: 'thinFloor', position: 'bottom' },
 		l: { kind: 'lava' },
 		1: { kind: 'turret' },
-		2: { kind: 'turret', health: 5 },
+		2: { kind: 'turret', health: 3 },
 		a: { kind: 'shooterMan', facing: -1 },
 		b: { kind: 'shooterMan', facing: 1 },
 		c: { kind: 'runnerMan' },

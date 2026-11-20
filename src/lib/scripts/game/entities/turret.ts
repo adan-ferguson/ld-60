@@ -38,7 +38,7 @@ export class Turret extends Enemy {
 		return this.props.health
 	}
 	get score(): number {
-		return 1000
+		return 750 + 250 * this.props.health
 	}
 	override get blocksMovement() {
 		return true

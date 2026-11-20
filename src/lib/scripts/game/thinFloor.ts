@@ -8,7 +8,7 @@ const THICKNESS = 2
 export const ThinFloor = {
 	THICKNESS,
 	toWorldRect(tileXY: XY, position: 'top' | 'bottom' = 'top'): CoolRect {
-		return TileDef.toWorldRect(tileXY).getEdge(position, THICKNESS)
+		return TileDef.toWorldRect(tileXY).getEdge(position, THICKNESS / Consts.TILE_SIZE_PX)
 	},
 	toRect(position: 'top' | 'bottom' = 'top'): CoolRect {
 		return new CoolRect({
