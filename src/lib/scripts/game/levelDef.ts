@@ -82,7 +82,7 @@ export type LevelDef = {
 	displayName: string
 	contents: TileDefs
 	hasPrincess?: boolean
-	tiles: [string, string, string]
+	tiles: [string, string, string] | string
 	treasureSpawnTime?: [number, number, number] | number
 	phantaSpawnTime?: [number, number, number] | number
 	turretShotTime?: [number, number, number] | number

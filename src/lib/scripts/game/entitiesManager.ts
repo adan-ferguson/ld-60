@@ -10,6 +10,7 @@ import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { BossMan } from '#lib/scripts/game/entities/bossMan.ts'
 import { Princess } from '#lib/scripts/game/entities/princess.ts'
 import { ConditionalBlock } from '#lib/scripts/game/entities/conditionalBlock.ts'
+import { Spikes } from '#lib/scripts/game/entities/spikes.ts'
 
 export class EntitiesManager {
 	#spawnedEntities: Set<GameEntity> = new Set()
@@ -93,6 +94,8 @@ export function tryCreateEntity(level: LevelInstance, def: TileDef) {
 			return new Princess(level)
 		} else if (def.contents.kind === 'conditionalBlock') {
 			return new ConditionalBlock(level, def.contents)
+		} else if (def.contents.kind === 'spikes') {
+			return new Spikes(level)
 		}
 	}
 }

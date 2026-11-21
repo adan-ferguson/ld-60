@@ -9,8 +9,16 @@ export type TileDef = {
 	contents: TileContents
 }
 
+function getTiles(tiles: [string, string, string] | string, loop: number) {
+	if (typeof tiles === 'string') {
+		return tiles
+	} else {
+		return tiles[loop - 1]
+	}
+}
+
 function parseLevelTiles(level: LevelDef, loop: number) {
-	const tiles = level.tiles[loop - 1]
+	const tiles = getTiles(level.tiles, loop)
 	if (!tiles) {
 		throw `Invalid loop value ${loop}`
 	}

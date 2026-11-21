@@ -39,9 +39,6 @@ export class MovingBlock extends GameEntity {
 	public override get blocksProjectiles() {
 		return this.type === 'block'
 	}
-	public override get isHazard() {
-		return this.type === 'spike'
-	}
 	constructor(
 		level: LevelInstance,
 		private def: MovingBlockDef,

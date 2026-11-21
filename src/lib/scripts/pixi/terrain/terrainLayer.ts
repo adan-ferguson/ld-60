@@ -26,14 +26,6 @@ export class TerrainLayer extends Graphics {
 				this.rect(x, y, TILE_SIZE_PX, TILE_SIZE_PX).fill('red')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
 				randomSquare(this, x, y, TILE_SIZE_PX, 1, 'orange')
-			} else if (contents.kind === 'spikes') {
-				this.addChild(
-					new Sprite({
-						texture: Assets.get('spike'),
-						x,
-						y,
-					}),
-				)
 			}
 		}
 	}

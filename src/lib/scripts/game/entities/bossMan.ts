@@ -11,7 +11,7 @@ export class BossMan extends Man {
 	#state: State
 	constructor(level: LevelInstance) {
 		super(level, {
-			health: [16, 32, 64][level.loops - 1],
+			health: [24, 48, 96][level.loops - 1],
 			scale: 2,
 			facing: -1,
 		})
@@ -56,7 +56,7 @@ class RunningState extends State {
 		return 'run' as const
 	}
 	update2(owner: BossMan) {
-		owner.velX = 32 * owner.facing * (1 + owner.iterations * 0.1)
+		owner.velX = 32 * owner.facing * (1 + owner.iterations * 0.05)
 		if (!owner.hasGroundAhead()) {
 			owner.facing *= -1
 			owner.velX = 0
@@ -93,7 +93,7 @@ class AttackState extends State {
 					wallHitbox: { x: 4, y: 24 },
 					source: owner,
 					lifetime: 15,
-					velX: 80 * owner.facing,
+					velX: 85 * owner.facing,
 					velY: 0,
 					angle: Math.atan2(0, owner.facing),
 					x: owner.x + 3 * owner.facing,
@@ -102,7 +102,7 @@ class AttackState extends State {
 				}),
 			)
 		}
-		const shotTime = owner.loops === 3 ? 1.3 : 1.5
+		const shotTime = owner.loops === 3 ? 1.2 : 1.4
 		if (this.time > shotTime) {
 			if (this.attackCount < owner.loops) {
 				owner.setState(new AttackState(this.attackCount + 1))
