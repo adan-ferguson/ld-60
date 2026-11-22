@@ -37,7 +37,7 @@ const GRAVITY_DELAY_AFTER_JUMP = 0.1
 export class Player extends GameEntity {
 	static COYOTE_TIME = 0.09
 	#dropThroughTime = 0
-	aerialState: AerialState = { kind: 'grounded', time: 0 }
+	aerialState: AerialState = { kind: 'aerial', time: 1, doubleJumpUsed: false }
 	private controlsManager: ControlsManager
 	public jumped =
 		CoolEvents.createHandler<(stateBefore: AerialState, stateAfter: AerialState) => void>()

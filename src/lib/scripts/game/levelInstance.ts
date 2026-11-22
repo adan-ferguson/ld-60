@@ -45,6 +45,9 @@ export class LevelInstance {
 			this.entitiesManager.fireRandomTurret(),
 		)
 	}
+	get displayName() {
+		return this.levelDef.displayName + (this.loops > 1 ? ` ${this.loops}` : '')
+	}
 	get hasPrincess() {
 		return this.levelDef.hasPrincess
 	}
@@ -62,6 +65,9 @@ export class LevelInstance {
 			return `level2`
 		}
 		return `level3`
+	}
+	get backgroundColor() {
+		return this.loops === 1 ? 'black' : this.loops === 2 ? '#000033' : '#330000'
 	}
 	get #treasureSpawnTime() {
 		return getLoopedVal(this.levelDef.treasureSpawnTime ?? 5, this.loops)

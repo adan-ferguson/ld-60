@@ -42,20 +42,20 @@ x.....x........................x
 x.....x........................x
 x.xaaax........................x
 x.....a.....a.....a.....a......x
-x........a.....a.....at......3.x
-xx.................2......xx...x
+x........a.....a.....at........x
+xx.................2......xx.3.x
 xllllllllllllllllllllllllllllllx
 `,
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xaaaaax....a...a.aa...a.a...111x
-x.....x....a...a...............x
-x.....x....ayyya....x.....xx...x
-x..a..x......a.........x..xx...x
-xs.aa.xa.axxxxxxx.........xx.9.x
-xxxxx.x..aaaaaaaaaaa.aaaaaax...x
-x1111.x....................x...x
-x1111.x...................mx...x
+xaaaaaxaaaaa...aaaa...aaa...111x
+x.....xa...a...a...............x
+x.....xa...ayyya....x.....xx...x
+x..a..xa.....a.........x..xx...x
+xs.aa.xa.axxxxxxx.........xx...x
+xxxxx.xa.aaaaaaaaaaa.aaaaaax...x
+x1111.xa...................x...x
+x1111.xa..................mx...x
 x1111.xxxxxxxxxxxxxxxxxxxxxx...x
 x1111.x....................x...x
 x1111.x.............t......x...x
@@ -63,7 +63,7 @@ x11111x........................x
 x..............................x
 x........a...aaaa...a..........x
 x........a..........a..........x
-xx.................8......x....x
+xx.................8......x..9.x
 xllllllllllllllllllllllllllllllx
 `,
 	],
@@ -75,7 +75,7 @@ xllllllllllllllllllllllllllllllx
 		a: { kind: 'spikes' },
 		1: { kind: 'turret' },
 		2: { kind: 'movingBlock', isX: true, speed: 22, initialDir: -1 },
-		3: { kind: 'movingBlock', isX: false, speed: 12, initialDir: -1 },
+		3: { kind: 'movingBlock', isX: false, speed: 12, initialDir: -1, inactiveUntilJumpedOn: true },
 		4: { kind: 'movingBlock', isX: true, type: 'spike', speed: 30, range: [0, 16] },
 		5: {
 			kind: 'movingBlock',
@@ -88,9 +88,9 @@ xllllllllllllllllllllllllllllllx
 		6: { kind: 'movingBlock', isX: false, range: [-3, 2] },
 		7: { kind: 'movingBlock', isX: true, range: [0, 6], type: 'spike', speed: 24 },
 		8: { kind: 'movingBlock', isX: true, speed: 50 },
-		9: { kind: 'movingBlock', isX: false, speed: 5, initialDir: -1 },
+		9: { kind: 'movingBlock', isX: false, speed: 5, initialDir: -1, inactiveUntilJumpedOn: true },
 		A: { kind: 'movingBlock', isX: true, speed: 32, initialDir: -1 },
-		B: { kind: 'movingBlock', isX: false, speed: 14, initialDir: -1 },
+		B: { kind: 'movingBlock', isX: false, speed: 14, initialDir: -1, inactiveUntilJumpedOn: true },
 		C: { kind: 'movingBlock', isX: false, range: [-4, 0], speed: 12 },
 		D: { kind: 'movingBlock', isX: false, range: [0, 2] },
 		E: { kind: 'movingBlock', isX: false, range: [-1, 0] },

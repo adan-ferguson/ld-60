@@ -59,6 +59,7 @@ export type MovingBlockDef = {
 	initialDir?: -1 | 1
 	speed?: number
 	range?: [number, number]
+	inactiveUntilJumpedOn?: boolean
 }
 
 export type TileContents =

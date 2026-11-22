@@ -18,7 +18,7 @@
       score = gc.game?.score ?? 0
       wave = gc.game ? gc.game.wave.toString() : ""
       lives = gc.game?.lives ?? 0
-      levelName = gc.game?.level?.levelDef.displayName ?? ""
+      levelName = gc.game?.level?.displayName ?? ""
       darkMode = gc.phase.kind !== 'wave'
     })
   })

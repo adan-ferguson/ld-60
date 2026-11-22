@@ -15,6 +15,7 @@ export class MovingBlock extends GameEntity {
 	#min = 0
 	#max = 0
 	#dir: -1 | 1 = 1
+	private active = false
 	public createPixiEl(gc: GameController): GameEntityEl {
 		return new MovingBlockEl(gc, this)
 	}
@@ -45,6 +46,7 @@ export class MovingBlock extends GameEntity {
 	) {
 		super(level)
 		this.#dir = def.initialDir ?? 1
+		this.active = !def.inactiveUntilJumpedOn
 	}
 	private get current() {
 		return this[this.axis]
@@ -52,6 +54,13 @@ export class MovingBlock extends GameEntity {
 	public update2(delta: number): void {
 		this.velX = 0
 		this.velY = 0
+		if (!this.active) {
+			if (this.getEntitiesStandingOn().length > 0) {
+				this.active = true
+			} else {
+				return
+			}
+		}
 		const speed = this.def.speed ?? DEFAULT_SPEED
 		const distance = this.#dir === 1 ? this.#max - this.current : this.current - this.#min
 		if (distance <= 0) {

@@ -183,6 +183,7 @@ export class GameController {
 		if (!level) {
 			throw 'No game'
 		}
+		this.mainContainer.setColor(level.backgroundColor)
 		this.setScreenPhase({ kind: 'wave' })
 		this.waveCleared = false
 		MusicPlayer.play('spawn')

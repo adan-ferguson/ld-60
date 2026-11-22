@@ -1,21 +1,23 @@
 import { TerrainLayer } from '#lib/scripts/pixi/terrain/terrainLayer.ts'
 import { EntitiesLayer } from '#lib/scripts/pixi/entities/entitiesLayer.ts'
-import { Container } from 'pixi.js'
+import { type ColorSource, Container, Graphics } from 'pixi.js'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { VfxLayer } from '#lib/scripts/pixi/vfx/vfxLayer.ts'
 import type { LevelInstance } from '#lib/scripts/game/levelInstance.ts'
 import { spiralSpawnAnimation } from '#lib/scripts/pixi/vfx/spiralSpawnAnimation.ts'
+import { Consts } from '#lib/scripts/consts.ts'
 
 export class MainContainer extends Container {
 	private terrainLayer: TerrainLayer
 	private entitiesLayer: EntitiesLayer
 	vfxLayer: VfxLayer
+	backgroundLayer = new Graphics()
 	constructor(private gc: GameController) {
 		super()
 		this.terrainLayer = new TerrainLayer()
 		this.entitiesLayer = new EntitiesLayer(gc)
 		this.vfxLayer = new VfxLayer()
-		this.addChild(this.terrainLayer, this.entitiesLayer, this.vfxLayer)
+		this.addChild(this.backgroundLayer, this.terrainLayer, this.entitiesLayer, this.vfxLayer)
 		gc.phaseChanged.listen(() => {
 			this.vfxLayer.clear()
 			this.entitiesLayer.clear()
@@ -28,6 +30,9 @@ export class MainContainer extends Container {
 				this.visible = false
 			}
 		})
+	}
+	setColor(color: ColorSource) {
+		this.backgroundLayer.clear().rect(0, 0, Consts.GAME_WIDTH, Consts.GAME_HEIGHT).fill(color)
 	}
 	update(delta: number) {
 		if (!this.visible) {
