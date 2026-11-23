@@ -156,7 +156,7 @@ export class Player extends GameEntity {
 		this.jumped.emit(stateBefore, this.aerialState)
 		return true
 	}
-	onGround() {
+	private onGround() {
 		return (
 			this.level.worldCollision.isGrounded(this.worldBounds, this.#dropThroughTime > 0) ?? false
 		)

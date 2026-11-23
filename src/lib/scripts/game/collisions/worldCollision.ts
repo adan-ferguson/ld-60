@@ -91,7 +91,7 @@ export class WorldCollision {
 	}
 
 	isGrounded(entityRect: CoolRect, ignoreThinFloors = false): boolean {
-		const feetRect = entityRect.getEdge('bottom').pad({ y: 0.001 })
+		const feetRect = entityRect.getEdge('bottom').pad({ x: -0.001, y: 0.001 })
 		return this.movementBlockers.some((solid) => {
 			if (ignoreThinFloors && solid.thinFloor) {
 				return false

@@ -38,7 +38,7 @@ export abstract class Man extends Enemy {
 		return 8
 	}
 	override get hazardHurtbox() {
-		return this.localBounds
+		return this.localBounds.getEdge('top', 0.8)
 	}
 	override get canStandOnMovingBlocks() {
 		return true
