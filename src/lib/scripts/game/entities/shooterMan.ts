@@ -23,12 +23,14 @@ export class ShooterMan extends Man {
 	get defaultAnimation(): ManAnimationType {
 		return 'stand'
 	}
+	override get currentAnimation() {
+		return this.state.animation
+	}
 	public get state(): State {
 		return this.#state
 	}
 	public set state(newState: State) {
 		this.#state = newState
-		this.animationChanged.emit(newState.animation)
 	}
 	update2(delta: number): void {
 		const { player } = this.level

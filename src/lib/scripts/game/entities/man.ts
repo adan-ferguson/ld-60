@@ -16,7 +16,7 @@ export type ManProps = {
 }
 
 export abstract class Man extends Enemy {
-	public animationChanged = CoolEvents.createHandler<(type: ManAnimationType) => void>()
+	public animationChanged = CoolEvents.createHandler()
 	protected constructor(level: LevelInstance, props: Partial<ManProps> = {}) {
 		super(level)
 		const p: ManProps = {
@@ -51,6 +51,9 @@ export abstract class Man extends Enemy {
 	}
 	override get maxHealth(): number {
 		return this.#maxHealth
+	}
+	get currentAnimation(): ManAnimationType {
+		return this.defaultAnimation
 	}
 	get hitbox() {
 		return this.worldBounds.pad({ y: -3 })

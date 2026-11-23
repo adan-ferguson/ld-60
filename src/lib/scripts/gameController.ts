@@ -140,7 +140,7 @@ export class GameController {
 		game.extraLifeGained.listen(() => {
 			this.flyingTextController.addText({
 				text: '1UP',
-				origin: { x: 14, y: 136 },
+				origin: game.level?.player.xy ?? { x: 0, y: 0 },
 				color: 'cyan',
 				duration: 2,
 			})

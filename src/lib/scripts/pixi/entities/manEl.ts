@@ -36,8 +36,8 @@ export class ManEl extends WithManSprite {
 		man.destroyed.listen(() => {
 			gc.addAnimation(particlesAnimation(man.worldBounds, man.color, 2, 3))
 		})
-		man.animationChanged.listen((type) => {
-			this.setAnimation(defs[type])
+		man.animationChanged.listen(() => {
+			this.setAnimation(defs[man.currentAnimation])
 		})
 		man.damageTaken.listen(() => {
 			this.#flashTime = DAMAGE_FLASH_TIME

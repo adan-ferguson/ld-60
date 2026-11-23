@@ -8,18 +8,21 @@ import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 
 export class BossMan extends Man {
 	iterations = 0
-	#state: State
+	private state: State
 	constructor(level: LevelInstance) {
 		super(level, {
 			health: [24, 48, 96][level.loops - 1],
 			scale: 2,
 			facing: -1,
 		})
-		this.#state = new RunningState()
+		this.state = new RunningState()
 		this.destroyed.listen(() => {
 			MusicPlayer.stop()
 			SfxPlayer.play('bossKill')
 		})
+	}
+	override get currentAnimation() {
+		return this.state.animation
 	}
 	get defaultAnimation(): ManAnimationType {
 		return 'run'
@@ -28,7 +31,7 @@ export class BossMan extends Man {
 		return this.level.loops
 	}
 	update2(delta: number) {
-		this.#state.update(this, delta)
+		this.state.update(this, delta)
 		const { player } = this.level
 		if (
 			player &&
@@ -38,9 +41,8 @@ export class BossMan extends Man {
 		}
 	}
 	setState(newState: State) {
-		this.#state = newState
+		this.state = newState
 		this.flashInterval = newState.flashInterval
-		this.animationChanged.emit(newState.animation)
 	}
 }
 
