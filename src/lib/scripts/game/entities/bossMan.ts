@@ -43,6 +43,7 @@ export class BossMan extends Man {
 	setState(newState: State) {
 		this.state = newState
 		this.flashInterval = newState.flashInterval
+		this.animationChanged.emit()
 	}
 }
 

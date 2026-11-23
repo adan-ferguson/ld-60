@@ -30,10 +30,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxsx................xxxxxxx
 xxxxxxxzx................xxxxxxx
-xxa.........axxxxxxxxxxx.xxxxxxx
+xxa.........a.xxxxxxxxxx.xxxxxxx
 xx...........xxxxxxyyyyy.yyyyyxx
 xx...........xxxxxx..........8xx
-xx...........xxyxxxyyyyyyyyyyyxx
+xx...........xxxxxxyyyyyyyyyyyxx
 xxa.....6...axxxx..7..........xx
 xxxxxxxxxxxxlxxxx.xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
@@ -57,12 +57,12 @@ xx...........xxxxxxyyyyyyyyyyyxx
 xxa.....c...axxxx..7.........8xx
 xxxxxxxxxxxxlxxxx.xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xx................xxxxxxxxxxxxxx
 xx................xxxxxxxxxxxxxx
 xx................x..........txx
 xxd...........................xx
 xxx...x...xxxxxxxxx...........xx
-xx........xxxxxxxxx.c.c.c.....xx
+xx........xxxxxxxxx.6.6.6.....xx
 xxllllllllxxxxxxxxxxxxxxxxxxxlxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 `,

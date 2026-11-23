@@ -57,7 +57,7 @@ x.......bx......a.....x........x
 x.......xx....xxxx....xx.......x
 x.......x..............x.......x
 x1......x..............x......1x
-x.......x.a...........ax.......x
+x.......x.a.x......x..ax.......x
 x......1xxxxx......xxxxx1......x
 xt.............................x
 x1............................1x
@@ -77,5 +77,6 @@ xlllllllllxxxxxxxxxxxxxxxxxxxxxx
 		b: { kind: 'spikes' },
 		c: { kind: 'shooterMan' },
 		d: { kind: 'shooterMan', facing: -1 },
+		e: { kind: 'runnerMan', health: 3 },
 	},
 }

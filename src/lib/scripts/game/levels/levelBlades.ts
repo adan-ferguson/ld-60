@@ -62,8 +62,8 @@ x..xxxxxxxxxx.aax3....aaaxxxxxxx
 x...........x........xxxxxxxxxxx
 x...........x.e...aaaxxxxxxxxxxx
 x...........xxxxxxxxxxxxxxxxxxxx
-x....aaaa.....x..xxxxxxxxxxxxxxx
-x...m.......x..f.xxxxxxxxxxxxxxx
+x....aaaa.....xxxxxxxxxxxxxxxxxx
+x...m.......x...1xxxxxxxxxxxxxxx
 xlllllllllllxxxxxxxxxxxxxxxxxxxx
 `,
 	],

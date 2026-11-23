@@ -184,10 +184,10 @@ export class Player extends GameEntity {
 				velX: 50 * x,
 				velY: 50 * y,
 				angle: Math.atan2(y, x),
-				hitbox: y ? { x: 3, y: 6 } : { x: 6, y: 3 },
+				hitbox: y ? { x: 3, y: 6 } : { x: 6, y: 3.4 },
 				wallHitbox: y ? { x: 3, y: 1 } : { x: 1, y: 3 },
 				x: this.x + x * 3 + (y ? 0 : 3 * this.facing),
-				y: this.y + (crouching ? -0.5 : -1.5) + y * 5,
+				y: this.y + (crouching ? -0.5 : -1.5) + y * 8,
 				tint: 'cyan',
 			}),
 		)

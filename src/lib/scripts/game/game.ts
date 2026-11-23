@@ -31,7 +31,7 @@ class Game {
 	waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
 	scoreAdded = CoolEvents.createHandler<(amount: number, sourcePosition?: XY) => void>()
 	extraLifeGained = CoolEvents.createHandler()
-	private treasures = new TreasureManager()
+	treasures = new TreasureManager()
 	private screenFadeCountdown: CoolCountdown | undefined
 	private roundOutcome: RoundOutcome = 'inProgress'
 	private scoreCountingSfx: PlaybackHandle | undefined

@@ -7,7 +7,7 @@
 </script>
 
 <div>
-  {#each treasureManager.rows as row,i (i)}
+  {#each treasureManager.treasureMapRows(currentWave) as row,i (i)}
     <div class="treasure-row">
       {#each row as level, j (j)}
         <div class="treasure-cell" class:current={level.wave === currentWave}>

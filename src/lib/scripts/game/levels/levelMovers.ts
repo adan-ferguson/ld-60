@@ -59,7 +59,7 @@ xxx................xxxxxxx1x.bbx
 x.......g..........xxxxxxxxx...x
 xbbbbbbbbbbbb......xx...xxxx...x
 xxxbbbxxxxxxx.....xxx...xxx....x
-x1x.t.............xxxyxyxxx....x
+x1xt..............xxxyxyxxx....x
 x.................xxx..dxxxxbb.x
 x......b..............x.xxxx...x
 x.k....bk.........2...x..1x1...x

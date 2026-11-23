@@ -31,7 +31,7 @@ export class ManEl extends WithManSprite {
 		private man: Man,
 	) {
 		super(gc, man)
-		this.setAnimation(defs[man.defaultAnimation])
+		this.setAnimation(defs[man.currentAnimation])
 		this.sprite.tint = man.color
 		man.destroyed.listen(() => {
 			gc.addAnimation(particlesAnimation(man.worldBounds, man.color, 2, 3))

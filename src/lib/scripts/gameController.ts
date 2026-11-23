@@ -127,7 +127,7 @@ export class GameController {
 				bonuses,
 			})
 			setTimeout(() => {
-				if (this.isTestMode) {
+				if (this.isTestMode && 0) {
 					this.preWave()
 				} else if (game.wave % 10 === 0 && 0) {
 					this.#showCutscene(1)

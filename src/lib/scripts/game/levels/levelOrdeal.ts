@@ -3,7 +3,7 @@ import type { LevelDef } from '#lib/scripts/game/levelDef.ts'
 export const LevelOrdeal: LevelDef = {
 	displayName: 'Ordeal',
 	phantaSpawnTime: 90,
-	turretShotTime: [4, 1, 1.25],
+	turretShotTime: [4, 1, 1.5],
 	treasureSpawnTime: [5, 17, 28],
 	tiles: [
 		`
@@ -48,17 +48,17 @@ xllllllllllllllllllllllllllllllx
 `,
 		`
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xaaaaaxaaaaa...aaaa...aaa...111x
+xaaaaaxa...a...aaaa...aaa...111x
 x.....xa...a...a...............x
 x.....xa...ayyya....x.....xx...x
 x..a..xa.....a.........x..xx...x
 xs.aa.xa.axxxxxxx.........xx...x
 xxxxx.xa.aaaaaaaaaaa.aaaaaax...x
-x1111.xa...................x...x
-x1111.xa..................mx...x
-x1111.xxxxxxxxxxxxxxxxxxxxxx...x
-x1111.x....................x...x
-x1111.x.............t......x...x
+x1....xa...................x...x
+x1....xa..................mx...x
+x1....xxxxxxxxxxxxxxxxxxxxxx...x
+x1....x....................x...x
+x1....x.............t......x...x
 x11111x........................x
 x..............................x
 x........a...aaaa...a..........x

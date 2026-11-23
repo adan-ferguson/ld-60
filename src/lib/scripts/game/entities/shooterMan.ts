@@ -31,6 +31,7 @@ export class ShooterMan extends Man {
 	}
 	public set state(newState: State) {
 		this.#state = newState
+		this.animationChanged.emit()
 	}
 	update2(delta: number): void {
 		const { player } = this.level

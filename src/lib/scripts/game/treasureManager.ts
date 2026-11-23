@@ -8,26 +8,28 @@ export class TreasureManager {
 	get collectedCount() {
 		return [...this.#treasures.values()].filter((v) => v).length
 	}
-	get rows() {
+	treasureMapRows(currentWave: number): LevelInfo[][] {
 		const rows: LevelInfo[][] = []
-		for (let r = 0; r < 3; r++) {
-			const row: LevelInfo[] = []
-			rows.push(row)
-			for (let c = 1; c <= 10; c++) {
-				const val = this.#treasures.get(c + r * 10)
-				row.push({
-					treasureFound: val ?? false,
-					wave: c + r * 10,
-				})
+		for (let wave = 1; wave <= 30; wave++) {
+			const val = this.#treasures.get(wave)
+			const { row, col } = toRowCol(wave)
+			if (!rows[row]) {
+				rows[row] = []
 			}
-			if (this.#treasures.get(r * 10 + 10) === undefined) {
-				break
-			}
+			rows[row][col] = { wave, treasureFound: val ?? false }
 		}
-		return rows
+		const { row } = toRowCol(currentWave)
+		return rows.slice(0, row + 1)
 	}
 	set(wave: number, collected: boolean) {
 		// TODO: ensure wave is an integer from 1 to 30
 		this.#treasures.set(wave, collected)
+	}
+}
+
+function toRowCol(wave: number) {
+	return {
+		row: Math.floor((wave - 1) / 10),
+		col: (wave - 1) % 10,
 	}
 }
