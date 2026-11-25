@@ -5,7 +5,7 @@ import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 import { MainContainer } from '#lib/scripts/pixi/mainContainer.ts'
 import type { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelte.ts'
-import { Cutscene, type CutsceneId } from '#lib/scripts/cutscene.ts'
+import { Cutscene, type CutsceneId } from '#lib/scripts/cutscenes/cutscene.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { GameOverController } from '#lib/scripts/gameOverController.ts'
 
@@ -231,13 +231,13 @@ export class GameController {
 			return true
 		}
 		return false
-		function getLoop3Id(game: Game) {
+		function getLoop3Id(game: Game): CutsceneId {
 			const allTreasures = game.treasures.collectedCount === 30
 			const noContinues = game.continuesUsed === 0
 			if (allTreasures && noContinues) {
 				return 'loop3_best'
 			} else if (allTreasures) {
-				return 'loop3_all_treasure'
+				return 'loop3_all_treasures'
 			} else if (noContinues) {
 				return 'loop3_no_continues'
 			}
