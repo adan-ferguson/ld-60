@@ -13,7 +13,9 @@ import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 4000
-const STARTING_LIVES = 1
+const SCORE_ROLLING_PERCENT = 40
+const STARTING_LIVES = 5
+const CONTINUE_PENALTY_WAVES = 2
 
 export type Bonuses = {
 	treasureBonus: number
@@ -69,7 +71,9 @@ class Game {
 	}
 	continued() {
 		this.lives = STARTING_LIVES
-		this.targetScore.value /= 2
+		this.targetScore.value = Math.ceil(this.targetScore.value / 2)
+		const checkpoint = Math.floor((this.wave - 1) / 10) * 10 + 1
+		this.wave = Math.max(checkpoint, this.wave - CONTINUE_PENALTY_WAVES)
 	}
 	update(delta: number) {
 		this.updateScore(delta)
@@ -132,19 +136,20 @@ class Game {
 		this.level?.end()
 	}
 	updateScore(delta: number) {
-		if (this.targetScore.value <= this.rollingScore.value) {
+		const difference = this.targetScore.value - this.rollingScore.value
+		const distance = Math.abs(difference)
+		if (distance === 0) {
 			this.scoreCountingSfx?.stop()
 			this.scoreCountingSfx = undefined
-			this.rollingScore.value = this.targetScore.value
 			return
 		}
 		if (!this.scoreCountingSfx) {
 			this.scoreCountingSfx = SfxPlayer.play('scoreCounting')
 		}
-		const change = Math.round(
-			Math.min(this.targetScore.value - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
-		)
-		this.rollingScore.value += change
+		const flatChange = SCORE_ROLLING_SPEED * delta
+		const percentageChange = distance * (SCORE_ROLLING_PERCENT / 100) * delta
+		const change = Math.min(distance, Math.max(flatChange, percentageChange))
+		this.rollingScore.value += Math.round(change * Math.sign(difference))
 	}
 	addScore(amount: number, sourcePosition?: XY) {
 		this.targetScore.value += amount

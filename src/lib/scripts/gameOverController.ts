@@ -11,6 +11,7 @@ export class GameOverController {
 	})
 	selectedIndex = 0
 	private poller: { stop(): void }
+	chosen = -1
 	constructor(public gc: GameController) {
 		this.poller = makeInputPoller({
 			move: (delta: number) => {
@@ -19,6 +20,7 @@ export class GameOverController {
 				this.events.selectedItemChanged.emit()
 			},
 			accept: () => {
+				this.chosen = this.selectedIndex
 				if (this.selectedIndex === 0) {
 					this.continue()
 				} else {
