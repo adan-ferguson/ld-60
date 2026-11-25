@@ -4,9 +4,13 @@ import type { XY } from '#lib/scripts/utils/XY.ts'
 import { getCutsceneDef } from '#lib/scripts/cutscenes/getCutsceneDef.ts'
 import { CutsceneTimeline } from '#lib/scripts/cutscenes/cutsceneTimeline.ts'
 
-type CutsceneActor = undefined
+type CutsceneActor = {
+	id: string
+	sprite: 'man'
+	position: XY
+}
 
-type CutsceneEvent = (
+export type CutsceneEvent = (
 	| { kind: 'showText'; text: string; duration?: number }
 	| { kind: 'hideText' }
 	| { kind: 'spawnActor'; actor: CutsceneActor }
@@ -25,6 +29,7 @@ export type CutsceneDef = {
 export class Cutscene {
 	public container: Container
 	public finished = CoolEvents.createHandler()
+	public eventFired = CoolEvents.createHandler<(event: CutsceneEvent) => void>()
 	#def: CutsceneDef
 	#timeline: CutsceneTimeline
 	constructor(id: CutsceneId) {
