@@ -9,6 +9,7 @@ import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelt
 import { Cutscene } from '#lib/scripts/cutscene.ts'
 import { CoolAudio } from '#lib/scripts/audio/coolAudio.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
+import { GameOverController } from '#lib/scripts/gameOverController.ts'
 
 export type PreWavePhase = {
 	kind: 'prewave'
@@ -27,8 +28,8 @@ export type PostWavePhase = {
 
 export type GameOverPhase = {
 	kind: 'gameover'
-	score: number
-	isHighScore: boolean
+	game: Game
+	gameOverController: GameOverController
 }
 
 export type TitlePhase = {
@@ -57,6 +58,9 @@ export type ScreenPhase =
 	| HighScoresPhase
 	| AttractPhase
 	| CutscenePhase
+
+const SINGLE_LEVEL_TEST_MODE = false
+const SHOW_CUTSCENES = false
 
 export class GameController {
 	public game: Game | undefined
@@ -127,9 +131,9 @@ export class GameController {
 				bonuses,
 			})
 			setTimeout(() => {
-				if (this.isTestMode && 0) {
+				if (this.isTestMode && SINGLE_LEVEL_TEST_MODE) {
 					this.preWave()
-				} else if (game.wave % 10 === 0 && 0) {
+				} else if (game.wave % 10 === 0 && SHOW_CUTSCENES) {
 					this.#showCutscene(1)
 				} else {
 					game.nextWave()
@@ -147,14 +151,21 @@ export class GameController {
 		})
 		this.preWave()
 	}
+	endGame() {
+		this.game = undefined
+		this.setScreenPhase({ kind: 'title' })
+	}
 	gameOver() {
-		const score = this.game?.score ?? 0
-		this.setScreenPhase({ kind: 'gameover', score, isHighScore: isHighScore(score) })
-		addHighScore(score)
-		setTimeout(() => {
-			// this.stopped.emit()
-			this.game = undefined
-		}, 6000)
+		const { game } = this
+		if (!game) {
+			throw 'No game'
+		}
+		const gameOverController = new GameOverController(this)
+		this.setScreenPhase({
+			kind: 'gameover',
+			game,
+			gameOverController,
+		})
 	}
 	preWave() {
 		if (!this.game) {

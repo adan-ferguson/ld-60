@@ -33,8 +33,8 @@ export const CoolEvents = {
 		/**
 		 * Usage:
 		 * const events = defineEvents({
-		 *   onChange: () => {},
-		 *   onDestroy: () => {},
+		 *   onChange(){},
+		 *   onDestroy(){},
 		 * })
 		 * events.onChange.emit()
 		 * events.onChange.listen(() => myListenerFunction)
@@ -48,9 +48,13 @@ export const CoolEvents = {
 	},
 	/**
 	 * Usage:
-	 * Events.subscribe(events, {
-	 *   onChange: () => {},
-	 *   onDestroy: () => {},
+	 * CoolEvents.subscribe(events, {
+	 *   onChange(){
+	 *     // do stuff
+	 *   },
+	 *   onDestroy(){
+	 *     // do stuff
+	 *   },
 	 * })
 	 * as a shortcut for:
 	 * events.onChange.listen(() => myListenerFunction)
@@ -59,8 +63,14 @@ export const CoolEvents = {
 	 * @param listeners
 	 */
 	subscribe<T extends EventMap>(events: Handlers<T>, listeners: Partial<{ [K in keyof T]: T[K] }>) {
+		const cleanups: (() => void)[] = []
 		for (const key in listeners) {
-			events[key].listen(listeners[key]!)
+			cleanups.push(events[key].listen(listeners[key]!))
+		}
+		return () => {
+			for (const cleanup of cleanups) {
+				cleanup()
+			}
 		}
 	},
 }

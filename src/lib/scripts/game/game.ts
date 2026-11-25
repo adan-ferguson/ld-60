@@ -13,6 +13,7 @@ import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
 
 const EXTRA_LIFE = 25000
 const SCORE_ROLLING_SPEED = 4000
+const STARTING_LIVES = 1
 
 export type Bonuses = {
 	treasureBonus: number
@@ -24,8 +25,8 @@ export type RoundOutcome = 'inProgress' | 'playerDied' | 'waveCleared'
 class Game {
 	level: LevelInstance | undefined
 	private rollingScore = new CoolCounter()
-	private targetScore = 0
-	lives = 5
+	private targetScore = new CoolCounter()
+	lives = STARTING_LIVES
 	wave = 1
 	playerDied = CoolEvents.createHandler()
 	waveCleared = CoolEvents.createHandler<(bonuses: Bonuses) => void>()
@@ -51,7 +52,7 @@ class Game {
 		private isTestMode = false,
 	) {
 		this.setWave(wave)
-		this.rollingScore.addInterval(EXTRA_LIFE, () => {
+		this.targetScore.addInterval(EXTRA_LIFE, () => {
 			SfxPlayer.play('extraLife')
 			this.lives++
 			this.extraLifeGained.emit()
@@ -65,6 +66,10 @@ class Game {
 	}
 	setWave(wave: number) {
 		this.wave = wave
+	}
+	continued() {
+		this.lives = STARTING_LIVES
+		this.targetScore.value /= 2
 	}
 	update(delta: number) {
 		this.updateScore(delta)
@@ -99,9 +104,7 @@ class Game {
 			}
 			this.roundOutcome = 'playerDied'
 			this.screenFadeCountdown = new CoolCountdown(2, () => {
-				if (!this.isTestMode) {
-					this.lives--
-				}
+				this.lives--
 				this.playerDied.emit()
 			})
 		})
@@ -129,22 +132,22 @@ class Game {
 		this.level?.end()
 	}
 	updateScore(delta: number) {
-		if (this.targetScore <= this.rollingScore.value) {
+		if (this.targetScore.value <= this.rollingScore.value) {
 			this.scoreCountingSfx?.stop()
 			this.scoreCountingSfx = undefined
-			this.rollingScore.value = this.targetScore
+			this.rollingScore.value = this.targetScore.value
 			return
 		}
 		if (!this.scoreCountingSfx) {
 			this.scoreCountingSfx = SfxPlayer.play('scoreCounting')
 		}
 		const change = Math.round(
-			Math.min(this.targetScore - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
+			Math.min(this.targetScore.value - this.rollingScore.value, delta * SCORE_ROLLING_SPEED),
 		)
 		this.rollingScore.value += change
 	}
 	addScore(amount: number, sourcePosition?: XY) {
-		this.targetScore += amount
+		this.targetScore.value += amount
 		this.scoreAdded.emit(amount, sourcePosition)
 	}
 	#finishWaveAndGrantBonuses() {
@@ -158,7 +161,7 @@ class Game {
 			treasureBonus,
 			waveBonus,
 		})
-		this.targetScore += treasureBonus + waveBonus
+		this.targetScore.value += treasureBonus + waveBonus
 	}
 }
 
