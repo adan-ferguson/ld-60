@@ -6,6 +6,7 @@ type Handlers<T extends EventMap> = {
 
 type Handler<T extends EventMap[string]> = {
 	listen: (fn: (...args: Parameters<T>) => void) => () => void
+	listenAsync: () => Promise<Parameters<T>[0]>
 	emit: (...args: Parameters<T>) => void
 	listeners: Set<(...args: Parameters<T>) => void>
 }
@@ -21,6 +22,14 @@ export const CoolEvents = {
 				return () => {
 					listeners.delete(fn)
 				}
+			},
+			listenAsync() {
+				return new Promise((resolve) => {
+					const cleanup = this.listen((...args) => {
+						cleanup()
+						resolve(args[0])
+					})
+				})
 			},
 			emit(...args) {
 				for (const fn of listeners) {

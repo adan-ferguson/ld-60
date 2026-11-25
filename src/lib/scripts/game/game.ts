@@ -40,6 +40,7 @@ class Game {
 	private scoreCountingSfx: PlaybackHandle | undefined
 	private pauseWasDown = false
 	paused = false
+	continuesUsed = 0
 	get activeEntities(): GameEntity[] {
 		return this.level?.entitiesManager.activeEntities ?? []
 	}
@@ -70,6 +71,7 @@ class Game {
 		this.wave = wave
 	}
 	continued() {
+		this.continuesUsed++
 		this.lives = STARTING_LIVES
 		this.targetScore.value = Math.ceil(this.targetScore.value / 2)
 		const checkpoint = Math.floor((this.wave - 1) / 10) * 10 + 1

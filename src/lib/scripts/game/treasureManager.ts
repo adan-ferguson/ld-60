@@ -25,6 +25,10 @@ export class TreasureManager {
 		// TODO: ensure wave is an integer from 1 to 30
 		this.#treasures.set(wave, collected)
 	}
+
+	hasCollected(wave: number) {
+		return this.#treasures.get(wave) ?? false
+	}
 }
 
 function toRowCol(wave: number) {

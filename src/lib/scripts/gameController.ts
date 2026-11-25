@@ -2,12 +2,10 @@ import { type Application } from 'pixi.js'
 import Game, { type Bonuses } from '#lib/scripts/game/game.ts'
 import { CoolEvents } from '#lib/scripts/utils/coolEvents.ts'
 import { getInputState } from '#lib/scripts/game/player/inputManager.ts'
-import { addHighScore, isHighScore } from '#lib/scripts/game/highScores.ts'
 import { MainContainer } from '#lib/scripts/pixi/mainContainer.ts'
 import type { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelte.ts'
-import { Cutscene } from '#lib/scripts/cutscene.ts'
-import { CoolAudio } from '#lib/scripts/audio/coolAudio.ts'
+import { Cutscene, type CutsceneId } from '#lib/scripts/cutscene.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { GameOverController } from '#lib/scripts/gameOverController.ts'
 
@@ -60,7 +58,7 @@ export type ScreenPhase =
 	| CutscenePhase
 
 const SINGLE_LEVEL_TEST_MODE = false
-const SHOW_CUTSCENES = false
+const SHOW_CUTSCENES = true
 
 export class GameController {
 	public game: Game | undefined
@@ -133,11 +131,8 @@ export class GameController {
 			setTimeout(() => {
 				if (this.isTestMode && SINGLE_LEVEL_TEST_MODE) {
 					this.preWave()
-				} else if (game.wave % 10 === 0 && SHOW_CUTSCENES) {
-					this.#showCutscene(1)
-				} else {
-					game.nextWave()
-					this.preWave()
+				} else if (!this.#tryShowCutscene()) {
+					this.nextWave()
 				}
 			}, 4000)
 		})
@@ -166,6 +161,13 @@ export class GameController {
 			game,
 			gameOverController,
 		})
+	}
+	nextWave() {
+		if (!this.game) {
+			throw 'No game'
+		}
+		this.game.nextWave()
+		this.preWave()
 	}
 	preWave() {
 		if (!this.game) {
@@ -207,25 +209,54 @@ export class GameController {
 			}
 		})
 	}
-
 	addAnimation(vfxAnimation: VfxAnimation) {
 		this.mainContainer.vfxLayer.addAnimation(vfxAnimation)
 	}
 
-	#showCutscene(index: number) {
-		this.#cutscene = new Cutscene(index)
+	#tryShowCutscene() {
+		const { game } = this
+		if (!game) {
+			return false
+		}
+		if (game.wave === 10) {
+			this.#showCutscene('loop1').then(() => {
+				this.nextWave()
+			})
+			return true
+		} else if (game.wave === 20) {
+			this.#showCutscene('loop2').then(() => this.nextWave())
+			return true
+		} else if (game.wave === 30) {
+			this.#showCutscene(getLoop3Id(game)).then(() => this.#congratulations())
+			return true
+		}
+		return false
+		function getLoop3Id(game: Game) {
+			const allTreasures = game.treasures.collectedCount === 30
+			const noContinues = game.continuesUsed === 0
+			if (allTreasures && noContinues) {
+				return 'loop3_best'
+			} else if (allTreasures) {
+				return 'loop3_all_treasure'
+			} else if (noContinues) {
+				return 'loop3_no_continues'
+			}
+			return 'loop3_worst'
+		}
+	}
+
+	async #showCutscene(id: CutsceneId) {
+		this.#cutscene = new Cutscene(id)
 		const { container } = this.#cutscene
 		this.app.stage.addChild(container)
 		this.setScreenPhase({
 			kind: 'cutscene',
 			cutscene: this.#cutscene,
 		})
-		this.#cutscene.finished.listen(() => {
-			this.app.stage.removeChild(container)
-			this.#cutscene = undefined
-			this.gameOver()
-			// this.nextWave()
-			// this.preWave()
-		})
+		await this.#cutscene.finished.listenAsync()
+		this.app.stage.removeChild(container)
+		this.#cutscene = undefined
 	}
+
+	#congratulations() {}
 }
