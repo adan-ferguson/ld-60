@@ -1,7 +1,6 @@
 import { Cutscene } from '#lib/scripts/cutscenes/cutscene.ts'
-import { ManSprite } from '#lib/scripts/pixi/entities/manSprite.ts'
-import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
-import { CutsceneActor } from '#lib/scripts/cutscenes/cutsceneActor.ts'
+import { ManActor } from '#lib/scripts/cutscenes/actors/manActor.ts'
+
 export function cutsceneLoop1() {
 	const princess = createPrincessActor()
 	const man = createManActor()
@@ -10,10 +9,16 @@ export function cutsceneLoop1() {
 	cutscene.timeline
 		.addThreshold(0, () => {
 			cutscene.addChild(princess, man)
+			princess.x = 200
+			princess.y = 0
+			princess.run(-4)
+			man.x = 0
+			man.y = 0
+			man.run(4)
 		})
 		.addThreshold(3, () => {
-			// cutscene.addChild() TODO: explosion animation
-			cutscene.removeChild(princess)
+			princess.stand()
+			man.stand()
 		})
 		.addThreshold(3.1, () => {
 			cutscene.addChild(redMan)
@@ -23,31 +28,19 @@ export function cutsceneLoop1() {
 }
 
 function createPrincessActor() {
-	const sprite = new ManSprite()
-	// TODO: Something like this
-	// sprite.scale.set(-1, 1)
-	// sprite.x = 50
-	// sprite.y = 0
-	// sprite.velocity = { x: -4, y: 0 }
-	// sprite.setAnimation('walk')
-	const container = new CutsceneActor()
-	container.addChild(sprite)
-	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
-	return container
+	const actor = new ManActor()
+	actor.sprite.tint = 'hotpink'
+	return actor
 }
 
 function createManActor() {
-	const sprite = new ManSprite()
-	const container = new CutsceneActor()
-	container.addChild(sprite)
-	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
-	return container
+	const actor = new ManActor()
+	actor.sprite.tint = 'cyan'
+	return actor
 }
 
 function createRedManActor() {
-	const sprite = new ManSprite()
-	const container = new CutsceneActor()
-	container.addChild(sprite)
-	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
-	return container
+	const actor = new ManActor()
+	actor.sprite.tint = 'red'
+	return actor
 }

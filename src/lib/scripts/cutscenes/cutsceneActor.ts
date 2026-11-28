@@ -1,13 +1,13 @@
-import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { Container } from 'pixi.js'
+import type { XY } from '#lib/scripts/utils/XY.ts'
 
-export class CutsceneActor extends Container {
-	timeline: CoolCounter
+export abstract class CutsceneActor extends Container {
+	velocity: XY = { x: 0, y: 0 }
 	constructor() {
 		super()
-		this.timeline = new CoolCounter()
 	}
 	update(delta: number) {
-		this.timeline.value += delta
+		this.x += this.velocity.x * delta
+		this.y += this.velocity.y * delta
 	}
 }

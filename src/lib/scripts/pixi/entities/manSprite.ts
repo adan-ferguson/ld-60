@@ -55,4 +55,15 @@ export class ManSprite extends AnimatedSprite {
 		this.loop = def.loop ?? false
 		this.gotoAndPlay(0)
 	}
+	run() {
+		this.setAnimation({
+			frames: [0, 2, 3, 4],
+			loop: true,
+		})
+	}
+	stand() {
+		this.setAnimation({
+			frames: [0],
+		})
+	}
 }
