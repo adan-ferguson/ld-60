@@ -1,3 +1,5 @@
-import type { CutsceneDef } from '#lib/scripts/cutscenes/cutscene.ts'
+import { Cutscene } from '#lib/scripts/cutscenes/cutscene.ts'
 
-export function cutsceneLoop2(): CutsceneDef {}
+export function cutsceneLoop2() {
+	return new Cutscene()
+}

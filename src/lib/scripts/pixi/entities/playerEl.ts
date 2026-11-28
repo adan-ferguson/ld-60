@@ -1,11 +1,12 @@
 import { Player } from '#lib/scripts/game/player/player.ts'
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
-import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+import { type AnimationDef, ManSprite } from '#lib/scripts/pixi/entities/manSprite.ts'
 import { VfxAnimation } from '#lib/scripts/pixi/vfx/vfxAnimation.ts'
 import { Graphics } from 'pixi.js'
 import { SfxPlayer } from '#lib/scripts/audio/sfxPlayer.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
+import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 
 type PlayerAnimationType =
 	'idle' | 'jump' | 'run' | 'fall' | 'attack' | 'crouch' | 'crouchMove' | 'crouchAttack'
@@ -41,15 +42,17 @@ const defs: Record<PlayerAnimationType, AnimationDef> = {
 	},
 }
 
-export class PlayerEl extends WithManSprite {
+export class PlayerEl extends GameEntityEl {
 	private currentAnimation: PlayerAnimationType = 'idle'
 	private shotAnimationTime = 0
+	private sprite: ManSprite
 	constructor(
 		gc: GameController,
 		private player: Player,
 	) {
 		super(gc, player)
-		this.setAnimation(defs.idle)
+		this.sprite = new ManSprite()
+		this.sprite.setAnimation(defs.idle)
 		this.sprite.tint = 'cyan'
 		this.zIndex = 1
 		player.jumped.listen((before, after) => {
@@ -82,7 +85,7 @@ export class PlayerEl extends WithManSprite {
 
 	private setAnimationType(animationType: PlayerAnimationType) {
 		this.currentAnimation = animationType
-		this.setAnimation(defs[animationType])
+		this.sprite.setAnimation(defs[animationType])
 	}
 
 	private airJumpFx() {

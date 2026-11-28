@@ -1,4 +1,3 @@
-import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 import { AssetUtils } from '#lib/scripts/pixi/assetUtils.ts'
 import { AnimatedSprite, Assets, type Spritesheet, type Texture } from 'pixi.js'
 
@@ -44,20 +43,16 @@ function getTextures(frames: number[]): Texture[] {
 	})
 }
 
-export abstract class WithManSprite extends GameEntityEl {
-	protected sprite!: AnimatedSprite
-	protected setAnimation(def: AnimationDef) {
-		const textures = getTextures(def.frames)
-		if (!this.sprite) {
-			this.sprite = new AnimatedSprite(textures)
-			this.addChild(this.sprite)
-			this.sprite.anchor.set(0.5)
-		} else {
-			this.sprite.stop()
-			this.sprite.textures = textures
-		}
-		this.sprite.animationSpeed = def.speed ?? 0.12
-		this.sprite.loop = def.loop ?? false
-		this.sprite.gotoAndPlay(0)
+export class ManSprite extends AnimatedSprite {
+	constructor() {
+		super(getTextures([0]))
+		this.anchor.set(0.5)
+	}
+	setAnimation(def: AnimationDef) {
+		this.stop()
+		this.textures = getTextures(def.frames)
+		this.animationSpeed = def.speed ?? 0.12
+		this.loop = def.loop ?? false
+		this.gotoAndPlay(0)
 	}
 }

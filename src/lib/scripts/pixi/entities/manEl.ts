@@ -1,7 +1,8 @@
 import type { GameController } from '#lib/scripts/gameController.ts'
 import { type Man } from '#lib/scripts/game/entities/man.ts'
 import { particlesAnimation } from '#lib/scripts/pixi/vfx/particlesAnimation.ts'
-import { type AnimationDef, WithManSprite } from '#lib/scripts/pixi/entities/withManSprite.ts'
+import { type AnimationDef, ManSprite } from '#lib/scripts/pixi/entities/manSprite.ts'
+import { GameEntityEl } from '#lib/scripts/pixi/entities/gameEntityEl.ts'
 
 export type ManAnimationType = 'run' | 'attack' | 'attackWindup' | 'stand'
 
@@ -24,20 +25,22 @@ const defs: Record<ManAnimationType, AnimationDef> = {
 
 const DAMAGE_FLASH_TIME = 0.1
 
-export class ManEl extends WithManSprite {
+export class ManEl extends GameEntityEl {
 	#flashTime = 0
+	private sprite: ManSprite
 	constructor(
 		gc: GameController,
 		private man: Man,
 	) {
 		super(gc, man)
-		this.setAnimation(defs[man.currentAnimation])
+		this.sprite = new ManSprite()
+		this.sprite.setAnimation(defs[man.currentAnimation])
 		this.sprite.tint = man.color
 		man.destroyed.listen(() => {
 			gc.addAnimation(particlesAnimation(man.worldBounds, man.color, 2, 3))
 		})
 		man.animationChanged.listen(() => {
-			this.setAnimation(defs[man.currentAnimation])
+			this.sprite.setAnimation(defs[man.currentAnimation])
 		})
 		man.damageTaken.listen(() => {
 			this.#flashTime = DAMAGE_FLASH_TIME

@@ -8,6 +8,7 @@ import { FlyingTextController } from '#lib/scripts/sv/flyingTextController.svelt
 import { Cutscene, type CutsceneId } from '#lib/scripts/cutscenes/cutscene.ts'
 import { MusicPlayer } from '#lib/scripts/audio/musicPlayer.ts'
 import { GameOverController } from '#lib/scripts/gameOverController.ts'
+import { createCutscene } from '#lib/scripts/cutscenes/getCutsceneDef.ts'
 
 export type PreWavePhase = {
 	kind: 'prewave'
@@ -246,15 +247,14 @@ export class GameController {
 	}
 
 	async #showCutscene(id: CutsceneId) {
-		this.#cutscene = new Cutscene(id)
-		const { container } = this.#cutscene
-		this.app.stage.addChild(container)
+		this.#cutscene = createCutscene(id)
+		this.app.stage.addChild(this.#cutscene)
 		this.setScreenPhase({
 			kind: 'cutscene',
 			cutscene: this.#cutscene,
 		})
-		await this.#cutscene.finished.listenAsync()
-		this.app.stage.removeChild(container)
+		await this.#cutscene.events.finished.listenAsync()
+		this.app.stage.removeChild(this.#cutscene)
 		this.#cutscene = undefined
 	}
 
