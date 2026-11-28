@@ -24,31 +24,30 @@ export function cutsceneLoop1() {
 
 function createPrincessActor() {
 	const sprite = new ManSprite()
-	const timeline = new CoolCounter()
 	// TODO: Something like this
 	// sprite.scale.set(-1, 1)
 	// sprite.x = 50
 	// sprite.y = 0
 	// sprite.velocity = { x: -4, y: 0 }
 	// sprite.setAnimation('walk')
-	timeline.addThreshold(0, () => {})
-	const container = new CutsceneActor(timeline)
+	const container = new CutsceneActor()
 	container.addChild(sprite)
+	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
 	return container
 }
 
 function createManActor() {
 	const sprite = new ManSprite()
-	const timeline = new CoolCounter()
-	const container = new CutsceneActor(timeline)
+	const container = new CutsceneActor()
 	container.addChild(sprite)
+	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
 	return container
 }
 
 function createRedManActor() {
 	const sprite = new ManSprite()
-	const timeline = new CoolCounter()
-	const container = new CutsceneActor(timeline)
+	const container = new CutsceneActor()
 	container.addChild(sprite)
+	container.timeline.addThreshold(0, () => {}).addThreshold(0, () => {})
 	return container
 }

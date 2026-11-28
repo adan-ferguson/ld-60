@@ -1,13 +1,13 @@
-import type { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
+import { CoolCounter } from '#lib/scripts/utils/coolCounter.ts'
 import { Container } from 'pixi.js'
 
 export class CutsceneActor extends Container {
-	#timeline: CoolCounter
-	constructor(timeline: CoolCounter) {
+	timeline: CoolCounter
+	constructor() {
 		super()
-		this.#timeline = timeline
+		this.timeline = new CoolCounter()
 	}
 	update(delta: number) {
-		this.#timeline.value += delta
+		this.timeline.value += delta
 	}
 }

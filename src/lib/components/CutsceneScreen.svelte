@@ -3,8 +3,8 @@
   const { phase }: { phase: CutscenePhase } = $props()
   const cutscene = $derived(phase.cutscene)
   $effect(() => {
-    return cutscene.eventFired.listen(event => {
-      // TODO: Something
+    return cutscene.events.textRenderRequested.listen((text, xy) => {
+
     })
   })
 </script>
